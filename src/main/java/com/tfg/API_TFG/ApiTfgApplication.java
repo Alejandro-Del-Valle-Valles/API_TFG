@@ -5,6 +5,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+/**
+ * @auth Alejandro del Valle Vallés, Aurora Pinar del Hoyo, Carolina Lobato Ruiz
+ */
 public class ApiTfgApplication {
 
 	public static void main(String[] args) {
