@@ -5,17 +5,15 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 
 @Entity
-@IdClass(LineaId.class)
 public class LineaCompra {
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "compra_id", nullable = false)
-    private @Valid Compra compra;
+    @EmbeddedId
+    private LineaId id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer numLinea;
+    @ManyToOne
+    @MapsId("compraId")        // Mapea el campo compraId del embeddable
+    @JoinColumn(name = "compra_id", nullable = false)
+    private Compra compra;
 
     //TODO: Implementar las entidades Entrada, Sesión y Proyección. Crear las relaciones entre estas.
 }
