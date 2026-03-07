@@ -7,23 +7,31 @@ import java.util.UUID;
 /**
  * Clase que serializa la PK de LineaCompra porque es una entidad débil.
  */
+@Embeddable
 public class LineaId implements Serializable {
 
-    private UUID compra;
+    @Column(name = "compra_id")
+    private UUID compraId;
 
+    @Column(name = "num_linea")
     private Integer numLinea;
 
-    public LineaId() { }
+    public LineaId() {}
+    public LineaId(UUID compraId, Integer numLinea) {
+        this.compraId = compraId;
+        this.numLinea = numLinea;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        LineaId lineaId = (LineaId) o;
-        return Objects.equals(compra, lineaId.compra) && Objects.equals(numLinea, lineaId.numLinea);
+        LineaId that = (LineaId) o;
+        return Objects.equals(compraId, that.compraId) &&
+               Objects.equals(numLinea, that.numLinea);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(compra, numLinea);
+        return Objects.hash(compraId, numLinea);
     }
 }
