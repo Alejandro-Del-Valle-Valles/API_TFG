@@ -12,7 +12,7 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotNull(message = "El nombre del producto no puede ser nulo.")
     @NotBlank(message = "El nombre del producto no puede estar vacío.")
@@ -30,19 +30,22 @@ public class Producto {
 
     @ManyToMany
     @JoinTable(
-            name = "producto-alergeno",
+            name = "producto_alergeno",
             joinColumns = @JoinColumn(name = "alergeno_id"),
             inverseJoinColumns = @JoinColumn(name = "producto_id")
     )
     private List<@Valid Alergeno> alergenos;
 
+    @OneToMany(mappedBy = "producto")
+    private List<@Valid LineaCompra> lineaCompras;
+
     public Producto() { }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -88,6 +91,26 @@ public class Producto {
 
     public void setAlergenos(List<@Valid Alergeno> alergenos) {
         this.alergenos = alergenos;
+    }
+
+    public List<LineaCompra> getLineaCompras() {
+        return lineaCompras;
+    }
+
+    public void setLineaCompras(List<@Valid LineaCompra> lineaCompras) {
+        this.lineaCompras = lineaCompras;
+    }
+
+    /**
+     * Añade la línea de compra si no la tiene ya y establece la relación entre ambos.
+     * @param lineaCompra Linea de compra a añadir
+     */
+    public void addLineaCompra(@Valid LineaCompra lineaCompra) {
+        if(lineaCompra == null) throw new IllegalArgumentException("La línea de compra no puede ser nula.");
+        if(!this.lineaCompras.contains(lineaCompra)) {
+            lineaCompra.setProducto(this);
+            this.lineaCompras.add(lineaCompra);
+        }
     }
 
     /**

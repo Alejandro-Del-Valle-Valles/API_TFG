@@ -42,6 +42,9 @@ public class Pelicula {
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Credito> creditos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<@Valid Sesion> sesiones = new ArrayList<>();
+
     public Pelicula() { }
 
     public UUID getId() {
@@ -117,11 +120,30 @@ public class Pelicula {
     public void addCredito(@Valid Credito credito) {
         if (credito == null) throw new IllegalArgumentException("El crédito no puede ser nulo.");
 
-        credito.setPelicula(this);
-        this.creditos.add(credito);
+        if(!this.creditos.contains(credito)) {
+            credito.setPelicula(this);
+            this.creditos.add(credito);
+        }
 
         if (credito.getParticipante() != null && !credito.getParticipante().getCreditos().contains(credito)) {
             credito.getParticipante().getCreditos().add(credito);
+        }
+    }
+
+    public List<Sesion> getSesiones() {
+        return sesiones;
+    }
+
+    public void setSesiones(List<@Valid Sesion> sesiones) {
+        this.sesiones = sesiones;
+    }
+
+    public void addSesion(@Valid Sesion sesion) {
+        if(sesion == null) throw new IllegalArgumentException("La sesión no puede ser nula.");
+
+        if(!this.sesiones.contains(sesion)) {
+            sesion.setPelicula(this);
+            this.sesiones.add(sesion);
         }
     }
 

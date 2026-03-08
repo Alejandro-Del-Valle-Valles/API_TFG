@@ -14,7 +14,7 @@ public class Participante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotNull(message = "El nombre del participante no puede ser nulo.")
     @NotBlank(message = "El nombre del participante no puede estar en blanco.")
@@ -27,11 +27,11 @@ public class Participante {
 
     public Participante() { }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

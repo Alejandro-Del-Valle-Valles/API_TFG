@@ -42,7 +42,7 @@ public class Credito {
         return pelicula;
     }
 
-    public void setPelicula(Pelicula pelicula) {
+    public void setPelicula(@Valid Pelicula pelicula) {
         this.pelicula = pelicula;
     }
 

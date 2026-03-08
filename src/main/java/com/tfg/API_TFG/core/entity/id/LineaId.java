@@ -1,5 +1,8 @@
 package com.tfg.API_TFG.core.entity.id;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,6 +22,22 @@ public class LineaId implements Serializable {
     public LineaId() {}
     public LineaId(UUID compraId, Integer numLinea) {
         this.compraId = compraId;
+        this.numLinea = numLinea;
+    }
+
+    public UUID getCompraId() {
+        return compraId;
+    }
+
+    public void setCompraId(UUID compraId) {
+        this.compraId = compraId;
+    }
+
+    public Integer getNumLinea() {
+        return numLinea;
+    }
+
+    public void setNumLinea(Integer numLinea) {
         this.numLinea = numLinea;
     }
 

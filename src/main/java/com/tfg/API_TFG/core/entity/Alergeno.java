@@ -14,7 +14,7 @@ public class Alergeno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotNull(message = "El nombre del alérgeno no puede ser nulo.")
     @NotBlank(message = "El nombre del alérgeno no puede estar vacío.")
@@ -27,11 +27,11 @@ public class Alergeno {
 
     public Alergeno() { }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
