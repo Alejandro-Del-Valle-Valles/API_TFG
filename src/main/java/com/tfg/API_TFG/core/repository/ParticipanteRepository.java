@@ -1,0 +1,9 @@
+package com.tfg.API_TFG.core.repository;
+
+import com.tfg.API_TFG.core.entity.Participante;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ParticipanteRepository extends JpaRepository<Participante, Integer> {
+}
