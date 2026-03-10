@@ -13,9 +13,6 @@ import java.util.UUID;
 @Embeddable
 public class ProyeccionId {
 
-    @Column(name = "cine_id")
-    private Integer cineId;
-
     @Column(name = "num_sala")
     private Integer numSala;
 
@@ -27,19 +24,10 @@ public class ProyeccionId {
 
     public ProyeccionId() { }
 
-    public ProyeccionId(Integer cineId, Integer numSala, UUID peliculaId, LocalDateTime horarioSesion) {
-        this.cineId = cineId;
+    public ProyeccionId(Integer numSala, UUID peliculaId, LocalDateTime horarioSesion) {
         this.numSala = numSala;
         this.peliculaId = peliculaId;
         this.horarioSesion = horarioSesion;
-    }
-
-    public Integer getCineId() {
-        return cineId;
-    }
-
-    public void setCineId(Integer cineId) {
-        this.cineId = cineId;
     }
 
     public Integer getNumSala() {
@@ -70,12 +58,12 @@ public class ProyeccionId {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ProyeccionId that = (ProyeccionId) o;
-        return Objects.equals(cineId, that.cineId) && Objects.equals(numSala, that.numSala) &&
+        return Objects.equals(numSala, that.numSala) &&
                 Objects.equals(peliculaId, that.peliculaId) && Objects.equals(horarioSesion, that.horarioSesion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cineId, numSala, peliculaId, horarioSesion);
+        return Objects.hash(numSala, peliculaId, horarioSesion);
     }
 }

@@ -13,10 +13,7 @@ public class Proyeccion {
     private ProyeccionId id;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "cine_id", referencedColumnName = "cine_id", insertable = false, updatable = false),
-            @JoinColumn(name = "num_sala", referencedColumnName = "numero", insertable = false, updatable = false)
-    })
+    @JoinColumn(name = "num_sala", referencedColumnName = "numSala", insertable = false, updatable = false)
     private @Valid Sala sala;
 
     @ManyToOne

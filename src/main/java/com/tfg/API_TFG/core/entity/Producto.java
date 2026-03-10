@@ -25,9 +25,6 @@ public class Producto {
     @Column(precision = 5, scale = 2)
     private BigDecimal precio;
 
-    @ManyToMany(mappedBy = "productos")
-    private List<@Valid Cine> cines;
-
     @ManyToMany
     @JoinTable(
             name = "producto_alergeno",
@@ -63,26 +60,6 @@ public class Producto {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
-    }
-
-    public List<Cine> getCines() {
-        return cines;
-    }
-
-    public void setCines(List<@Valid Cine> cines) {
-        this.cines = cines;
-    }
-
-    /**
-     * Añade un cine a la lista de cines en los que está disponible y establece la relación.
-     * @param cine Cine a añadir.
-     */
-    public void addCine(@Valid Cine cine) {
-        if(cine == null) throw new IllegalArgumentException("El cine no puede ser nulo.");
-        if(!this.cines.contains(cine)) {
-            this.cines.add(cine);
-            cine.getProductos().add(this);
-        }
     }
 
     public List<Alergeno> getAlergenos() {

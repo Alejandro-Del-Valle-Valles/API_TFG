@@ -14,9 +14,6 @@ import java.util.UUID;
 @Embeddable
 public class EntradaId implements Serializable {
 
-    @Column(name = "cine_id")
-    private Integer cineId;
-
     @Column(name = "num_sala")
     private Integer numSala;
 
@@ -31,20 +28,11 @@ public class EntradaId implements Serializable {
 
     public EntradaId() { }
 
-    public EntradaId(Integer cineId, Integer numSala, UUID peliculaId, LocalDateTime horarioSesion, Integer numButaca) {
-        this.cineId = cineId;
+    public EntradaId(Integer numSala, UUID peliculaId, LocalDateTime horarioSesion, Integer numButaca) {
         this.numSala = numSala;
         this.peliculaId = peliculaId;
         this.horarioSesion = horarioSesion;
         this.numButaca = numButaca;
-    }
-
-    public Integer getCineId() {
-        return cineId;
-    }
-
-    public void setCineId(Integer cineId) {
-        this.cineId = cineId;
     }
 
     public Integer getNumSala() {
@@ -83,13 +71,13 @@ public class EntradaId implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         EntradaId entradaId = (EntradaId) o;
-        return Objects.equals(cineId, entradaId.cineId) && Objects.equals(numSala, entradaId.numSala) &&
+        return Objects.equals(numSala, entradaId.numSala) &&
                 Objects.equals(peliculaId, entradaId.peliculaId) && Objects.equals(horarioSesion, entradaId.horarioSesion)
                 && Objects.equals(numButaca, entradaId.numButaca);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cineId, numSala, peliculaId, horarioSesion, numButaca);
+        return Objects.hash(numSala, peliculaId, horarioSesion, numButaca);
     }
 }

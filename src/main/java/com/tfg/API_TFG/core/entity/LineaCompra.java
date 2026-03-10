@@ -25,7 +25,6 @@ public class LineaCompra {
 
     @OneToOne
     @JoinColumns({
-            @JoinColumn(name = "cine_id",        referencedColumnName = "cine_id",        nullable = true),
             @JoinColumn(name = "num_sala",        referencedColumnName = "num_sala",        nullable = true),
             @JoinColumn(name = "pelicula_id",     referencedColumnName = "pelicula_id",     nullable = true),
             @JoinColumn(name = "horario_sesion",  referencedColumnName = "horario_sesion",  nullable = true),
