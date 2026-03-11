@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ApiResponse(responseCode = "404", description = "La entidad buscada no existe o no se ha encontrado")
     public ResponseEntity<Map<String, String>> entityNotFound(EntityNotFoundException ex) {
         Map<String, String> message = new HashMap<>();
-        message.put(ex.getCause().getMessage(), ex.getMessage());
+        message.put(ex.getClass().getSimpleName(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
