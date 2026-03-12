@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -50,8 +51,8 @@ public class ProductoController {
     }
 
     @Operation(
-                summary = "Buscay devuelve un producto por su nombre. Ignora el case.",
-                description = "Buscay devuelve si existe, un producto y sus alérgenos en base al nombre."
+                summary = "Busca y devuelve un producto por su nombre. Ignora el case.",
+                description = "Busca y devuelve si existe, un producto y sus alérgenos en base al nombre."
         )
         @ApiResponses( value = {
                 @ApiResponse(
@@ -65,7 +66,18 @@ public class ProductoController {
                 @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no encontrado",
-                        content = @Content
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "ProductoNoEncontrado",
+                                        summary = "Ejemplo del error devuelto si no se encuentra el producto buscado.",
+                                        value = """
+                                                {
+                                                    "EntityNotFoundException": "No existe el producto con el nombre palomitas"
+                                                }
+                                                """
+                                )
+                        )
                 )
         })
     @GetMapping("/{nombre}")
@@ -92,12 +104,35 @@ public class ProductoController {
                 @ApiResponse(
                         responseCode = "400",
                         description = "Datos inválidos.",
-                        content = @Content
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "DatosInválidos",
+                                        summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                        value = """
+                                                {
+                                                    "nombre": "El nombre no puede ser nulo",
+                                                    "precio": "El precio no puede ser negativo
+                                                }
+                                                """
+                                )
+                        )
                 ),
                 @ApiResponse(
                         responseCode = "409",
                         description = "Objeto ya existente",
-                        content = @Content
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "ObjetoExistente",
+                                        summary = "Ejemplo del error devuelto si ya existe ese producto",
+                                        value = """
+                                                {
+                                                    "EntityExistsException": "Ya existe un producto con el nombre palomitas"
+                                                }
+                                                """
+                                )
+                        )
                 )
         })
     @PostMapping
@@ -124,12 +159,35 @@ public class ProductoController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos inválidos.",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "DatosInválidos",
+                                    summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                    value = """
+                                                {
+                                                    "nombre": "El nombre no puede ser nulo",
+                                                    "precio": "El precio no puede ser negativo
+                                                }
+                                                """
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "409",
                     description = "Objeto ya existente",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoExistente",
+                                    summary = "Ejemplo del error devuelto si ya existe ese producto con el nuevo nombre.",
+                                    value = """
+                                                {
+                                                    "EntityExistsException": "Ya existe un producto con el nombre palomitas"
+                                                }
+                                                """
+                            )
+                    )
             )
     })
     @PutMapping("/{nombre}")
@@ -158,17 +216,39 @@ public class ProductoController {
                 @ApiResponse(
                         responseCode = "400",
                         description = "Datos inválidos.",
-                        content = @Content
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "DatosInválidos",
+                                        summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                        value = """
+                                                {
+                                                    "nombre": "El nombre no puede ser nulo"
+                                                }
+                                                """
+                                )
+                        )
                 ),
                 @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no encontrado",
-                        content = @Content
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "ObjetoNoEncontrado",
+                                        summary = "Ejemplo del error devuelto si no existe el producto buscado.",
+                                        value = """
+                                                {
+                                                    "EntityNotFoundException": "No existe un producto con el nombre palomitas"
+                                                }
+                                                """
+                                )
+                        )
                 )
         })
     @DeleteMapping("/{nombre}")
     public ResponseEntity<ProductoDTO> deleteProducto(
-            @Parameter(description = "Nombre del producto a actualizar.")
+            @Parameter(description = "Nombre del producto a borrar.")
             @PathVariable String nombre
     ) {
         return ResponseEntity.ok(productoService.deleteProducto(nombre));

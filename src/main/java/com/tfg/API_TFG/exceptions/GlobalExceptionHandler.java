@@ -20,13 +20,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ApiResponse(responseCode = "400", description = "Los atributos pasados no son correctos.")
-    public ResponseEntity<String> methodArgumentNotValid(MethodArgumentNotValidException ex) {
-        String message = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> error.getField() + ':' + error.getDefaultMessage())
-                .collect(Collectors.joining());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+    public ResponseEntity<Map<String, String>> methodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errorMessage = new HashMap<>();
+        ex.getBindingResult().getFieldErrors()
+                .forEach(e -> errorMessage.put(e.getField(), e.getDefaultMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

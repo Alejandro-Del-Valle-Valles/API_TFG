@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlergenoServiceImpl implements AlergenoService {
@@ -38,11 +39,9 @@ public class AlergenoServiceImpl implements AlergenoService {
 
     @Override
     public AlergenoDTO createAlergeno(@Valid AlergenoDTO alergenoDTO) {
-        Alergeno alergeno = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre())
-                .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno con nombre " + alergenoDTO.getNombre()));
-        if(alergeno != null)
-            throw new EntityExistsException("Ya existe un alérgeno con el nombre " + alergenoDTO.getNombre());
-        alergeno = new Alergeno();
+        Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre());
+        if(!alergenoExiste.isEmpty()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.getNombre());
+        Alergeno alergeno = new Alergeno();
         alergeno.setNombre(alergenoDTO.getNombre());
         alergenoRepository.save(alergeno);
         return alergenoDTO;
@@ -50,6 +49,8 @@ public class AlergenoServiceImpl implements AlergenoService {
 
     @Override
     public AlergenoDTO updateAlergeno(String nombreAntiguo, @Valid AlergenoDTO alergenoDTO) {
+        Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre());
+        if(!alergenoExiste.isEmpty()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.getNombre());
         Alergeno alergeno = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre())
                 .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno con nombre " + alergenoDTO.getNombre()));
         if(alergeno == null)

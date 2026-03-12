@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -65,7 +66,18 @@ public class AlergenoController {
         @ApiResponse(
                 responseCode = "404",
                 description = "Alérgeno no encontrado",
-                content = @Content
+                content = @Content(
+                        mediaType = "application/json",
+                        examples = @ExampleObject(
+                                name = "ObjetoNoEncontrado",
+                                summary = "Ejemplo del error devuelto si no existe el alergeno buscado.",
+                                value = """
+                                                {
+                                                    "EntityNotFoundException": "No existe un alérgeno con el nombre gluten"
+                                                }
+                                                """
+                        )
+                )
         )
     })
     @GetMapping("/{nombre}")
@@ -91,12 +103,34 @@ public class AlergenoController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos inválidos",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "DatosInválidos",
+                                    summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                    value = """
+                                                {
+                                                    "nombre": "El nombre no puede ser nulo"
+                                                }
+                                                """
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "409",
                     description = "El objeto ya existe",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoExistente",
+                                    summary = "Ejemplo del error devuelto si ya existe un alergeno con el nombre gluten.",
+                                    value = """
+                                                {
+                                                    "EntityExistsException": "Ya existe un alergeno con el nombre gluten."
+                                                }
+                                                """
+                            )
+                    )
             )
     })
     @PostMapping
@@ -122,12 +156,50 @@ public class AlergenoController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos inválidos.",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "DatosInválidos",
+                                    summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                    value = """
+                                                {
+                                                    "nombre": "El nombre no puede ser nulo"
+                                                }
+                                                """
+                            )
+                    )
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Alérgeno no encontrado",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoNoEncontrado",
+                                    summary = "Ejemplo del error devuelto si no existe el alergeno buscado.",
+                                    value = """
+                                                {
+                                                    "EntityNotFoundException": "No existe un alergeno con el nombre gluten"
+                                                }
+                                                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "El objeto ya existe",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoExistente",
+                                    summary = "Ejemplo del error devuelto si ya existe un alergeno con el nombre gluten.",
+                                    value = """
+                                                {
+                                                    "EntityExistsException": "Ya existe un alergeno con el nombre gluten."
+                                                }
+                                                """
+                            )
+                    )
             )
     })
     @PutMapping("/{nombre}")
@@ -156,7 +228,18 @@ public class AlergenoController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Alérgeno no encontrado",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoNoEncontrado",
+                                    summary = "Ejemplo del error devuelto si no existe el alergeno buscado.",
+                                    value = """
+                                                {
+                                                    "EntityNotFoundException": "No existe un alergeno con el nombre gluten"
+                                                }
+                                                """
+                            )
+                    )
             )
     })
     @DeleteMapping("/{nombre}")

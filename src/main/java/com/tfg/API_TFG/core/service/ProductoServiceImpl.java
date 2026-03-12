@@ -52,6 +52,8 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional
     public ProductoDTO updateProducto(String nombre, ProductoDTO productoDTO) {
+        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
+        if(!productoExiste.isEmpty()) throw new EntityExistsException("Ya existe un producto con el nombre " +  productoDTO.getNombre());
         Producto producto = productoRepository.findByNombreIgnoreCase(nombre)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No existe un producto con el nombre " + nombre
