@@ -27,6 +27,10 @@ public class Alergeno {
 
     public Alergeno() { }
 
+    public Alergeno(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -49,6 +53,13 @@ public class Alergeno {
 
     public void setProductos(List<@Valid Producto> productos) {
         this.productos = productos;
+    }
+
+    @PreRemove
+    private void removeAlergenoFromProductos() {
+        this.productos.forEach(producto ->
+                producto.getAlergenos().remove(this)
+        );
     }
 
     @Override

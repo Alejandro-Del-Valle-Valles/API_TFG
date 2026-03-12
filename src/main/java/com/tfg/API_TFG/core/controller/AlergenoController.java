@@ -92,6 +92,11 @@ public class AlergenoController {
                     responseCode = "400",
                     description = "Datos inválidos",
                     content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "El objeto ya existe",
+                    content = @Content
             )
     })
     @PostMapping

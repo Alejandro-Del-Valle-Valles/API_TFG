@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Producto {
@@ -96,7 +97,38 @@ public class Producto {
      */
     public void addAlergeno(@Valid Alergeno alergeno) {
         if(alergeno == null) throw new IllegalArgumentException("El alérgeno no puede ser nulo.");
-        alergeno.getProductos().add(this);
-        this.alergenos.add(alergeno);
+        if(!alergeno.getProductos().contains(this)) {
+            alergeno.getProductos().add(this);
+            this.alergenos.add(alergeno);
+        }
+    }
+
+    /**
+     * Elimina un alérgeno y su relación.
+     * @param alergeno Alergeno a eliminar de la relación.
+     */
+    public void removeAlergeno(@Valid Alergeno alergeno) {
+        if(alergeno == null) throw new IllegalArgumentException("El alérgeno no puede ser nulo.");
+        alergeno.getProductos().remove(this);
+        this.alergenos.remove(alergeno);
+    }
+
+    @PreRemove
+    private void removeProductoFromAlergenos() {
+        this.alergenos.forEach(alergeno ->
+                alergeno.getProductos().remove(this)
+        );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(id, producto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

@@ -2,6 +2,7 @@ package com.tfg.API_TFG.exceptions;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,14 @@ public class GlobalExceptionHandler {
         Map<String, String> message = new HashMap<>();
         message.put(ex.getClass().getSimpleName(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(EntityExistsException.class)
+    @ApiResponse(responseCode = "409", description = "La entidad ya existe y no se puede crear.")
+    public ResponseEntity<Map<String, String>> entityNotFound(EntityExistsException ex) {
+        Map<String, String> message = new HashMap<>();
+        message.put(ex.getClass().getSimpleName(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
 
     @ExceptionHandler(Exception.class)
