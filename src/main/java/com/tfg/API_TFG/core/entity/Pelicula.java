@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,12 +33,10 @@ public class Pelicula {
     private String portada;
 
     @NotNull(message = "La duración de la película no puede ser nula.")
-    @Positive(message = "La duración de la película no puede ser 0 o negativa.")
-    @Column(precision = 4, scale = 2)
-    private BigDecimal duracion;
+    private LocalTime duracion;
 
     @PositiveOrZero(message = "La calificación de edad de la película no puede ser negativa.")
-    private Integer calificacionEdad;
+    private Integer calificacionEdad = 0;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Credito> creditos = new ArrayList<>();
@@ -79,21 +78,11 @@ public class Pelicula {
         this.portada = portada;
     }
 
-    public BigDecimal getDuracion() {
+    public LocalTime getDuracion() {
         return duracion;
     }
 
-    /**
-     * Comprueba que los minutos no sean superiores a 59
-     * @param duracion BigDecimal de la duración de la película.
-     */
-    public void setDuracion(BigDecimal duracion) {
-        if (duracion != null) {
-            int minutos = duracion.movePointRight(2).remainder(BigDecimal.valueOf(100)).intValue();
-
-            if (minutos > 59)
-                throw new IllegalArgumentException("Los minutos no pueden ser mayores a 59 (Formato HH.mm)");
-        }
+    public void setDuracion(LocalTime duracion) {
         this.duracion = duracion;
     }
 

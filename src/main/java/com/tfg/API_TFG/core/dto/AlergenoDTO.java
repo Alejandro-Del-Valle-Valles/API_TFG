@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.Objects;
 
-@Schema(description = "Datos para CRUD de un Alérgeno.")
+@Schema(description = "Información de un Alergeno.")
 public class AlergenoDTO {
 
     @Schema(
