@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface PeliculaRepository extends JpaRepository<Pelicula, UUID>{
-
+    List<Pelicula> findByNombreContainingIgnoreCase(String nombre);
 }

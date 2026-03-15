@@ -8,18 +8,25 @@ import java.util.List;
 import java.util.UUID;
 
 @Schema(description = "Toda la info básica de la película, más la info de los participantes.")
-public class PeliculaCompletoDTO extends PeliculaDTO{
+public class PeliculaCompletoDTO extends PeliculaDTO {
+    private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
 
-    //TODO: Pensar si hacer un DTO específico para los participantes
-    private List<String> directores = new ArrayList<>();
-    private List<String> actores = new ArrayList<>();
-
-    public PeliculaCompletoDTO(UUID id, String descripcion, String nombre, String url, LocalTime duracion, Integer edad,
-                               List<String> directores, List<String> actores) {
+    public PeliculaCompletoDTO(UUID id, String descripcion, String nombre, String url, LocalTime duracion,
+                               Integer edad, List<ParticipanteCompletoDTO> participantes) {
         super(id, descripcion, nombre, url, duracion, edad);
-        this.directores = directores;
-        this.actores = actores;
+        this.participantes = participantes;
     }
 
-    //TODO: No implemento nada más hasta pensar como hacerlo bien
+    public List<ParticipanteCompletoDTO> getParticipantes() {
+        return participantes;
+    }
+
+    public void setParticipantes(List<ParticipanteCompletoDTO> participantes) {
+        this.participantes = participantes;
+    }
+
+    public void addParticipante(ParticipanteCompletoDTO participanteCompletoDTO) {
+        if(!this.participantes.contains(participanteCompletoDTO))
+            this.participantes.add(participanteCompletoDTO);
+    }
 }

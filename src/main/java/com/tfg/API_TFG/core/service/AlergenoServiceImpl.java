@@ -40,7 +40,7 @@ public class AlergenoServiceImpl implements AlergenoService {
     @Override
     public AlergenoDTO createAlergeno(@Valid AlergenoDTO alergenoDTO) {
         Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre());
-        if(!alergenoExiste.isEmpty()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.getNombre());
+        if(alergenoExiste.isEmpty()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.getNombre());
         Alergeno alergeno = new Alergeno();
         alergeno.setNombre(alergenoDTO.getNombre());
         alergenoRepository.save(alergeno);
