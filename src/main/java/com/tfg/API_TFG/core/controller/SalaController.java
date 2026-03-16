@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/sala")
-@Tag(name = "salas", description = "API para las salas")
+@Tag(name = "Salas", description = "API para las salas")
 public class SalaController {
 
     private final SalaService salaService;

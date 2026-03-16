@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/participante")
-@Tag(name = "participantes", description = "API para los participantes")
+@Tag(name = "Participantes", description = "API para los participantes")
 public class ParticipanteController {
     private final ParticipanteService participanteService;
 
@@ -242,7 +242,7 @@ public class ParticipanteController {
                         description = "El participante fue eliminado con éxito.",
                         content = @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = Object.class)
+                                schema = @Schema(implementation = ParticipanteDTO.class)
                         )
                 ),
                 @ApiResponse(
@@ -268,10 +268,10 @@ public class ParticipanteController {
                                 mediaType = "application/json",
                                 examples = @ExampleObject(
                                         name = "ObjetoNoExistente",
-                                        summary = "Ejemplo del error devuelto si ya existe ese participante",
+                                        summary = "Ejemplo del error devuelto si no existe ese participante",
                                         value = """
                                                     {
-                                                        "EntityExistsException": "No existe el participante con ID 1"
+                                                        "EntityNotFoundException": "No existe el participante con ID 1"
                                                     }
                                                     """
                                 )

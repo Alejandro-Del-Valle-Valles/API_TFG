@@ -1,7 +1,7 @@
 package com.tfg.API_TFG.core.service.interfaces;
 
 import com.tfg.API_TFG.core.dto.PeliculaCompletoDTO;
-import com.tfg.API_TFG.core.dto.PeliculaCreteDTO;
+import com.tfg.API_TFG.core.dto.PeliculaCreateDTO;
 import com.tfg.API_TFG.core.dto.PeliculaDTO;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public interface PeliculaService {
     List<PeliculaCompletoDTO> getAllCompleto();
     List<PeliculaDTO> getByNombreContainingIgonreCase(String nombre);
     List<PeliculaCompletoDTO> getCompletoByNombreContainingIgnoreCase(String nombre);
-    PeliculaCompletoDTO createPelicula(PeliculaCreteDTO peliculaCompletoDTO);
+    PeliculaCompletoDTO createPelicula(PeliculaCreateDTO peliculaCompletoDTO);
     PeliculaCompletoDTO updatePeliculaCompleto(PeliculaCompletoDTO peliculaCompletoDTO);
     PeliculaDTO deletePelicula(UUID id);
 }

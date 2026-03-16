@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(description = "DTO para la creación y actualización de info básica de películas.")
-public class PeliculaCreteDTO {
+public class PeliculaCreateDTO {
 
     @Schema(
             description = "Descripción de la película.",
@@ -47,8 +47,8 @@ public class PeliculaCreteDTO {
 
     private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
 
-    public PeliculaCreteDTO(String descripcion, String nombre, String url, LocalTime duracion, Integer edad,
-                            List<ParticipanteCompletoDTO> participantes) {
+    public PeliculaCreateDTO(String descripcion, String nombre, String url, LocalTime duracion, Integer edad,
+                             List<ParticipanteCompletoDTO> participantes) {
         this.descripcion = descripcion;
         this.nombre = nombre;
         this.url = url;

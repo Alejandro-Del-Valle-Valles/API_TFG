@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/alergeno")
-@Tag(name = "alergenos", description = "API para la gestión de alérgenos.")
+@Tag(name = "Alergenos", description = "API para la gestión de alérgenos.")
 public class AlergenoController {
 
     private final AlergenoService alergenoService;
