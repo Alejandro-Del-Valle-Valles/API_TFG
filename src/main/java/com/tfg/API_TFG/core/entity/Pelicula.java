@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +36,8 @@ public class Pelicula {
 
     @PositiveOrZero(message = "La calificación de edad de la película no puede ser negativa.")
     private Integer calificacionEdad = 0;
+
+    private Boolean enCartelera;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Credito> creditos = new ArrayList<>();
@@ -92,6 +93,14 @@ public class Pelicula {
 
     public void setCalificacionEdad(Integer calificacionEdad) {
         this.calificacionEdad = calificacionEdad;
+    }
+
+    public Boolean isEnCartelera() {
+        return enCartelera;
+    }
+
+    public void setEnCartelera(Boolean enCartelera) {
+        this.enCartelera = enCartelera;
     }
 
     public List<Credito> getCreditos() {

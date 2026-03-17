@@ -26,6 +26,10 @@ public class Producto {
     @Column(precision = 5, scale = 2)
     private BigDecimal precio;
 
+    @NotNull(message = "El stock no puede ser nulo.")
+    @PositiveOrZero(message = "El stock debe ser 0 o mayor.")
+    private Integer stock;
+
     @ManyToMany
     @JoinTable(
             name = "producto_alergeno",
@@ -61,6 +65,14 @@ public class Producto {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public List<Alergeno> getAlergenos() {

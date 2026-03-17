@@ -1,5 +1,6 @@
 package com.tfg.API_TFG.core.dto;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -51,8 +52,14 @@ public class PeliculaCreateDTO {
     private Integer edad;
 
     @Schema(
-            description = "Lista de participantes que actuan en la película",
-            example = "{\n\"id\": 1\n\"nombre\": \"Tom Cruise\"\n\"roles\": [\nACTOR\n]"
+            description = "Null si no está en cartelera, true si está en cartelera, false si es de estreno.",
+            example = "true"
+    )
+    private Boolean enCartelera;
+
+    @ArraySchema(
+            schema = @Schema(implementation = ParticipanteCompletoDTO.class),
+            arraySchema = @Schema(description = "Lista de participantes que actúan en la película")
     )
     private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
 

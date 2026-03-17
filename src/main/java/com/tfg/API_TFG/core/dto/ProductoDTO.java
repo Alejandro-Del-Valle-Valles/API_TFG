@@ -1,5 +1,6 @@
 package com.tfg.API_TFG.core.dto;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -32,8 +33,16 @@ public class ProductoDTO {
     private BigDecimal precio;
 
     @Schema(
-            description = "Lista de los alérgenos del producto si contiene.",
-            example = "[{\"nombre\": \"Gluten\"}]"
+            description = "Stock disponible.",
+            example = "20"
+    )
+    @NotNull(message = "EL stock no puede ser nulo.")
+    @PositiveOrZero(message = "El stock no puede ser negativo.")
+    private Integer stock;
+
+    @ArraySchema(
+            schema = @Schema(implementation = AlergenoDTO.class),
+            arraySchema = @Schema(description = "Lista de alérgenos del producto")
     )
     private List<@Valid AlergenoDTO> alergenos;
 
@@ -57,6 +66,14 @@ public class ProductoDTO {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public List<AlergenoDTO> getAlergenos() {

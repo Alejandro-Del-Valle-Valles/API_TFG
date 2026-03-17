@@ -1,5 +1,6 @@
 package com.tfg.API_TFG.core.dto;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalTime;
@@ -9,6 +10,11 @@ import java.util.UUID;
 
 @Schema(description = "Toda la info básica de la película, más la info de los participantes.")
 public class PeliculaCompletoDTO extends PeliculaDTO {
+
+    @ArraySchema(
+            schema = @Schema(implementation = ParticipanteCompletoDTO.class),
+            arraySchema = @Schema(description = "Lista de participantes que actúan en la película")
+    )
     private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
 
     public PeliculaCompletoDTO(UUID id, String descripcion, String nombre, String url, LocalTime duracion,

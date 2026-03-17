@@ -54,6 +54,12 @@ public class PeliculaDTO {
     @PositiveOrZero(message = "La calificación de la película debe ser positiva.")
     private Integer edad;
 
+    @Schema(
+            description = "Null si no está en cartelera, true si está en cartelera, false si es de estreno.",
+            example = "true"
+    )
+    private Boolean enCartelera;
+
     public PeliculaDTO(UUID id, String descripcion, String nombre, String url, LocalTime duracion, Integer edad) {
         this.id = id;
         this.descripcion = descripcion;
