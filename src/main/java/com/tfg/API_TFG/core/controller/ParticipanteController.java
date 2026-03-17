@@ -63,7 +63,7 @@ public class ParticipanteController {
                     )
             )
     })
-    @GetMapping("/{nombre}")
+    @GetMapping("/nombre/{nombre}")
     public ResponseEntity<List<ParticipanteDTO>> getAllByNombre(
             @Parameter(description = "Nombre de los participantes a buscar. Encuentra todos los qe contenga la palabra buscada.")
             @PathVariable String nombre) {
@@ -116,7 +116,7 @@ public class ParticipanteController {
                         )
                 )
         })
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ParticipanteDTO> getById(
             @Parameter(description = "ID del participante buscado.")
             @PathVariable Integer id) {

@@ -37,14 +37,23 @@ public class PeliculaCreateDTO {
     private String url;
 
     @Schema(
-            description = "Duración en horas y minutos "
+            description = "Duración en horas y minutos ",
+            example = "03:49"
     )
     @NotNull(message = "La duración no puede ser nula.")
     private LocalTime duracion;
 
+    @Schema(
+            description = "La calificación de edad de la película. (Edad minima recomendada)",
+            example = "3"
+    )
     @PositiveOrZero(message = "La calificación de la película debe ser positiva.")
     private Integer edad;
 
+    @Schema(
+            description = "Lista de participantes que actuan en la película",
+            example = "{\n\"id\": 1\n\"nombre\": \"Tom Cruise\"\n\"roles\": [\nACTOR\n]"
+    )
     private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
 
     public PeliculaCreateDTO(String descripcion, String nombre, String url, LocalTime duracion, Integer edad,
