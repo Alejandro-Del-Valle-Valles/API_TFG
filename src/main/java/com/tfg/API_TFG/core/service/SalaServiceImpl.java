@@ -39,7 +39,7 @@ public class SalaServiceImpl implements SalaService {
     @Override
     public SalaDTO createSala(SalaDTO salaDTO) {
         Optional<Sala> sala = salaRepository.findById(salaDTO.getNumero());
-        if(sala.isEmpty()) throw new EntityExistsException("Ya existe la sala " + salaDTO.getNumero());
+        if(!sala.isEmpty()) throw new EntityExistsException("Ya existe la sala " + salaDTO.getNumero());
         Sala nuevaSala = new Sala();
         nuevaSala.setNumSala(salaDTO.getNumero());
         nuevaSala.setAforo(salaDTO.getAforo());

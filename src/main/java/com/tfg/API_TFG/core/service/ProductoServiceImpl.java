@@ -43,7 +43,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public ProductoDTO createProducto(ProductoDTO productoDTO) {
         Optional<Producto> producto = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
-        if(producto.isEmpty()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.getNombre());
+        if(!producto.isEmpty()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.getNombre());
         productoRepository.save(producto.get());
         return ProductoAdapter.toDTO(producto.get());
     }
