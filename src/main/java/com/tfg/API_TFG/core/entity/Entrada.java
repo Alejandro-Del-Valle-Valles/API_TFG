@@ -21,7 +21,7 @@ public class Entrada {
             @JoinColumn(name = "pelicula_id", referencedColumnName = "pelicula_id", insertable = false, updatable = false),
             @JoinColumn(name = "horario_sesion", referencedColumnName = "horario_sesion", insertable = false, updatable = false)
     })
-    private @Valid Proyeccion proyeccion;
+    private @Valid Sesion sesion;
 
     @NotNull(message = "El precio no puede ser nulo.")
     @PositiveOrZero(message = "El precio debe ser 0 o superior.")
@@ -33,37 +33,21 @@ public class Entrada {
 
     public Entrada() { }
 
-    public EntradaId getId() {
-        return id;
-    }
+    public EntradaId getId() { return id; }
 
-    public void setId(EntradaId id) {
-        this.id = id;
-    }
+    public void setId(EntradaId id) { this.id = id; }
 
-    public Proyeccion getProyeccion() {
-        return proyeccion;
-    }
+    public Sesion getProyeccion() { return sesion; }
 
-    public void setProyeccion(@Valid Proyeccion proyeccion) {
-        this.proyeccion = proyeccion;
-    }
+    public void setProyeccion(@Valid Sesion sesion) { this.sesion = sesion; }
 
-    public BigDecimal getPrecio() {
-        return precio;
-    }
+    public BigDecimal getPrecio() { return precio; }
 
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
+    public void setPrecio(BigDecimal precio) { this.precio = precio; }
 
-    public LineaCompra getLineaCompra() {
-        return lineaCompra;
-    }
+    public LineaCompra getLineaCompra() { return lineaCompra; }
 
-    public void setLineaCompra(@Valid LineaCompra lineaCompra) {
-        this.lineaCompra = lineaCompra;
-    }
+    public void setLineaCompra(@Valid LineaCompra lineaCompra) { this.lineaCompra = lineaCompra; }
 
     @Override
     public boolean equals(Object o) {
@@ -73,7 +57,5 @@ public class Entrada {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

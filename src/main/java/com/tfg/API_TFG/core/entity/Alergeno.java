@@ -31,29 +31,17 @@ public class Alergeno {
         this.nombre = nombre;
     }
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public List<Producto> getProductos() {
-        return productos;
-    }
+    public List<Producto> getProductos() { return productos; }
 
-    public void setProductos(List<@Valid Producto> productos) {
-        this.productos = productos;
-    }
+    public void setProductos(List<@Valid Producto> productos) { this.productos = productos; }
 
     @PreRemove
     private void removeAlergenoFromProductos() {
@@ -70,7 +58,5 @@ public class Alergeno {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    public int hashCode() { return Objects.hash(id); }
 }

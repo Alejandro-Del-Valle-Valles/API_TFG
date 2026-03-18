@@ -3,28 +3,39 @@ package com.tfg.API_TFG.core.entity.id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Clase que serializa la PK de Sesion, ya que es entidad debil.
+ * Clase que serializa la PK de Proyeccion al ser esta una entidad asociativa
  */
 @Embeddable
-public class SesionId implements Serializable {
+public class SesionId {
+
+    @Column(name = "num_sala")
+    private Integer numSala;
 
     @Column(name = "pelicula_id")
     private UUID peliculaId;
 
-    @Column(name = "horario")
-    private LocalDateTime horario;
+    @Column(name = "horario_sesion")
+    private LocalDateTime horarioSesion;
 
     public SesionId() { }
 
-    public SesionId(UUID peliculaId, LocalDateTime horario) {
+    public SesionId(Integer numSala, UUID peliculaId, LocalDateTime horarioSesion) {
+        this.numSala = numSala;
         this.peliculaId = peliculaId;
-        this.horario = horario;
+        this.horarioSesion = horarioSesion;
+    }
+
+    public Integer getNumSala() {
+        return numSala;
+    }
+
+    public void setNumSala(Integer numSala) {
+        this.numSala = numSala;
     }
 
     public UUID getPeliculaId() {
@@ -35,23 +46,24 @@ public class SesionId implements Serializable {
         this.peliculaId = peliculaId;
     }
 
-    public LocalDateTime getHorario() {
-        return horario;
+    public LocalDateTime getHorarioSesion() {
+        return horarioSesion;
     }
 
-    public void setHorario(LocalDateTime horario) {
-        this.horario = horario;
+    public void setHorarioSesion(LocalDateTime horarioSesion) {
+        this.horarioSesion = horarioSesion;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        SesionId sesionId = (SesionId) o;
-        return Objects.equals(peliculaId, sesionId.peliculaId) && Objects.equals(horario, sesionId.horario);
+        SesionId that = (SesionId) o;
+        return Objects.equals(numSala, that.numSala) &&
+                Objects.equals(peliculaId, that.peliculaId) && Objects.equals(horarioSesion, that.horarioSesion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(peliculaId, horario);
+        return Objects.hash(numSala, peliculaId, horarioSesion);
     }
 }

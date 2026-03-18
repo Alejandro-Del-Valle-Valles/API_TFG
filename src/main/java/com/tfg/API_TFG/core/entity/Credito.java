@@ -30,37 +30,21 @@ public class Credito {
 
     public Credito() { }
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() { return id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) { this.id = id; }
 
-    public Pelicula getPelicula() {
-        return pelicula;
-    }
+    public Pelicula getPelicula() { return pelicula; }
 
-    public void setPelicula(@Valid Pelicula pelicula) {
-        this.pelicula = pelicula;
-    }
+    public void setPelicula(@Valid Pelicula pelicula) { this.pelicula = pelicula; }
 
-    public Participante getParticipante() {
-        return participante;
-    }
+    public Participante getParticipante() { return participante; }
 
-    public void setParticipante(@Valid Participante participante) {
-        this.participante = participante;
-    }
+    public void setParticipante(@Valid Participante participante) { this.participante = participante; }
 
-    public RolParticipante getRol() {
-        return rol;
-    }
+    public RolParticipante getRol() { return rol; }
 
-    public void setRol(RolParticipante role) {
-        this.rol = role;
-    }
+    public void setRol(RolParticipante role) { this.rol = role; }
 
     @Override
     public boolean equals(Object o) {
@@ -70,7 +54,5 @@ public class Credito {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

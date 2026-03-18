@@ -21,7 +21,7 @@ public class Sala {
     private Integer aforo;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<@Valid Proyeccion> proyecciones = new ArrayList<>();
+    private List<@Valid Sesion> proyecciones = new ArrayList<>();
 
     public Sala() {}
 
@@ -36,23 +36,23 @@ public class Sala {
     public Integer getAforo() { return aforo; }
     public void setAforo(Integer aforo) { this.aforo = aforo; }
 
-    public List<Proyeccion> getProyecciones() {
+    public List<Sesion> getProyecciones() {
         return proyecciones;
     }
 
-    public void setProyecciones(List<@Valid Proyeccion> proyecciones) {
+    public void setProyecciones(List<@Valid Sesion> proyecciones) {
         this.proyecciones = proyecciones;
     }
 
     /**
      * Añade la proyección si no la contiene ya y establece la relación.
-     * @param proyeccion Proyeccion a añadir.
+     * @param sesion Proyeccion a añadir.
      */
-    public void addProyeccion(@Valid Proyeccion proyeccion) {
-        if(proyeccion == null) throw new IllegalArgumentException("La proyección no puede ser nula.");
-        if(!this.proyecciones.contains(proyeccion)) {
-            proyeccion.setSala(this);
-            this.proyecciones.add(proyeccion);
+    public void addProyeccion(@Valid Sesion sesion) {
+        if(sesion == null) throw new IllegalArgumentException("La proyección no puede ser nula.");
+        if(!this.proyecciones.contains(sesion)) {
+            sesion.setSala(this);
+            this.proyecciones.add(sesion);
         }
     }
 

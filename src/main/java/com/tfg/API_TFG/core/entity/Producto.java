@@ -43,53 +43,29 @@ public class Producto {
 
     public Producto() { }
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public BigDecimal getPrecio() {
-        return precio;
-    }
+    public BigDecimal getPrecio() { return precio; }
 
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
+    public void setPrecio(BigDecimal precio) { this.precio = precio; }
 
-    public Integer getStock() {
-        return stock;
-    }
+    public Integer getStock() { return stock; }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
+    public void setStock(Integer stock) { this.stock = stock; }
 
-    public List<Alergeno> getAlergenos() {
-        return alergenos;
-    }
+    public List<Alergeno> getAlergenos() { return alergenos; }
 
-    public void setAlergenos(List<@Valid Alergeno> alergenos) {
-        this.alergenos = alergenos;
-    }
+    public void setAlergenos(List<@Valid Alergeno> alergenos) { this.alergenos = alergenos; }
 
-    public List<LineaCompra> getLineaCompras() {
-        return lineaCompras;
-    }
+    public List<LineaCompra> getLineaCompras() { return lineaCompras; }
 
-    public void setLineaCompras(List<@Valid LineaCompra> lineaCompras) {
-        this.lineaCompras = lineaCompras;
-    }
+    public void setLineaCompras(List<@Valid LineaCompra> lineaCompras) { this.lineaCompras = lineaCompras; }
 
     /**
      * Añade la línea de compra si no la tiene ya y establece la relación entre ambos.
@@ -140,7 +116,5 @@ public class Producto {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

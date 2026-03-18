@@ -30,21 +30,13 @@ public class SalaDTO {
         this.aforo = aforo;
     }
 
-    public Integer getNumero() {
-        return numero;
-    }
+    public Integer getNumero() { return numero; }
 
-    public void setNumero(Integer numero) {
-        this.numero = numero;
-    }
+    public void setNumero(Integer numero) { this.numero = numero; }
 
-    public Integer getAforo() {
-        return aforo;
-    }
+    public Integer getAforo() { return aforo; }
 
-    public void setAforo(Integer aforo) {
-        this.aforo = aforo;
-    }
+    public void setAforo(Integer aforo) { this.aforo = aforo; }
 
     @Override
     public boolean equals(Object o) {
@@ -54,7 +46,5 @@ public class SalaDTO {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(numero);
-    }
+    public int hashCode() { return Objects.hashCode(numero); }
 }

@@ -24,29 +24,17 @@ public class Compra {
 
     public Compra() { }
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() { return id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) { this.id = id; }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+    public Usuario getUsuario() { return usuario; }
 
-    public void setUsuario(@Valid Usuario usuario) {
-        this.usuario = usuario;
-    }
+    public void setUsuario(@Valid Usuario usuario) { this.usuario = usuario; }
 
-    public List<LineaCompra> getLineaCompras() {
-        return lineaCompras;
-    }
+    public List<LineaCompra> getLineaCompras() { return lineaCompras; }
 
-    public void setLineaCompras(List<@Valid LineaCompra> lineaCompras) {
-        this.lineaCompras = lineaCompras;
-    }
+    public void setLineaCompras(List<@Valid LineaCompra> lineaCompras) { this.lineaCompras = lineaCompras; }
 
     /**
      * Añade la linea de compra si no la contiene ya y establece la relación entre ambos.
@@ -68,7 +56,5 @@ public class Compra {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

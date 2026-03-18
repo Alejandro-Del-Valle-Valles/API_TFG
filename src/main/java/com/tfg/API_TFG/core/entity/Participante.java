@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Participante {
@@ -27,29 +28,17 @@ public class Participante {
 
     public Participante() { }
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public List<Credito> getCreditos() {
-        return creditos;
-    }
+    public List<Credito> getCreditos() { return creditos; }
 
-    public void setCreditos(List<@Valid Credito> creditos) {
-        this.creditos = creditos;
-    }
+    public void setCreditos(List<@Valid Credito> creditos) { this.creditos = creditos; }
 
     /**
      * Añade un crédito al participante y establece la relación.
@@ -64,4 +53,14 @@ public class Participante {
             credito.getPelicula().getCreditos().add(credito);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Participante that = (Participante) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() { return Objects.hashCode(id); }
 }

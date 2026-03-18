@@ -47,69 +47,37 @@ public class Pelicula {
 
     public Pelicula() { }
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() { return id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public String getDescripcion() { return descripcion; }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public String getPortada() {
-        return portada;
-    }
+    public String getPortada() { return portada; }
 
-    public void setPortada(String portada) {
-        this.portada = portada;
-    }
+    public void setPortada(String portada) { this.portada = portada; }
 
-    public LocalTime getDuracion() {
-        return duracion;
-    }
+    public LocalTime getDuracion() { return duracion; }
 
-    public void setDuracion(LocalTime duracion) {
-        this.duracion = duracion;
-    }
+    public void setDuracion(LocalTime duracion) { this.duracion = duracion; }
 
-    public Integer getCalificacionEdad() {
-        return calificacionEdad;
-    }
+    public Integer getCalificacionEdad() { return calificacionEdad; }
 
-    public void setCalificacionEdad(Integer calificacionEdad) {
-        this.calificacionEdad = calificacionEdad;
-    }
+    public void setCalificacionEdad(Integer calificacionEdad) { this.calificacionEdad = calificacionEdad; }
 
-    public Boolean isEnCartelera() {
-        return enCartelera;
-    }
+    public Boolean isEnCartelera() { return enCartelera; }
 
-    public void setEnCartelera(Boolean enCartelera) {
-        this.enCartelera = enCartelera;
-    }
+    public void setEnCartelera(Boolean enCartelera) { this.enCartelera = enCartelera; }
 
-    public List<Credito> getCreditos() {
-        return creditos;
-    }
+    public List<Credito> getCreditos() { return creditos; }
 
-    public void setCreditos(List<@Valid Credito> creditos) {
-        this.creditos = creditos;
-    }
+    public void setCreditos(List<@Valid Credito> creditos) { this.creditos = creditos; }
 
     /**
      * Añade el crédito y establece la relación entre Película, Crédito y Participante
@@ -128,12 +96,16 @@ public class Pelicula {
         }
     }
 
+    public Boolean getEnCartelera() {
+        return enCartelera;
+    }
+
     public List<Sesion> getSesiones() {
         return sesiones;
     }
 
-    public void setSesiones(List<@Valid Sesion> sesiones) {
-        this.sesiones = sesiones;
+    public void setSesiones(List<Sesion> proyecciones) {
+        this.sesiones = proyecciones;
     }
 
     public void addSesion(@Valid Sesion sesion) {
@@ -153,7 +125,5 @@ public class Pelicula {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

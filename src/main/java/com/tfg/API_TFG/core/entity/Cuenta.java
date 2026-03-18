@@ -38,45 +38,25 @@ public class Cuenta {
 
     public Cuenta() { }
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() { return id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) { this.id = id; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getContrasena() {
-        return contrasena;
-    }
+    public String getContrasena() { return contrasena; }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 
-    public RolUsuario getRol() {
-        return rol;
-    }
+    public RolUsuario getRol() { return rol; }
 
-    public void setRol(RolUsuario rol) {
-        this.rol = rol;
-    }
+    public void setRol(RolUsuario rol) { this.rol = rol; }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+    public Usuario getUsuario() { return usuario; }
 
-    public void setUsuario(@Valid Usuario usuario) {
-        this.usuario = usuario;
-    }
+    public void setUsuario(@Valid Usuario usuario) { this.usuario = usuario; }
 
     @Override
     public boolean equals(Object o) {
@@ -86,7 +66,5 @@ public class Cuenta {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

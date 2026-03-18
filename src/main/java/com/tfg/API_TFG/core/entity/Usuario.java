@@ -31,40 +31,26 @@ public class Usuario {
 
     public Usuario() { }
 
-    public UUID getId() {
-        return id;
-    }
+    public UUID getId() { return id; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public void setId(UUID id) { this.id = id; }
 
-    public String getCorreo() {
-        return correo;
-    }
+    public String getCorreo() { return correo; }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
+    public void setCorreo(String correo) { this.correo = correo; }
 
-    public Cuenta getCuenta() {
-        return cuenta;
-    }
+    public Cuenta getCuenta() { return cuenta; }
 
     public void setCuenta(Cuenta cuenta) {
-        if (cuenta == null && this.cuenta != null) this.cuenta.setUsuario(null);
+        if (cuenta == null) this.cuenta.setUsuario(null);
         else cuenta.setUsuario(this);
 
         this.cuenta = cuenta;
     }
 
-    public List<Compra> getCompras() {
-        return compras;
-    }
+    public List<Compra> getCompras() { return compras; }
 
-    public void setCompras(List<@Valid Compra> compras) {
-        this.compras = compras;
-    }
+    public void setCompras(List<@Valid Compra> compras) { this.compras = compras; }
 
     /**
      * Añade la compra a la lista si no existe ya y establece la relación.
@@ -86,7 +72,5 @@ public class Usuario {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

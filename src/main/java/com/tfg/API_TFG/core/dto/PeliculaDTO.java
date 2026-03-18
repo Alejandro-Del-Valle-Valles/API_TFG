@@ -1,5 +1,6 @@
 package com.tfg.API_TFG.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -46,9 +47,13 @@ public class PeliculaDTO {
     private String url;
 
     @Schema(
-            description = "Duración en horas y minutos "
+            description = "Duración en horas y minutos ",
+            example = "01:34",
+            type = "string",
+            format = "time"
     )
     @NotNull(message = "La duración no puede ser nula.")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime duracion;
 
     @PositiveOrZero(message = "La calificación de la película debe ser positiva.")

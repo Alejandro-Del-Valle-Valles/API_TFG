@@ -33,43 +33,25 @@ public class LineaCompra {
     private @Valid Entrada entrada;
 
     @AssertTrue(message = "La línea de compra debe tener exactamente una Entrada o un Producto, no ambos ni ninguno.")
-    private boolean isXorValido() {
-        return (entrada != null) ^ (producto != null);
-    }
+    private boolean isXorValido() { return (entrada != null) ^ (producto != null); }
 
     public LineaCompra() { }
 
-    public LineaId getId() {
-        return id;
-    }
+    public LineaId getId() { return id; }
 
-    public void setId(LineaId id) {
-        this.id = id;
-    }
+    public void setId(LineaId id) { this.id = id; }
 
-    public Compra getCompra() {
-        return compra;
-    }
+    public Compra getCompra() { return compra; }
 
-    public void setCompra(Compra compra) {
-        this.compra = compra;
-    }
+    public void setCompra(Compra compra) { this.compra = compra; }
 
-    public Producto getProducto() {
-        return producto;
-    }
+    public Producto getProducto() { return producto; }
 
-    public void setProducto(@Valid Producto producto) {
-        this.producto = producto;
-    }
+    public void setProducto(@Valid Producto producto) { this.producto = producto; }
 
-    public Entrada getEntrada() {
-        return entrada;
-    }
+    public Entrada getEntrada() { return entrada; }
 
-    public void setEntrada(@Valid Entrada entrada) {
-        this.entrada = entrada;
-    }
+    public void setEntrada(@Valid Entrada entrada) { this.entrada = entrada; }
 
     @Override
     public boolean equals(Object o) {
@@ -79,7 +61,5 @@ public class LineaCompra {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }
