@@ -42,17 +42,20 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoDTO createProducto(ProductoDTO productoDTO) {
-        Optional<Producto> producto = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
-        if(!producto.isEmpty()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.getNombre());
-        productoRepository.save(producto.get());
-        return ProductoAdapter.toDTO(producto.get());
+        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
+        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.getNombre());
+        Producto producto = new Producto();
+        producto.setNombre(productoDTO.getNombre());
+        producto.setPrecio(productoDTO.getPrecio());
+        producto.setStock(productoDTO.getStock());
+        return ProductoAdapter.toDTO(productoRepository.save(producto));
     }
 
     @Override
     @Transactional
     public ProductoDTO updateProducto(String nombre, ProductoDTO productoDTO) {
         Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
-        if(!productoExiste.isEmpty()) throw new EntityExistsException("Ya existe un producto con el nombre " +  productoDTO.getNombre());
+        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " +  productoDTO.getNombre());
         Producto producto = productoRepository.findByNombreIgnoreCase(nombre)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No existe un producto con el nombre " + nombre
@@ -67,6 +70,7 @@ public class ProductoServiceImpl implements ProductoService {
                 )
                 .toList();
         producto.setAlergenos(alergenos);
+        producto.setStock(productoDTO.getStock());
         return ProductoAdapter.toDTO(productoRepository.save(producto));
     }
 

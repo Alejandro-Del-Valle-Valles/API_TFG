@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Schema(description = "DTO para la creación de una sesión. Solo incluye las PK.")
-public class SesionCreateDTO {
+public class SesionCrudDTO {
 
     @Schema(
             description = "Número de la sala en la que se proyecta.",
@@ -24,7 +24,7 @@ public class SesionCreateDTO {
             description = "ID de la película que se proyecta"
     )
     @NotNull(message = "La película que se proyecta no puede ser nula.")
-    private UUID pelicula_id;
+    private UUID peliculaId;
 
     @Schema(
             description = "Horario de la película (Día y hora a la que empieza)",
@@ -36,9 +36,9 @@ public class SesionCreateDTO {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime horario;
 
-    public SesionCreateDTO(Integer numSala, UUID pelicula_id, LocalDateTime horario) {
+    public SesionCrudDTO(Integer numSala, UUID peliculaId, LocalDateTime horario) {
         this.numSala = numSala;
-        this.pelicula_id = pelicula_id;
+        this.peliculaId = peliculaId;
         this.horario = horario;
     }
 
@@ -46,9 +46,9 @@ public class SesionCreateDTO {
 
     public void setNumSala(Integer numSala) { this.numSala = numSala; }
 
-    public UUID getPelicula_id() { return pelicula_id; }
+    public UUID getPeliculaId() { return peliculaId; }
 
-    public void setPelicula_id(UUID pelicula_id) { this.pelicula_id = pelicula_id; }
+    public void setPeliculaId(UUID peliculaId) { this.peliculaId = peliculaId; }
 
     public LocalDateTime getHorario() { return horario; }
 
@@ -57,12 +57,12 @@ public class SesionCreateDTO {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        SesionCreateDTO that = (SesionCreateDTO) o;
-        return Objects.equals(numSala, that.numSala) && Objects.equals(pelicula_id, that.pelicula_id) && Objects.equals(horario, that.horario);
+        SesionCrudDTO that = (SesionCrudDTO) o;
+        return Objects.equals(numSala, that.numSala) && Objects.equals(peliculaId, that.peliculaId) && Objects.equals(horario, that.horario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(numSala, pelicula_id, horario);
+        return Objects.hash(numSala, peliculaId, horario);
     }
 }

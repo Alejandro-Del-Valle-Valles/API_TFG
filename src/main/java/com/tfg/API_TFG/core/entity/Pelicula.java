@@ -117,6 +117,23 @@ public class Pelicula {
         }
     }
 
+    /**
+     * Limpia las relaciones antes de eliminar la película.
+     * Aunque @PreRemove de Credito ya lo hace, esto asegura limpieza completa.
+     */
+    @PreRemove
+    private void limpiarRelaciones() {
+        for (Credito credito : new ArrayList<>(this.creditos)) {
+            if (credito.getParticipante() != null)
+                credito.getParticipante().getCreditos().remove(credito);
+        }
+        this.creditos.clear();
+        for (Sesion sesion : new ArrayList<>(this.sesiones)) {
+            if (sesion.getSala() != null)
+                sesion.getSala().getSesiones().remove(sesion);
+        }
+        this.sesiones.clear();
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

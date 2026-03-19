@@ -46,6 +46,18 @@ public class Credito {
 
     public void setRol(RolParticipante role) { this.rol = role; }
 
+    /**
+     * Limpia las relaciones bidireccionales antes de eliminar el crédito.
+     * Se ejecuta automáticamente cuando se elimina un crédito (directamente o por cascade).
+     */
+    @PreRemove
+    private void limpiarRelaciones() {
+        if (this.pelicula != null && this.pelicula.getCreditos() != null)
+            this.pelicula.getCreditos().remove(this);
+        if (this.participante != null && this.participante.getCreditos() != null)
+            this.participante.getCreditos().remove(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

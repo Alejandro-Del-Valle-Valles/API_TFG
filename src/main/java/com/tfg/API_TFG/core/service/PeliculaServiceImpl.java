@@ -99,6 +99,15 @@ public class PeliculaServiceImpl implements PeliculaService {
         return PeliculaAdapter.toCompletoDTO(pelicula);
     }
 
+    @Override
+    @Transactional
+    public PeliculaDTO deletePelicula(UUID id) {
+        Pelicula pelicula = peliculaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No existe la película con ID " + id));
+        peliculaRepository.delete(pelicula);
+        return PeliculaAdapter.toDTO(pelicula);
+    }
+
     /**
      * Actualiza los campos básicos de una película en base a los datos del DTO pasado.
      * @param pelicula Pelicula a actualizar
@@ -188,19 +197,5 @@ public class PeliculaServiceImpl implements PeliculaService {
                 }
             }
         }
-    }
-
-    @Override
-    @Transactional
-    public PeliculaDTO deletePelicula(UUID id) {
-        Pelicula pelicula = peliculaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No existe la película con ID " + id));
-        pelicula.getCreditos().forEach(c -> {
-            Participante participante = c.getParticipante();
-            if (participante != null) participante.getCreditos().remove(c);
-        });
-        pelicula.getCreditos().clear();
-        peliculaRepository.delete(pelicula);
-        return PeliculaAdapter.toDTO(pelicula);
     }
 }

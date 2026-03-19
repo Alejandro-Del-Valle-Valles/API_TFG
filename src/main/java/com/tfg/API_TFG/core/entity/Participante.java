@@ -54,6 +54,18 @@ public class Participante {
         }
     }
 
+    /**
+     * Limpia las relaciones antes de eliminar el participante.
+     */
+    @PreRemove
+    private void limpiarRelaciones() {
+        for (Credito credito : new ArrayList<>(this.creditos)) {
+            if (credito.getPelicula() != null)
+                credito.getPelicula().getCreditos().remove(credito);
+        }
+        this.creditos.clear();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
