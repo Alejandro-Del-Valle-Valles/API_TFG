@@ -13,6 +13,7 @@ public interface PeliculaService {
     List<PeliculaCompletoDTO> getAllCompleto();
     List<PeliculaDTO> getByNombreContainingIgonreCase(String nombre);
     List<PeliculaCompletoDTO> getCompletoByNombreContainingIgnoreCase(String nombre);
+    PeliculaCompletoDTO getCompletoById(UUID id);
     PeliculaCompletoDTO createPelicula(PeliculaCreateDTO peliculaCompletoDTO);
     PeliculaCompletoDTO updatePeliculaCompleto(PeliculaCompletoDTO peliculaCompletoDTO);
     PeliculaDTO deletePelicula(UUID id);

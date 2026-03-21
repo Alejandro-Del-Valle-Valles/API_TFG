@@ -9,6 +9,7 @@ import java.util.List;
 public interface SesionService {
     List<SesionDTO> getAll();
     List<SesionDTO> getAllBetweenHorarios(LocalDateTime horarioInicio, LocalDateTime horarioFin);
+    SesionDTO getSesion(SesionCrudDTO sesionCrudDTO);
     SesionDTO createSesion(SesionCrudDTO sesionCrudDTO);
     SesionDTO updateSesion(SesionCrudDTO antiguaSesion, SesionCrudDTO nuevaSesion);
     SesionDTO deleteSesion(SesionCrudDTO sesionCrudDTO);

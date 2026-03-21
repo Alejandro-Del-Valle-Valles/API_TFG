@@ -48,6 +48,17 @@ public class SesionServiceImpl implements SesionService {
     }
 
     @Override
+    public SesionDTO getSesion(SesionCrudDTO sesionCrudDTO) {
+        SesionId id = toSesionId(sesionCrudDTO);
+        Sesion sesion = sesionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("No existe la sesión para la sala %d con la película %s y para el horario %s.",
+                                id.getNumSala(), id.getPeliculaId(), id.getHorarioSesion())
+                ));
+        return SesionAdapter.toDTO(sesion);
+    }
+
+    @Override
     @Transactional
     public SesionDTO createSesion(SesionCrudDTO sesionCrudDTO) {
         Pelicula pelicula = peliculaRepository.findById(sesionCrudDTO.getPeliculaId())
@@ -56,11 +67,7 @@ public class SesionServiceImpl implements SesionService {
                 ));
         Sala sala = salaRepository.findById(sesionCrudDTO.getNumSala())
                 .orElseThrow(() -> new EntityNotFoundException("No existe la sala " + sesionCrudDTO.getNumSala()));
-        SesionId id = new SesionId(
-                sesionCrudDTO.getNumSala(),
-                sesionCrudDTO.getPeliculaId(),
-                sesionCrudDTO.getHorario()
-        );
+        SesionId id = toSesionId(sesionCrudDTO);
         if (sesionRepository.existsById(id)) {
             throw new EntityExistsException(String.format(
                     "Ya existe una sesión en la sala %d para la película %s con horario %s",
@@ -71,8 +78,9 @@ public class SesionServiceImpl implements SesionService {
         }
         Sesion sesion = new Sesion();
         sesion.setId(id);
-        pelicula.addSesion(sesion);
-        sala.addSesion(sesion);
+        sesion.setSala(sala);
+        sesion.setPelicula(pelicula);
+        sesion.setHorario(sesionCrudDTO.getHorario());
         sesion = sesionRepository.save(sesion);
         return SesionAdapter.toDTO(sesion);
     }
@@ -96,12 +104,7 @@ public class SesionServiceImpl implements SesionService {
      * @return Sesion de la sesión eliminada.
      */
     private Sesion eliminarSesion(SesionCrudDTO sesionCrudDTO) {
-        SesionId id = new SesionId(
-                sesionCrudDTO.getNumSala(),
-                sesionCrudDTO.getPeliculaId(),
-                sesionCrudDTO.getHorario()
-        );
-
+        SesionId id = toSesionId(sesionCrudDTO);
         Sesion sesion = sesionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("No existe la sesión en la sala %d con horario %s",
@@ -110,5 +113,13 @@ public class SesionServiceImpl implements SesionService {
                 ));
         sesionRepository.delete(sesion);
         return sesion;
+    }
+
+    private SesionId toSesionId(SesionCrudDTO sesionCrudDTO) {
+        return new SesionId(
+                sesionCrudDTO.getNumSala(),
+                sesionCrudDTO.getPeliculaId(),
+                sesionCrudDTO.getHorario()
+        );
     }
 }

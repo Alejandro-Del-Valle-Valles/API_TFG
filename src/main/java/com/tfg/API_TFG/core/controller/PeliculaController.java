@@ -117,6 +117,60 @@ public class PeliculaController {
     }
 
     @Operation(
+                summary = "Busca y devuelve una película por su ID",
+                description = "Busca si existe la película con el ID especificado y la devuelve si existe con toda su información."
+        )
+        @ApiResponses( value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "La película fue encontrada.",
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = PeliculaCompletoDTO.class)
+                        )
+                ),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Datos inválidos.",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "DatosInválidos",
+                                        summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                        value = """
+                                                    {
+                                                        "id": "El ID no es correcto",
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Objeto no existente",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "ObjetoNoExistente",
+                                        summary = "Ejemplo del error devuelto si no existe esa película",
+                                        value = """
+                                                    {
+                                                        "EntityNotFoundException": "No existe la película con ID: c5363d99-8ed5-4694-94be-20141bf1cc2f"
+                                                    }
+                                                    """
+                                )
+                        )
+                )
+        })
+    @GetMapping("/id/{id}")
+    public ResponseEntity<PeliculaCompletoDTO> getById(
+            @Parameter(description = "UUID de la película buscada")
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.ok(peliculaService.getCompletoById(id));
+    }
+
+    @Operation(
                 summary = "Crea una nueva película.",
                 description = "Crea una nueva película y establece las relaciones con participantes."
         )
@@ -222,7 +276,7 @@ public class PeliculaController {
                         description = "El registro fue eliminado con éxito.",
                         content = @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = Object.class)
+                                schema = @Schema(implementation = PeliculaDTO.class)
                         )
                 ),
                 @ApiResponse(

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PeliculaServiceImpl implements PeliculaService {
@@ -61,6 +62,13 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
+    public PeliculaCompletoDTO getCompletoById(UUID id) {
+        Pelicula pelicula = peliculaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No existe la película con ID: " + id));
+        return PeliculaAdapter.toCompletoDTO(pelicula);
+    }
+
+    @Override
     @Transactional
     public PeliculaCompletoDTO createPelicula(PeliculaCreateDTO peliculaCreateDTO) {
         Pelicula pelicula = new Pelicula();
@@ -70,16 +78,36 @@ public class PeliculaServiceImpl implements PeliculaService {
         pelicula.setPortada(peliculaCreateDTO.getUrl());
         pelicula.setCalificacionEdad(peliculaCreateDTO.getEdad());
         pelicula = peliculaRepository.save(pelicula);
+        List<Integer> participanteIds = peliculaCreateDTO.getParticipantes().stream()
+                .map(ParticipanteCompletoDTO::getId)
+                .toList();
+        List<Participante> participantes = participanteRepository.findAllById(participanteIds);
+        if (participantes.size() != participanteIds.size()) {
+            List<Integer> encontrados = participantes.stream()
+                    .map(Participante::getId)
+                    .toList();
+            List<Integer> noEncontrados = participanteIds.stream()
+                    .filter(id -> !encontrados.contains(id))
+                    .toList();
+            throw new EntityNotFoundException(
+                    "No se encontraron los siguientes participantes: " + noEncontrados
+            );
+        }
+        Map<Integer, Participante> participantesMap = participantes.stream()
+                .collect(Collectors.toMap(Participante::getId, p -> p));
+
         for (ParticipanteCompletoDTO participanteDTO : peliculaCreateDTO.getParticipantes()) {
-            Participante participante = participanteRepository.findById(participanteDTO.getId())
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "No existe el participante con ID " + participanteDTO.getId()
-                    ));
+            Participante participante = participantesMap.get(participanteDTO.getId());
+            if (participanteDTO.getRoles() == null || participanteDTO.getRoles().isEmpty()) {
+                throw new IllegalArgumentException(
+                        "El participante " + participante.getNombre() + " debe tener al menos un rol"
+                );
+            }
             for (RolParticipante rol : participanteDTO.getRoles()) {
                 Credito credito = new Credito();
                 credito.setRol(rol);
-                pelicula.addCredito(credito);
                 credito.setParticipante(participante);
+                pelicula.addCredito(credito);
             }
         }
         pelicula = peliculaRepository.save(pelicula);
