@@ -11,7 +11,12 @@ import java.util.List;
 public class ParticipanteCompletoDTO extends ParticipanteDTO{
 
     @ArraySchema(
-            schema = @Schema(implementation = RolParticipante.class),
+            schema = @Schema(
+                    description = "Lista de roles del participante",
+                    example = "[ACTOR, DIRECTOR]",
+                    allowableValues = {"ACTOR", "DIRECTOR"},
+                    implementation = RolParticipante.class
+            ),
             arraySchema = @Schema(description = "Lista de roles")
     )
     private List<RolParticipante> roles = new ArrayList<>();
