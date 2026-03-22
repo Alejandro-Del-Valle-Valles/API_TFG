@@ -42,35 +42,35 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public ProductoDTO createProducto(ProductoDTO productoDTO) {
-        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
-        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.getNombre());
+        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.nombre());
+        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.nombre());
         Producto producto = new Producto();
-        producto.setNombre(productoDTO.getNombre());
-        producto.setPrecio(productoDTO.getPrecio());
-        producto.setStock(productoDTO.getStock());
+        producto.setNombre(productoDTO.nombre());
+        producto.setPrecio(productoDTO.precio());
+        producto.setStock(productoDTO.stock());
         return ProductoAdapter.toDTO(productoRepository.save(producto));
     }
 
     @Override
     @Transactional
     public ProductoDTO updateProducto(String nombre, ProductoDTO productoDTO) {
-        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.getNombre());
-        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " +  productoDTO.getNombre());
+        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.nombre());
+        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " +  productoDTO.nombre());
         Producto producto = productoRepository.findByNombreIgnoreCase(nombre)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No existe un producto con el nombre " + nombre
                 ));
-        producto.setNombre(productoDTO.getNombre());
-        producto.setPrecio(productoDTO.getPrecio());
-        List<Alergeno> alergenos = productoDTO.getAlergenos().stream()
-                .map(alergenoDTO -> alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre())
+        producto.setNombre(productoDTO.nombre());
+        producto.setPrecio(productoDTO.precio());
+        List<Alergeno> alergenos = productoDTO.alergenos().stream()
+                .map(alergenoDTO -> alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre())
                         .orElseThrow(() -> new EntityNotFoundException(
-                                "No se encontró el alérgeno " + alergenoDTO.getNombre()
+                                "No se encontró el alérgeno " + alergenoDTO.nombre()
                         ))
                 )
                 .toList();
         producto.setAlergenos(alergenos);
-        producto.setStock(productoDTO.getStock());
+        producto.setStock(productoDTO.stock());
         return ProductoAdapter.toDTO(productoRepository.save(producto));
     }
 

@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import java.util.Objects;
 
 @Schema(description = "Información de un Alergeno.")
-public class AlergenoDTO {
+public record AlergenoDTO (
 
     @Schema(
             description = "Nombre del alérgeno. Ni puede superar los 25 caracteres.",
@@ -17,29 +17,5 @@ public class AlergenoDTO {
     @Length(max = 25, message = "La longitud del nombre no puede ser superior a 25 caracteres.")
     @NotNull(message = "El nombre del alérgeno no puede ser nulo.")
     @NotBlank(message = "El nombre del alérgeno no puede estar vacío.")
-    private String nombre;
-
-    public AlergenoDTO(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        AlergenoDTO that = (AlergenoDTO) o;
-        return Objects.equals(nombre, that.nombre);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(nombre);
-    }
-}
+    String nombre
+) {}

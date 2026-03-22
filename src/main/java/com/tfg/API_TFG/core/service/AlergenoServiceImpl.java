@@ -39,21 +39,21 @@ public class AlergenoServiceImpl implements AlergenoService {
 
     @Override
     public AlergenoDTO createAlergeno(@Valid AlergenoDTO alergenoDTO) {
-        Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre());
-        if(alergenoExiste.isPresent()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.getNombre());
+        Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre());
+        if(alergenoExiste.isPresent()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.nombre());
         Alergeno alergeno = new Alergeno();
-        alergeno.setNombre(alergenoDTO.getNombre());
+        alergeno.setNombre(alergenoDTO.nombre());
         alergenoRepository.save(alergeno);
         return alergenoDTO;
     }
 
     @Override
     public AlergenoDTO updateAlergeno(String nombreAntiguo, @Valid AlergenoDTO alergenoDTO) {
-        Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre());
-        if(alergenoExiste.isPresent()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.getNombre());
-        Alergeno alergeno = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.getNombre())
-                .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno con nombre " + alergenoDTO.getNombre()));
-        alergeno.setNombre(alergenoDTO.getNombre());
+        Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre());
+        if(alergenoExiste.isPresent()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.nombre());
+        Alergeno alergeno = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre())
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno con nombre " + alergenoDTO.nombre()));
+        alergeno.setNombre(alergenoDTO.nombre());
         alergenoRepository.save(alergeno);
         return alergenoDTO;
     }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Schema(description = "Información de un producto.")
-public class ProductoDTO {
+public record ProductoDTO (
 
     @Schema(
             description = "Nombre del producto. Es único por cada producto.",
@@ -22,7 +22,7 @@ public class ProductoDTO {
     @NotNull(message = "El nombre del producto no puede ser nulo.")
     @NotBlank(message = "El nombre del producto no puede estar vacío.")
     @Length(max = 50, message = "El nombre del producto no puede contener más de 50 caracteres.")
-    private String nombre;
+    String nombre,
 
     @Schema(
             description = "Precio del producto en euros. Máximo 5 dígitios de los cuales, 2 son decimales.",
@@ -30,7 +30,7 @@ public class ProductoDTO {
     )
     @NotNull(message = "El precio del producto no puede ser nulo.")
     @PositiveOrZero(message = "El precio del producto no puede ser negativo.")
-    private BigDecimal precio;
+    BigDecimal precio,
 
     @Schema(
             description = "Stock disponible.",
@@ -38,61 +38,11 @@ public class ProductoDTO {
     )
     @NotNull(message = "EL stock no puede ser nulo.")
     @PositiveOrZero(message = "El stock no puede ser negativo.")
-    private Integer stock;
+    Integer stock,
 
     @ArraySchema(
             schema = @Schema(implementation = AlergenoDTO.class),
             arraySchema = @Schema(description = "Lista de alérgenos del producto")
     )
-    private List<@Valid AlergenoDTO> alergenos;
-
-    public ProductoDTO(String nombre, BigDecimal precio, List<@Valid AlergenoDTO> alergenos) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.alergenos = alergenos;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public BigDecimal getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public List<AlergenoDTO> getAlergenos() {
-        return alergenos;
-    }
-
-    public void setAlergenos(List<@Valid AlergenoDTO> alergenos) {
-        this.alergenos = alergenos;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductoDTO that = (ProductoDTO) o;
-        return Objects.equals(nombre, that.nombre);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(nombre);
-    }
-}
+    List<@Valid AlergenoDTO> alergenos
+) {}

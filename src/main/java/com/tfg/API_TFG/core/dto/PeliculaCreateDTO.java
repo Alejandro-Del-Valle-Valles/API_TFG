@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(description = "DTO para la creación y actualización de info básica de películas.")
-public class PeliculaCreateDTO {
+public record PeliculaCreateDTO (
 
     @Schema(
             description = "Descripción de la película.",
             example = "Descubre la historia del Titanic desde la perspectiva de un joven chico interpretado por Leonardo Dicaprio..."
     )
     @Length(max = 511, message = "La descripción no puede tener más de 511 caracteres.")
-    private String descripcion;
+    String descripcion,
 
     @Schema(
             description = "Nombre de la película",
@@ -28,96 +28,38 @@ public class PeliculaCreateDTO {
     @NotNull(message = "El nombre de la película no puede ser nulo.")
     @NotBlank(message = "El nombre de la película no puede estar en blanco.")
     @Length(max = 50, message = "El nombre no puede contener más de 50 caracteres.")
-    private String nombre;
+    String nombre,
 
     @Schema(
             description = "URL de la magen de la portada de la película",
             example = "https://es.web.img3.acsta.net/medias/nmedia/18/86/91/41/19870073.jpg"
     )
     @Length(max = 511, message = "El enlace no puede ser superior a 50 caracteres.")
-    private String url;
+    String url,
 
     @Schema(
             description = "Duración en horas y minutos ",
             example = "03:49"
     )
     @NotNull(message = "La duración no puede ser nula.")
-    private LocalTime duracion;
+    LocalTime duracion,
 
     @Schema(
             description = "La calificación de edad de la película. (Edad minima recomendada)",
             example = "3"
     )
     @PositiveOrZero(message = "La calificación de la película debe ser positiva.")
-    private Integer edad;
+    Integer edad,
 
     @Schema(
             description = "Null si no está en cartelera, true si está en cartelera, false si es de estreno.",
             example = "true"
     )
-    private Boolean enCartelera;
+    Boolean enCartelera,
 
     @ArraySchema(
             schema = @Schema(implementation = ParticipanteCompletoDTO.class),
             arraySchema = @Schema(description = "Lista de participantes que actúan en la película")
     )
-    private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
-
-    public PeliculaCreateDTO(String descripcion, String nombre, String url, LocalTime duracion, Integer edad,
-                             List<ParticipanteCompletoDTO> participantes) {
-        this.descripcion = descripcion;
-        this.nombre = nombre;
-        this.url = url;
-        this.duracion = duracion;
-        this.edad = edad;
-        this.participantes = participantes;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public LocalTime getDuracion() {
-        return duracion;
-    }
-
-    public void setDuracion(LocalTime duracion) {
-        this.duracion = duracion;
-    }
-
-    public Integer getEdad() {
-        return edad;
-    }
-
-    public void setEdad(Integer edad) {
-        this.edad = edad;
-    }
-
-    public List<ParticipanteCompletoDTO> getParticipantes() {
-        return participantes;
-    }
-
-    public void setParticipantes(List<ParticipanteCompletoDTO> participantes) {
-        this.participantes = participantes;
-    }
-}
+    List<ParticipanteCompletoDTO> participantes
+) {}

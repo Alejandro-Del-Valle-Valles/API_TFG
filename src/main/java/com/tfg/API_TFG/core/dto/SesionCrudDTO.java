@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Schema(description = "DTO para la creación de una sesión. Solo incluye las PK.")
-public class SesionCrudDTO {
+public record SesionCrudDTO (
 
     @Schema(
             description = "Número de la sala en la que se proyecta.",
@@ -18,13 +18,13 @@ public class SesionCrudDTO {
     )
     @NotNull(message = "El número de la sala no puede ser negativo.")
     @Positive(message = "El número de la sala debe ser positivo.")
-    private Integer numSala;
+    Integer numSala,
 
     @Schema(
             description = "ID de la película que se proyecta"
     )
     @NotNull(message = "La película que se proyecta no puede ser nula.")
-    private UUID peliculaId;
+    UUID peliculaId,
 
     @Schema(
             description = "Horario de la película (Día y hora a la que empieza)",
@@ -34,35 +34,5 @@ public class SesionCrudDTO {
     )
     @NotNull(message = "El horario de la película no puede ser nulo.")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime horario;
-
-    public SesionCrudDTO(Integer numSala, UUID peliculaId, LocalDateTime horario) {
-        this.numSala = numSala;
-        this.peliculaId = peliculaId;
-        this.horario = horario;
-    }
-
-    public Integer getNumSala() { return numSala; }
-
-    public void setNumSala(Integer numSala) { this.numSala = numSala; }
-
-    public UUID getPeliculaId() { return peliculaId; }
-
-    public void setPeliculaId(UUID peliculaId) { this.peliculaId = peliculaId; }
-
-    public LocalDateTime getHorario() { return horario; }
-
-    public void setHorario(LocalDateTime horario) { this.horario = horario; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        SesionCrudDTO that = (SesionCrudDTO) o;
-        return Objects.equals(numSala, that.numSala) && Objects.equals(peliculaId, that.peliculaId) && Objects.equals(horario, that.horario);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(numSala, peliculaId, horario);
-    }
-}
+    LocalDateTime horario
+) {}

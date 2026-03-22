@@ -61,26 +61,26 @@ public class SesionServiceImpl implements SesionService {
     @Override
     @Transactional
     public SesionDTO createSesion(SesionCrudDTO sesionCrudDTO) {
-        Pelicula pelicula = peliculaRepository.findById(sesionCrudDTO.getPeliculaId())
+        Pelicula pelicula = peliculaRepository.findById(sesionCrudDTO.peliculaId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No existe la película con ID " + sesionCrudDTO.getPeliculaId()
+                        "No existe la película con ID " + sesionCrudDTO.peliculaId()
                 ));
-        Sala sala = salaRepository.findById(sesionCrudDTO.getNumSala())
-                .orElseThrow(() -> new EntityNotFoundException("No existe la sala " + sesionCrudDTO.getNumSala()));
+        Sala sala = salaRepository.findById(sesionCrudDTO.numSala())
+                .orElseThrow(() -> new EntityNotFoundException("No existe la sala " + sesionCrudDTO.numSala()));
         SesionId id = toSesionId(sesionCrudDTO);
         if (sesionRepository.existsById(id)) {
             throw new EntityExistsException(String.format(
                     "Ya existe una sesión en la sala %d para la película %s con horario %s",
-                    sesionCrudDTO.getNumSala(),
+                    sesionCrudDTO.numSala(),
                     pelicula.getNombre(),
-                    sesionCrudDTO.getHorario()
+                    sesionCrudDTO.horario()
             ));
         }
         Sesion sesion = new Sesion();
         sesion.setId(id);
         sesion.setSala(sala);
         sesion.setPelicula(pelicula);
-        sesion.setHorario(sesionCrudDTO.getHorario());
+        sesion.setHorario(sesionCrudDTO.horario());
         sesion = sesionRepository.save(sesion);
         return SesionAdapter.toDTO(sesion);
     }
@@ -108,8 +108,8 @@ public class SesionServiceImpl implements SesionService {
         Sesion sesion = sesionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("No existe la sesión en la sala %d con horario %s",
-                                sesionCrudDTO.getNumSala(),
-                                sesionCrudDTO.getHorario())
+                                sesionCrudDTO.numSala(),
+                                sesionCrudDTO.horario())
                 ));
         sesionRepository.delete(sesion);
         return sesion;
@@ -117,9 +117,9 @@ public class SesionServiceImpl implements SesionService {
 
     private SesionId toSesionId(SesionCrudDTO sesionCrudDTO) {
         return new SesionId(
-                sesionCrudDTO.getNumSala(),
-                sesionCrudDTO.getPeliculaId(),
-                sesionCrudDTO.getHorario()
+                sesionCrudDTO.numSala(),
+                sesionCrudDTO.peliculaId(),
+                sesionCrudDTO.horario()
         );
     }
 }

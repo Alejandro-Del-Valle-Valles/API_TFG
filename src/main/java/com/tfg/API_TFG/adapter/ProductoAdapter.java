@@ -3,6 +3,8 @@ package com.tfg.API_TFG.adapter;
 import com.tfg.API_TFG.core.dto.ProductoDTO;
 import com.tfg.API_TFG.core.entity.Producto;
 
+import java.util.stream.Collectors;
+
 public class ProductoAdapter {
 
     /**
@@ -11,7 +13,8 @@ public class ProductoAdapter {
      * @return ProductoDTO
      */
     public static ProductoDTO toDTO(Producto producto) {
-        return new ProductoDTO(producto.getNombre(), producto.getPrecio(), producto.getAlergenos().stream()
+        return new ProductoDTO(producto.getNombre(), producto.getPrecio(), producto.getStock(),
+                producto.getAlergenos().stream()
                 .map(AlergenoAdapter::toDTO)
                 .toList());
     }

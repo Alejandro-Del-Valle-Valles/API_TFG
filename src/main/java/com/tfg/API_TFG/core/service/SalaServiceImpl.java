@@ -38,20 +38,20 @@ public class SalaServiceImpl implements SalaService {
 
     @Override
     public SalaDTO createSala(SalaDTO salaDTO) {
-        Optional<Sala> sala = salaRepository.findById(salaDTO.getNumero());
-        if(sala.isPresent()) throw new EntityExistsException("Ya existe la sala " + salaDTO.getNumero());
+        Optional<Sala> sala = salaRepository.findById(salaDTO.numero());
+        if(sala.isPresent()) throw new EntityExistsException("Ya existe la sala " + salaDTO.numero());
         Sala nuevaSala = new Sala();
-        nuevaSala.setNumSala(salaDTO.getNumero());
-        nuevaSala.setAforo(salaDTO.getAforo());
+        nuevaSala.setNumSala(salaDTO.numero());
+        nuevaSala.setAforo(salaDTO.aforo());
         salaRepository.save(nuevaSala);
         return salaDTO;
     }
 
     @Override
     public SalaDTO updateSala(SalaDTO salaDTO) {
-        Sala sala = salaRepository.findById(salaDTO.getNumero())
-                .orElseThrow(() -> new EntityNotFoundException("No existe la sala " + salaDTO.getNumero()));
-        sala.setAforo(salaDTO.getAforo());
+        Sala sala = salaRepository.findById(salaDTO.numero())
+                .orElseThrow(() -> new EntityNotFoundException("No existe la sala " + salaDTO.numero()));
+        sala.setAforo(salaDTO.aforo());
         salaRepository.save(sala);
         return salaDTO;
     }

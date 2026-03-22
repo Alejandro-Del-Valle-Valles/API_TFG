@@ -72,13 +72,13 @@ public class PeliculaServiceImpl implements PeliculaService {
     @Transactional
     public PeliculaCompletoDTO createPelicula(PeliculaCreateDTO peliculaCreateDTO) {
         Pelicula pelicula = new Pelicula();
-        pelicula.setNombre(peliculaCreateDTO.getNombre());
-        pelicula.setDescripcion(peliculaCreateDTO.getDescripcion());
-        pelicula.setDuracion(peliculaCreateDTO.getDuracion());
-        pelicula.setPortada(peliculaCreateDTO.getUrl());
-        pelicula.setCalificacionEdad(peliculaCreateDTO.getEdad());
+        pelicula.setNombre(peliculaCreateDTO.nombre());
+        pelicula.setDescripcion(peliculaCreateDTO.descripcion());
+        pelicula.setDuracion(peliculaCreateDTO.duracion());
+        pelicula.setPortada(peliculaCreateDTO.url());
+        pelicula.setCalificacionEdad(peliculaCreateDTO.edad());
         pelicula = peliculaRepository.save(pelicula);
-        List<Integer> participanteIds = peliculaCreateDTO.getParticipantes().stream()
+        List<Integer> participanteIds = peliculaCreateDTO.participantes().stream()
                 .map(ParticipanteCompletoDTO::getId)
                 .toList();
         List<Participante> participantes = participanteRepository.findAllById(participanteIds);
@@ -96,7 +96,7 @@ public class PeliculaServiceImpl implements PeliculaService {
         Map<Integer, Participante> participantesMap = participantes.stream()
                 .collect(Collectors.toMap(Participante::getId, p -> p));
 
-        for (ParticipanteCompletoDTO participanteDTO : peliculaCreateDTO.getParticipantes()) {
+        for (ParticipanteCompletoDTO participanteDTO : peliculaCreateDTO.participantes()) {
             Participante participante = participantesMap.get(participanteDTO.getId());
             if (participanteDTO.getRoles() == null || participanteDTO.getRoles().isEmpty()) {
                 throw new IllegalArgumentException(
