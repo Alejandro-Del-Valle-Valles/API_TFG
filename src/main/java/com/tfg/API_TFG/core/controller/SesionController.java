@@ -1,9 +1,7 @@
 package com.tfg.API_TFG.core.controller;
 
-import com.tfg.API_TFG.core.dto.PeliculaCreateDTO;
-import com.tfg.API_TFG.core.dto.PeliculaDTO;
 import com.tfg.API_TFG.core.dto.SesionCrudDTO;
-import com.tfg.API_TFG.core.dto.SesionDTO;
+import com.tfg.API_TFG.core.dto.SesionCompletaDTO;
 import com.tfg.API_TFG.core.service.interfaces.SesionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,12 +43,12 @@ public class SesionController {
                     description = "Registros obtenidos",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = SesionDTO.class))
+                            array = @ArraySchema(schema = @Schema(implementation = SesionCompletaDTO.class))
                     )
             )
     })
     @GetMapping
-    public ResponseEntity<List<SesionDTO>> getAll() {
+    public ResponseEntity<List<SesionCompletaDTO>> getAll() {
         return ResponseEntity.ok(sesionService.getAll());
     }
 
@@ -64,12 +62,12 @@ public class SesionController {
                     description = "Registros obtenidos",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = SesionDTO.class))
+                            array = @ArraySchema(schema = @Schema(implementation = SesionCompletaDTO.class))
                     )
             )
     })
     @GetMapping("/horario")
-    public ResponseEntity<List<SesionDTO>> getByRangoHorario(
+    public ResponseEntity<List<SesionCompletaDTO>> getByRangoHorario(
             @Parameter(description = "Fecha y hora de inicio", example = "2026-06-21T18:00:00", required = true)
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
 
@@ -127,7 +125,7 @@ public class SesionController {
                 )
         })
     @GetMapping("/sesion")
-    public ResponseEntity<SesionDTO> getSesion(
+    public ResponseEntity<SesionCompletaDTO> getSesion(
             @Parameter(description = "Datos de la sesión buscada.")
             @RequestBody @Valid SesionCrudDTO sesionCrudDTO
     ) {
@@ -182,7 +180,7 @@ public class SesionController {
                 )
         })
     @PostMapping
-    public ResponseEntity<SesionDTO> createSesion(
+    public ResponseEntity<SesionCompletaDTO> createSesion(
             @Parameter(description = "Datos de la sesión a crear con el número de la sala, el ID de la película y el horario.")
             @RequestBody @Valid SesionCrudDTO sesionCrudDTO
     ) {
@@ -253,7 +251,7 @@ public class SesionController {
                 )
         })
     @PutMapping
-    public ResponseEntity<SesionDTO> updateSesion(
+    public ResponseEntity<SesionCompletaDTO> updateSesion(
             @Parameter(description = "Datos de la sesión actual")
             @RequestBody @Valid SesionCrudDTO actual,
             @Parameter(description = "Datos nuevos de la sesión")
@@ -310,7 +308,7 @@ public class SesionController {
                 )
         })
     @DeleteMapping
-    public ResponseEntity<SesionDTO> deleteSesion(
+    public ResponseEntity<SesionCompletaDTO> deleteSesion(
             @Parameter(description = "Datos de la sesión a eliminar.")
             @RequestBody @Valid SesionCrudDTO sesionCrudDTO
     ) {

@@ -37,9 +37,9 @@ public class Entrada {
 
     public void setId(EntradaId id) { this.id = id; }
 
-    public Sesion getProyeccion() { return sesion; }
+    public Sesion getSesion() { return sesion; }
 
-    public void setProyeccion(@Valid Sesion sesion) { this.sesion = sesion; }
+    public void setSesion(@Valid Sesion sesion) { this.sesion = sesion; }
 
     public BigDecimal getPrecio() { return precio; }
 

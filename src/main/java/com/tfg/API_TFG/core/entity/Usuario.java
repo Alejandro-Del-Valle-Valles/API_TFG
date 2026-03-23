@@ -59,7 +59,7 @@ public class Usuario {
     public void addCompra(@Valid Compra compra) {
         if(compra == null) throw new IllegalArgumentException("La compra no puede ser nula.");
         if(!this.compras.contains(compra)) {
-            //compra.setUsuario(this);
+            compra.setUsuario(this);
             this.compras.add(compra);
         }
     }

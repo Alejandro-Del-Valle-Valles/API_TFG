@@ -2,7 +2,7 @@ package com.tfg.API_TFG.core.service;
 
 import com.tfg.API_TFG.adapter.SesionAdapter;
 import com.tfg.API_TFG.core.dto.SesionCrudDTO;
-import com.tfg.API_TFG.core.dto.SesionDTO;
+import com.tfg.API_TFG.core.dto.SesionCompletaDTO;
 import com.tfg.API_TFG.core.entity.Pelicula;
 import com.tfg.API_TFG.core.entity.Sala;
 import com.tfg.API_TFG.core.entity.Sesion;
@@ -34,33 +34,33 @@ public class SesionServiceImpl implements SesionService {
     }
 
     @Override
-    public List<SesionDTO> getAll() {
+    public List<SesionCompletaDTO> getAll() {
         return sesionRepository.findAll().stream()
-                .map(SesionAdapter::toDTO)
+                .map(SesionAdapter::toCompletoDTO)
                 .toList();
     }
 
     @Override
-    public List<SesionDTO> getAllBetweenHorarios(LocalDateTime horarioInicio, LocalDateTime horarioFin) {
+    public List<SesionCompletaDTO> getAllBetweenHorarios(LocalDateTime horarioInicio, LocalDateTime horarioFin) {
         return sesionRepository.findByHorarioBetween(horarioInicio, horarioFin).stream()
-                .map(SesionAdapter::toDTO)
+                .map(SesionAdapter::toCompletoDTO)
                 .toList();
     }
 
     @Override
-    public SesionDTO getSesion(SesionCrudDTO sesionCrudDTO) {
+    public SesionCompletaDTO getSesion(SesionCrudDTO sesionCrudDTO) {
         SesionId id = toSesionId(sesionCrudDTO);
         Sesion sesion = sesionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("No existe la sesión para la sala %d con la película %s y para el horario %s.",
                                 id.getNumSala(), id.getPeliculaId(), id.getHorarioSesion())
                 ));
-        return SesionAdapter.toDTO(sesion);
+        return SesionAdapter.toCompletoDTO(sesion);
     }
 
     @Override
     @Transactional
-    public SesionDTO createSesion(SesionCrudDTO sesionCrudDTO) {
+    public SesionCompletaDTO createSesion(SesionCrudDTO sesionCrudDTO) {
         Pelicula pelicula = peliculaRepository.findById(sesionCrudDTO.peliculaId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No existe la película con ID " + sesionCrudDTO.peliculaId()
@@ -82,20 +82,20 @@ public class SesionServiceImpl implements SesionService {
         sesion.setPelicula(pelicula);
         sesion.setHorario(sesionCrudDTO.horario());
         sesion = sesionRepository.save(sesion);
-        return SesionAdapter.toDTO(sesion);
+        return SesionAdapter.toCompletoDTO(sesion);
     }
 
     @Override
     @Transactional
-    public SesionDTO updateSesion(SesionCrudDTO antiguaSesion, SesionCrudDTO nuevaSesion) {
+    public SesionCompletaDTO updateSesion(SesionCrudDTO antiguaSesion, SesionCrudDTO nuevaSesion) {
         eliminarSesion(antiguaSesion);
         return createSesion(nuevaSesion);
     }
 
     @Override
     @Transactional
-    public SesionDTO deleteSesion(SesionCrudDTO sesionCrudDTO) {
-        return SesionAdapter.toDTO(eliminarSesion(sesionCrudDTO));
+    public SesionCompletaDTO deleteSesion(SesionCrudDTO sesionCrudDTO) {
+        return SesionAdapter.toCompletoDTO(eliminarSesion(sesionCrudDTO));
     }
 
     /**

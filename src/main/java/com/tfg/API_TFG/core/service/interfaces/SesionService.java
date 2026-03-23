@@ -1,16 +1,16 @@
 package com.tfg.API_TFG.core.service.interfaces;
 
 import com.tfg.API_TFG.core.dto.SesionCrudDTO;
-import com.tfg.API_TFG.core.dto.SesionDTO;
+import com.tfg.API_TFG.core.dto.SesionCompletaDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SesionService {
-    List<SesionDTO> getAll();
-    List<SesionDTO> getAllBetweenHorarios(LocalDateTime horarioInicio, LocalDateTime horarioFin);
-    SesionDTO getSesion(SesionCrudDTO sesionCrudDTO);
-    SesionDTO createSesion(SesionCrudDTO sesionCrudDTO);
-    SesionDTO updateSesion(SesionCrudDTO antiguaSesion, SesionCrudDTO nuevaSesion);
-    SesionDTO deleteSesion(SesionCrudDTO sesionCrudDTO);
+    List<SesionCompletaDTO> getAll();
+    List<SesionCompletaDTO> getAllBetweenHorarios(LocalDateTime horarioInicio, LocalDateTime horarioFin);
+    SesionCompletaDTO getSesion(SesionCrudDTO sesionCrudDTO);
+    SesionCompletaDTO createSesion(SesionCrudDTO sesionCrudDTO);
+    SesionCompletaDTO updateSesion(SesionCrudDTO antiguaSesion, SesionCrudDTO nuevaSesion);
+    SesionCompletaDTO deleteSesion(SesionCrudDTO sesionCrudDTO);
 }

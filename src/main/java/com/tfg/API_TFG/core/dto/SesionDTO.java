@@ -7,31 +7,33 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.UUID;
 
-@Schema(description = "DTO de sesión que contiene la el numero de la sala, la info básica de la película y el horario en el que se proyecta.")
-public record SesionDTO (
-    @Schema(
-            description = "Número de la sala en la que se proyecta.",
-            example = "1"
-    )
-    @NotNull(message = "El número de la sala no puede ser negativo.")
-    @Positive(message = "El número de la sala debe ser positivo.")
-    Integer numSala,
+@Schema(description = "Información básica de una sesión")
+public record SesionDTO(
 
-    @Schema(
-            description = "Información básica de la película"
-    )
-    @NotNull(message = "La película que se proyecta no puede ser nula.")
-    @Valid PeliculaDTO pelicula,
+        @Schema(
+                description = "Número de la sala en la que se proyecta.",
+                example = "1"
+        )
+        @NotNull(message = "El número de la sala no puede ser negativo.")
+        @Positive(message = "El número de la sala debe ser positivo.")
+        Integer numSala,
 
-    @Schema(
-            description = "Horario de la película (Día y hora a la que empieza)",
-            example = "2026-06-21T18:30",
-            type = "string",
-            format = "date-time"
-    )
-    @NotNull(message = "El horario de la película no puede ser nulo.")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    LocalDateTime horario
-) {}
+        @Schema(
+                description = "Información básica de la película"
+        )
+        @NotNull(message = "La película que se proyecta no puede ser nula.")
+        UUID peliculaId,
+
+        @Schema(
+                description = "Horario de la película (Día y hora a la que empieza)",
+                example = "2026-06-21T18:30",
+                type = "string",
+                format = "date-time"
+        )
+        @NotNull(message = "El horario de la película no puede ser nulo.")
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+        LocalDateTime horario
+) {
+}

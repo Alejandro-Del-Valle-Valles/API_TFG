@@ -42,7 +42,7 @@ public class CuentaServiceImpl implements CuentaService {
                 .orElseGet(() -> {
                     Usuario nuevoUsuario = new Usuario();
                     nuevoUsuario.setCorreo(cuentaDTO.correo());
-                    return usuarioRepository.save(nuevoUsuario);  // ✅ Guardar y retornar
+                    return usuarioRepository.save(nuevoUsuario);
                 });
         Cuenta cuenta = new Cuenta();
         cuenta.setUsuario(usuario);
