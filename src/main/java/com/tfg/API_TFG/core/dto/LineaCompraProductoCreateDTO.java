@@ -1,30 +1,29 @@
 package com.tfg.API_TFG.core.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.hibernate.validator.constraints.Length;
 
 @Schema(description = "Información para crear una línea de compra con un producto.")
 public class LineaCompraProductoCreateDTO extends LineaCompraDTO{
 
     @Schema(
-            description = "ID del producto a añadir",
-            example = "2"
+            description = "Nombre del producto a añadir",
+            example = "Palomitas"
     )
-    @NotNull(message = "El ID del producto no puede ser nulo.")
-    @Positive(message = "El ID del producto no puede ser inferior a 1.")
-    private Integer productoId;
+    @NotNull(message = "El nombre del producto no puede ser nulo.")
+    @NotBlank(message = "El nombre del producto no puede estar vacío.")
+    @Length(max = 50, message = "El nombre del producto no puede tener más de 50 caracteres.")
+    private String nombreProducto;
 
-    public LineaCompraProductoCreateDTO(Integer numero, Integer productoId) {
+    public LineaCompraProductoCreateDTO(Integer numero, String nombreProducto) {
         super(numero);
-        this.productoId = productoId;
+        this.nombreProducto = nombreProducto;
     }
 
-    public Integer getProductoId() {
-        return productoId;
-    }
+    public String getNombreProducto() { return nombreProducto; }
 
-    public void setProductoId(Integer productoId) {
-        this.productoId = productoId;
-    }
+    public void setNombreProducto(String nombreProducto) { this.nombreProducto = nombreProducto; }
 }

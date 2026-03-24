@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CompraService {
 
-    List<CompraDTO> getByCorreoUsuario(String correo);
+    List<CompraDTO> getAllByCorreoUsuario(String correo);
     CompraDTO createCompra(CompraDTO compraDTO);
     
 }

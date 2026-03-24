@@ -25,10 +25,11 @@ public class LineaCompra {
 
     @OneToOne
     @JoinColumns({
-            @JoinColumn(name = "num_sala",        referencedColumnName = "num_sala",        nullable = true),
-            @JoinColumn(name = "pelicula_id",     referencedColumnName = "pelicula_id",     nullable = true),
-            @JoinColumn(name = "horario_sesion",  referencedColumnName = "horario_sesion",  nullable = true),
-            @JoinColumn(name = "num_butaca",      referencedColumnName = "num_butaca",      nullable = true)
+            @JoinColumn(name = "num_sala", referencedColumnName = "num_sala", nullable = true),
+            @JoinColumn(name = "pelicula_id", referencedColumnName = "pelicula_id", nullable = true),
+            @JoinColumn(name = "horario_sesion", referencedColumnName = "horario_sesion", nullable = true),
+            @JoinColumn(name = "fila", referencedColumnName = "fila", nullable = true),
+            @JoinColumn(name = "butaca", referencedColumnName = "butaca", nullable = true)
     })
     private @Valid Entrada entrada;
 

@@ -23,16 +23,20 @@ public class EntradaId implements Serializable {
     @Column(name = "horario_sesion")
     private LocalDateTime horarioSesion;
 
-    @Column(name = "num_butaca")
-    private Integer numButaca;
+    @Column(name = "fila")
+    private Integer fila;
+
+    @Column(name = "butaca")
+    private Integer butaca;
 
     public EntradaId() { }
 
-    public EntradaId(Integer numSala, UUID peliculaId, LocalDateTime horarioSesion, Integer numButaca) {
+    public EntradaId(Integer numSala, UUID peliculaId, LocalDateTime horarioSesion, Integer fila, Integer butaca) {
         this.numSala = numSala;
         this.peliculaId = peliculaId;
         this.horarioSesion = horarioSesion;
-        this.numButaca = numButaca;
+        this.fila = fila;
+        this.butaca = butaca;
     }
 
     public Integer getNumSala() {
@@ -59,25 +63,27 @@ public class EntradaId implements Serializable {
         this.horarioSesion = horarioSesion;
     }
 
-    public Integer getNumButaca() {
-        return numButaca;
+    public Integer getFila() { return fila; }
+
+    public void setFila(Integer numFila) { this.fila = numFila; }
+
+    public Integer getButaca() {
+        return butaca;
     }
 
-    public void setNumButaca(Integer numButaca) {
-        this.numButaca = numButaca;
+    public void setButaca(Integer butaca) {
+        this.butaca = butaca;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         EntradaId entradaId = (EntradaId) o;
-        return Objects.equals(numSala, entradaId.numSala) &&
-                Objects.equals(peliculaId, entradaId.peliculaId) && Objects.equals(horarioSesion, entradaId.horarioSesion)
-                && Objects.equals(numButaca, entradaId.numButaca);
+        return Objects.equals(numSala, entradaId.numSala) && Objects.equals(peliculaId, entradaId.peliculaId) &&
+                Objects.equals(horarioSesion, entradaId.horarioSesion) && Objects.equals(fila, entradaId.fila) &&
+                Objects.equals(butaca, entradaId.butaca);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(numSala, peliculaId, horarioSesion, numButaca);
-    }
+    public int hashCode() { return Objects.hash(numSala, peliculaId, horarioSesion, fila, butaca); }
 }

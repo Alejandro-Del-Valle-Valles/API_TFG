@@ -3,6 +3,7 @@ package com.tfg.API_TFG.core.entity.id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,7 +12,7 @@ import java.util.UUID;
  * Clase que serializa la PK de Proyeccion al ser esta una entidad asociativa
  */
 @Embeddable
-public class SesionId {
+public class SesionId implements Serializable {
 
     @Column(name = "num_sala")
     private Integer numSala;

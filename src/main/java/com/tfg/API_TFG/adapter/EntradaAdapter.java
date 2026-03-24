@@ -6,7 +6,7 @@ import com.tfg.API_TFG.core.entity.Entrada;
 public class EntradaAdapter {
 
     public static EntradaDTO toDTO(Entrada entrada) {
-        return new EntradaDTO(SesionAdapter.toDTO(entrada.getSesion()),
-                entrada.getPrecio());
+        return new EntradaDTO(SesionAdapter.toDTO(entrada.getSesion()), entrada.getId().getFila(),
+                entrada.getId().getButaca(), entrada.getPrecio());
     }
 }

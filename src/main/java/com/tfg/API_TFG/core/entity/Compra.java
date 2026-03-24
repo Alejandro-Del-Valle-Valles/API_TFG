@@ -2,7 +2,11 @@ package com.tfg.API_TFG.core.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +18,11 @@ public class Compra {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @NotNull(message = "La fecha de compra no puede ser nula.")
+    @NotBlank(message = "La fecha de compra no puede estar en blanco.")
+    @PastOrPresent(message = "La fecha debe ser pasada o presente, no futura.")
+    private LocalDateTime fecha;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -27,6 +36,10 @@ public class Compra {
     public UUID getId() { return id; }
 
     public void setId(UUID id) { this.id = id; }
+
+    public LocalDateTime getFecha() { return fecha; }
+
+    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 
     public Usuario getUsuario() { return usuario; }
 

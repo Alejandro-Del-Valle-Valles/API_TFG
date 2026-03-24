@@ -17,6 +17,18 @@ public record EntradaDTO(
         SesionDTO sesion,
 
         @Schema(
+                description = "Número de la fila",
+                example = "5"
+        )
+        Integer numFila,
+
+        @Schema(
+                description = "Número de la butaca",
+                example = "2"
+        )
+        Integer numButaca,
+
+        @Schema(
                 description = "Precio de la entrada.",
                 example = "7.50"
         )

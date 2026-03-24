@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface CompraRepository extends JpaRepository<Compra, UUID> {
     List<Compra> findAllByUsuarioCorreo(String correo);
+    //TODO: Añadir método para obtener compras aún no canjeadas
 }

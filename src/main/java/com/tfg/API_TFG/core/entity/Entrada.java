@@ -17,9 +17,9 @@ public class Entrada {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "num_sala", referencedColumnName = "num_sala", insertable = false, updatable = false),
-            @JoinColumn(name = "pelicula_id", referencedColumnName = "pelicula_id", insertable = false, updatable = false),
-            @JoinColumn(name = "horario_sesion", referencedColumnName = "horario_sesion", insertable = false, updatable = false)
+            @JoinColumn(name = "horario_sesion", insertable = false, updatable = false),
+            @JoinColumn(name = "num_sala", insertable = false, updatable = false),
+            @JoinColumn(name = "pelicula_id", insertable = false, updatable = false)
     })
     private @Valid Sesion sesion;
 

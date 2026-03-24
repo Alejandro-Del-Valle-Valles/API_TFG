@@ -50,7 +50,15 @@ public class Sesion {
 
     public List<Entrada> getEntradas() { return entradas; }
 
-    public void setEntradas(List<Entrada> entradas) { this.entradas = entradas; }
+    public void setEntradas(List<@Valid Entrada> entradas) { this.entradas = entradas; }
+
+    public void addEntrada(@Valid Entrada entrada) {
+        if(entrada == null) throw new IllegalArgumentException("La entrada no puede ser nula");
+        if(!this.entradas.contains(entrada)) {
+            entrada.setSesion(this);
+            this.entradas.add(entrada);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
