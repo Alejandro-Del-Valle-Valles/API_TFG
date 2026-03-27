@@ -25,17 +25,6 @@ public record CompraDTO(
         @Length(max = 100, message = "El correo no puede contener más de 100 caracteres.")
         String correo,
 
-        @Schema(
-                description = "Fecha en la que se realiza la compra.",
-                example = "2026-06-21T18:30",
-                type = "string",
-                format = "date-time"
-        )
-        @NotNull(message = "La fecha de compra no puede ser nula.")
-        @PastOrPresent(message = "La fecha no puede ser futura.")
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-        LocalDateTime fecha,
-
         @ArraySchema(
                 schema = @Schema(implementation = LineaCompraDTO.class),
                 arraySchema = @Schema(description = "Lista de lineas de compra del DTO")

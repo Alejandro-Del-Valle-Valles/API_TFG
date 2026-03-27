@@ -2,9 +2,7 @@ package com.tfg.API_TFG.core.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,27 +17,24 @@ public class Compra {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull(message = "La fecha de compra no puede ser nula.")
-    @NotBlank(message = "La fecha de compra no puede estar en blanco.")
-    @PastOrPresent(message = "La fecha debe ser pasada o presente, no futura.")
-    private LocalDateTime fecha;
-
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private @Valid Usuario usuario;
 
+    @NotEmpty(message = "La compra debe contener al menos una línea.")
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
-    private @Valid List<@Valid LineaCompra> lineaCompras = new ArrayList<>();
+    private List<@Valid LineaCompra> lineaCompras = new ArrayList<>();
+
+    @AssertTrue(message = "La compra debe tener al menos una línea con entrada.")
+    private boolean hasLineaConEntrada() {
+        return lineaCompras != null && lineaCompras.stream().anyMatch(lc -> lc.getEntrada() != null);
+    }
 
     public Compra() { }
 
     public UUID getId() { return id; }
 
     public void setId(UUID id) { this.id = id; }
-
-    public LocalDateTime getFecha() { return fecha; }
-
-    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 
     public Usuario getUsuario() { return usuario; }
 

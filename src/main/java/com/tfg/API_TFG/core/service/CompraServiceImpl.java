@@ -14,9 +14,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CompraServiceImpl implements CompraService {
@@ -50,35 +52,77 @@ public class CompraServiceImpl implements CompraService {
     }
 
     @Override
+    public List<CompraDTO> getAllByCorreoUsuarioAndAfterYesterday(String correo) {
+        Usuario usuario = usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new EntityNotFoundException("No existe un usuario con correo " + correo));
+        List<Compra> compras = compraRepository.findDistinctByUsuarioCorreoAndLineaComprasEntradaSesionHorarioAfter(correo, LocalDateTime.now().minusDays(1));
+        return compras.stream()
+                .map(CompraAdapter::toDTO)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public CompraDTO createCompra(CompraDTO compraDTO) {
         Usuario usuario = usuarioRepository.findByCorreo(compraDTO.correo())
                 .orElseGet(() -> {
-                    Usuario nuevoUsuario = new Usuario();
-                    nuevoUsuario.setCorreo(compraDTO.correo());
-                    return usuarioRepository.save(nuevoUsuario);
+                    Usuario u = new Usuario();
+                    u.setCorreo(compraDTO.correo());
+                    return usuarioRepository.save(u);
                 });
+
         Compra compra = new Compra();
-        usuario.addCompra(compra);
-        compra = compraRepository.save(compra);
-        List<LineaCompra> lineas = new ArrayList<>();
-        Compra finalCompra = compra;
-        compraDTO.lineasCompra().forEach(linea -> {
-            LineaCompra lineaCompra = new LineaCompra();
-            LineaId id = new LineaId(finalCompra.getId(), linea.getNumero());
-            lineaCompra.setId(id);
-            if(linea instanceof LineaCompraProductoCreateDTO) {
-                LineaCompraProductoCreateDTO lineaProducto = (LineaCompraProductoCreateDTO) linea;
-                lineaCompra = createLineaCompraProducto(lineaProducto, lineaCompra);
+        compra.setUsuario(usuario);
+
+        boolean hayEntrada = false;
+        Set<EntradaId> idsEnEstaCompra = new HashSet<>();
+
+        for (LineaCompraDTO linea : compraDTO.lineasCompra()) {
+            LineaCompra lc = new LineaCompra();
+            lc.setId(new LineaId(null, linea.getNumero()));
+
+            if (linea instanceof LineaCompraProductoCreateDTO lp) {
+                lc = createLineaCompraProducto(lp, lc);
             } else {
-                LineaCompraEntradaDTO lineaEntrada = (LineaCompraEntradaDTO)linea;
-                lineaCompra = createLineaCompraEntrada(lineaEntrada, lineaCompra);
+                hayEntrada = true;
+                LineaCompraEntradaDTO le = (LineaCompraEntradaDTO) linea;
+                EntradaDTO eDTO = le.getEntrada();
+
+                EntradaId entradaId = new EntradaId(
+                        eDTO.sesion().numSala(),
+                        eDTO.sesion().peliculaId(),
+                        eDTO.sesion().horario(),
+                        eDTO.numFila(),
+                        eDTO.numButaca()
+                );
+                if (!idsEnEstaCompra.add(entradaId)) {
+                    throw new IllegalArgumentException("La entrada " + entradaId + " está duplicada en la misma compra.");
+                }
+                if (entradaRepository.existsById(entradaId)) {
+                    throw new EntityExistsException("Ya existe la entrada " + entradaId);
+                }
+
+                Sesion sesion = sesionRepository.findById(
+                                new SesionId(eDTO.sesion().numSala(), eDTO.sesion().peliculaId(), eDTO.sesion().horario()))
+                        .orElseThrow(() -> new EntityNotFoundException("La sesión de la película no existe."));
+
+                Entrada entrada = new Entrada();
+                entrada.setId(entradaId);
+                entrada.setPrecio(eDTO.precio());
+                sesion.addEntrada(entrada);
+
+                lc.setEntrada(entrada);
             }
-            lineas.add(lineaCompra);
-        });
-        compra.setLineaCompras(lineas);
-        compra = compraRepository.save(compra);
-        return CompraAdapter.toDTO(compra);
+
+            compra.addLineaCompra(lc);
+        }
+
+        if (!hayEntrada) {
+            throw new IllegalArgumentException("Debe existir al menos una entrada para poder realizar la compra.");
+        }
+
+        Compra guardada = compraRepository.save(compra);
+        return CompraAdapter.toDTO(guardada);
     }
 
     /**
@@ -102,25 +146,29 @@ public class CompraServiceImpl implements CompraService {
      * @return LineaCompra con la entrada seteada.
      */
     private LineaCompra createLineaCompraEntrada(LineaCompraEntradaDTO linea, LineaCompra lineaCompra) {
-        SesionDTO sesionDTO = linea.getEntrada().sesion();
-        SesionId sesionId = new SesionId(sesionDTO.numSala(), sesionDTO.peliculaId(), sesionDTO.horario());
+        SesionDTO s = linea.getEntrada().sesion();
+        SesionId sesionId = new SesionId(s.numSala(), s.peliculaId(), s.horario());
         Sesion sesion = sesionRepository.findById(sesionId)
                 .orElseThrow(() -> new EntityNotFoundException("La sesión de la película no existe."));
 
-        EntradaDTO entradaDTO = linea.getEntrada();
-        EntradaId entradaId = new EntradaId(entradaDTO.sesion().numSala(), entradaDTO.sesion().peliculaId(),
-                entradaDTO.sesion().horario(), entradaDTO.numFila(), entradaDTO.numButaca());
-        Optional<Entrada> entradaExiste = entradaRepository.findById(entradaId);
-        if(entradaExiste.isPresent()) throw new EntityExistsException("Ya existe la entrada que se trata de registrar");
+        EntradaDTO e = linea.getEntrada();
+        EntradaId entradaId = new EntradaId(
+                e.sesion().numSala(),
+                e.sesion().peliculaId(),
+                e.sesion().horario(),
+                e.numFila(),
+                e.numButaca()
+        );
+        if (entradaRepository.existsById(entradaId))
+            throw new EntityExistsException("Ya existe la entrada que se trata de registrar");
 
         Entrada entrada = new Entrada();
         entrada.setId(entradaId);
-        entrada.setPrecio(entradaDTO.precio());
+        entrada.setPrecio(e.precio());
         sesion.addEntrada(entrada);
-
-        entrada = entradaRepository.save(entrada);
-
         lineaCompra.setEntrada(entrada);
+        entrada.setLineaCompra(lineaCompra);
+
         return lineaCompra;
     }
 

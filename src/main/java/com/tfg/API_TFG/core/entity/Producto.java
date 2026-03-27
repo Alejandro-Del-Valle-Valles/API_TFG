@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,10 +37,10 @@ public class Producto {
             joinColumns = @JoinColumn(name = "alergeno_id"),
             inverseJoinColumns = @JoinColumn(name = "producto_id")
     )
-    private List<@Valid Alergeno> alergenos;
+    private List<@Valid Alergeno> alergenos = new ArrayList<>();
 
     @OneToMany(mappedBy = "producto")
-    private List<@Valid LineaCompra> lineaCompras;
+    private List<@Valid LineaCompra> lineaCompras = new ArrayList<>();
 
     public Producto() { }
 

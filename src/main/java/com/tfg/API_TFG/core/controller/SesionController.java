@@ -2,6 +2,7 @@ package com.tfg.API_TFG.core.controller;
 
 import com.tfg.API_TFG.core.dto.SesionCrudDTO;
 import com.tfg.API_TFG.core.dto.SesionCompletaDTO;
+import com.tfg.API_TFG.core.dto.SesionDTO;
 import com.tfg.API_TFG.core.service.interfaces.SesionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/sesion")
@@ -87,7 +89,7 @@ public class SesionController {
                         description = "La sesión fue encontrada",
                         content = @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = Object.class)
+                                schema = @Schema(implementation = SesionCompletaDTO.class)
                         )
                 ),
                 @ApiResponse(
@@ -126,10 +128,13 @@ public class SesionController {
         })
     @GetMapping("/sesion")
     public ResponseEntity<SesionCompletaDTO> getSesion(
-            @Parameter(description = "Datos de la sesión buscada.")
-            @RequestBody @Valid SesionCrudDTO sesionCrudDTO
-    ) {
-        return ResponseEntity.ok(sesionService.getSesion(sesionCrudDTO));
+            @Parameter(description = "Numero de la sala de la sesión.")
+            @RequestParam Integer numSala,
+            @Parameter(description = "UUID de la película.")
+            @RequestParam UUID peliculaId,
+            @Parameter(description = "Horario de la película. Formato yyyy-MM-ddTHH:mm")
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario) {
+        return ResponseEntity.ok(sesionService.getSesion(numSala, peliculaId, horario));
     }
 
     @Operation(
@@ -197,7 +202,7 @@ public class SesionController {
                         description = "La sesión se actualizó con éxito.",
                         content = @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = Object.class)
+                                schema = @Schema(implementation = SesionCompletaDTO.class)
                         )
                 ),
                 @ApiResponse(
@@ -254,10 +259,14 @@ public class SesionController {
     public ResponseEntity<SesionCompletaDTO> updateSesion(
             @Parameter(description = "Datos de la sesión actual")
             @RequestBody @Valid SesionCrudDTO actual,
-            @Parameter(description = "Datos nuevos de la sesión")
-            @RequestBody @Valid SesionCrudDTO nuevo
+            @Parameter(description = "Numero de la nueva sala.")
+            @RequestParam(required = false) Integer numSala,
+            @Parameter(description = "UUID de la nueva película.")
+            @RequestParam(required = false) UUID peliculaId,
+            @Parameter(description = "Nuevo horario")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario
     ) {
-        return ResponseEntity.ok(sesionService.updateSesion(actual, nuevo));
+        return ResponseEntity.ok(sesionService.updateSesion(actual, numSala, peliculaId, horario));
     }
 
     @Operation(

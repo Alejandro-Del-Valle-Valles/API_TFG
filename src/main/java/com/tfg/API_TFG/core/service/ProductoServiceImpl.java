@@ -12,8 +12,12 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -54,22 +58,24 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     @Transactional
     public ProductoDTO updateProducto(String nombre, ProductoDTO productoDTO) {
-        Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.nombre());
-        if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " +  productoDTO.nombre());
         Producto producto = productoRepository.findByNombreIgnoreCase(nombre)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No existe un producto con el nombre " + nombre
-                ));
+                .orElseThrow(() -> new EntityNotFoundException("No existe el producto " + nombre));
+
+        if (!nombre.equalsIgnoreCase(productoDTO.nombre())) {
+            productoRepository.findByNombreIgnoreCase(productoDTO.nombre())
+                    .ifPresent(p -> { throw new EntityExistsException(
+                            "Ya existe un producto con el nombre " + productoDTO.nombre()); });
+        }
         producto.setNombre(productoDTO.nombre());
         producto.setPrecio(productoDTO.precio());
+
         List<Alergeno> alergenos = productoDTO.alergenos().stream()
-                .map(alergenoDTO -> alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre())
-                        .orElseThrow(() -> new EntityNotFoundException(
-                                "No se encontró el alérgeno " + alergenoDTO.nombre()
-                        ))
-                )
-                .toList();
-        producto.setAlergenos(alergenos);
+                .map(a -> alergenoRepository.findByNombreIgnoreCase(a.nombre())
+                        .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno " + a.nombre())))
+                .collect(Collectors.toCollection(ArrayList::new));
+        producto.getAlergenos().clear();
+        producto.getAlergenos().addAll(alergenos);
+
         producto.setStock(productoDTO.stock());
         return ProductoAdapter.toDTO(productoRepository.save(producto));
     }
