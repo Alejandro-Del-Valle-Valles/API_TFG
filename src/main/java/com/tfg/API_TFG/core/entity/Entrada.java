@@ -15,13 +15,14 @@ public class Entrada {
     @EmbeddedId
     private EntradaId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId("sesionId")
     @JoinColumns({
-            @JoinColumn(name = "horario_sesion", insertable = false, updatable = false),
-            @JoinColumn(name = "num_sala", insertable = false, updatable = false),
-            @JoinColumn(name = "pelicula_id", insertable = false, updatable = false)
+            @JoinColumn(name = "num_sala", referencedColumnName = "num_sala"),
+            @JoinColumn(name = "pelicula_id", referencedColumnName = "pelicula_id"),
+            @JoinColumn(name = "horario_sesion", referencedColumnName = "horario_sesion")
     })
-    private @Valid Sesion sesion;
+    private Sesion sesion;
 
     @NotNull(message = "El precio no puede ser nulo.")
     @PositiveOrZero(message = "El precio debe ser 0 o superior.")

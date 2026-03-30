@@ -2,6 +2,7 @@ package com.tfg.API_TFG.core.entity.id;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,14 +15,8 @@ import java.util.UUID;
 @Embeddable
 public class EntradaId implements Serializable {
 
-    @Column(name = "num_sala")
-    private Integer numSala;
-
-    @Column(name = "pelicula_id")
-    private UUID peliculaId;
-
-    @Column(name = "horario_sesion")
-    private LocalDateTime horarioSesion;
+    @Embedded
+    private SesionId sesionId;
 
     @Column(name = "fila")
     private Integer fila;
@@ -31,37 +26,15 @@ public class EntradaId implements Serializable {
 
     public EntradaId() { }
 
-    public EntradaId(Integer numSala, UUID peliculaId, LocalDateTime horarioSesion, Integer fila, Integer butaca) {
-        this.numSala = numSala;
-        this.peliculaId = peliculaId;
-        this.horarioSesion = horarioSesion;
+    public EntradaId(SesionId sesionId, Integer fila, Integer butaca) {
+        this.sesionId = sesionId;
         this.fila = fila;
         this.butaca = butaca;
     }
 
-    public Integer getNumSala() {
-        return numSala;
-    }
+    public SesionId getSesionId() { return sesionId; }
 
-    public void setNumSala(Integer numSala) {
-        this.numSala = numSala;
-    }
-
-    public UUID getPeliculaId() {
-        return peliculaId;
-    }
-
-    public void setPeliculaId(UUID peliculaId) {
-        this.peliculaId = peliculaId;
-    }
-
-    public LocalDateTime getHorarioSesion() {
-        return horarioSesion;
-    }
-
-    public void setHorarioSesion(LocalDateTime horarioSesion) {
-        this.horarioSesion = horarioSesion;
-    }
+    public void setSesionId(SesionId sesionId) { this.sesionId = sesionId; }
 
     public Integer getFila() { return fila; }
 
@@ -79,11 +52,9 @@ public class EntradaId implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         EntradaId entradaId = (EntradaId) o;
-        return Objects.equals(numSala, entradaId.numSala) && Objects.equals(peliculaId, entradaId.peliculaId) &&
-                Objects.equals(horarioSesion, entradaId.horarioSesion) && Objects.equals(fila, entradaId.fila) &&
-                Objects.equals(butaca, entradaId.butaca);
+        return Objects.equals(sesionId, entradaId.sesionId) && Objects.equals(fila, entradaId.fila) && Objects.equals(butaca, entradaId.butaca);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(numSala, peliculaId, horarioSesion, fila, butaca); }
+    public int hashCode() { return Objects.hash(sesionId, fila, butaca); }
 }

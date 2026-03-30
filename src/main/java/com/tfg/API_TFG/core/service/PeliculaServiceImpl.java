@@ -107,6 +107,7 @@ public class PeliculaServiceImpl implements PeliculaService {
                 Credito credito = new Credito();
                 credito.setRol(rol);
                 credito.setParticipante(participante);
+                credito.setPelicula(pelicula);
                 pelicula.addCredito(credito);
             }
         }

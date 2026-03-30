@@ -12,7 +12,8 @@ import java.util.UUID;
 @Repository
 public interface SesionRepository extends JpaRepository<Sesion, SesionId> {
 
-    List<Sesion> findByHorarioBetween(LocalDateTime horarioInicio, LocalDateTime horarioFin);
+    List<Sesion> findByIdHorarioSesionBetween(LocalDateTime horarioInicio, LocalDateTime horarioFin);
+    List<Sesion> findByIdHorarioSesionAndSalaNumSala(LocalDateTime horario, Integer numSala);
     List<Sesion> findByPeliculaId(UUID peliculaId);
 
 }

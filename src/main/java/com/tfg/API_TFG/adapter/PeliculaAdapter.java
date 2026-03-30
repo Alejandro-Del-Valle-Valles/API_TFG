@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class PeliculaAdapter {
 
     public static PeliculaDTO toDTO(Pelicula pelicula) {
-        return new PeliculaDTO(pelicula.getId(), pelicula.getNombre(), pelicula.getDescripcion(),
+        return new PeliculaDTO(pelicula.getId(), pelicula.getDescripcion(), pelicula.getNombre(),
                 pelicula.getPortada(), pelicula.getDuracion(), pelicula.getCalificacionEdad());
     }
 
@@ -32,7 +32,7 @@ public class PeliculaAdapter {
         List<ParticipanteCompletoDTO> participantes = participanteRoles.entrySet().stream()
                 .map(entry -> ParticipanteAdapter.toCompletoDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
-        return new PeliculaCompletoDTO(pelicula.getId(), pelicula.getNombre(), pelicula.getDescripcion(),
+        return new PeliculaCompletoDTO(pelicula.getId(), pelicula.getDescripcion(), pelicula.getNombre(),
                 pelicula.getPortada(), pelicula.getDuracion(), pelicula.getCalificacionEdad(), participantes);
     }
 }

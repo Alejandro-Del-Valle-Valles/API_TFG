@@ -24,9 +24,6 @@ public class Sesion {
     @JoinColumn(name = "pelicula_id", referencedColumnName = "id", insertable = false, updatable = false)
     private @Valid Pelicula pelicula;
 
-    @NotNull(message = "El horario no puede ser nulo.")
-    private LocalDateTime horario;
-
     @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Entrada> entradas = new ArrayList<>();
 
@@ -44,9 +41,9 @@ public class Sesion {
 
     public void setPelicula(Pelicula pelicula) { this.pelicula = pelicula; }
 
-    public LocalDateTime getHorario() { return horario; }
+    public LocalDateTime getHorario() { return id.getHorarioSesion(); }
 
-    public void setHorario(LocalDateTime horario) { this.horario = horario; }
+    public void setHorario(LocalDateTime horario) { this.id.setHorarioSesion(horario); }
 
     public List<Entrada> getEntradas() { return entradas; }
 

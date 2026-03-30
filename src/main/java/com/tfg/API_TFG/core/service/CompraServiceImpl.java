@@ -88,19 +88,13 @@ public class CompraServiceImpl implements CompraService {
                 LineaCompraEntradaDTO le = (LineaCompraEntradaDTO) linea;
                 EntradaDTO eDTO = le.getEntrada();
 
-                EntradaId entradaId = new EntradaId(
-                        eDTO.sesion().numSala(),
-                        eDTO.sesion().peliculaId(),
-                        eDTO.sesion().horario(),
-                        eDTO.numFila(),
-                        eDTO.numButaca()
-                );
-                if (!idsEnEstaCompra.add(entradaId)) {
+                SesionId sesionId = new SesionId(eDTO.sesion().numSala(),  eDTO.sesion().peliculaId(),  eDTO.sesion().horario());
+
+                EntradaId entradaId = new EntradaId( sesionId,  eDTO.numFila(),  eDTO.numButaca() );
+                if (!idsEnEstaCompra.add(entradaId))
                     throw new IllegalArgumentException("La entrada " + entradaId + " está duplicada en la misma compra.");
-                }
-                if (entradaRepository.existsById(entradaId)) {
+                if (entradaRepository.existsById(entradaId))
                     throw new EntityExistsException("Ya existe la entrada " + entradaId);
-                }
 
                 Sesion sesion = sesionRepository.findById(
                                 new SesionId(eDTO.sesion().numSala(), eDTO.sesion().peliculaId(), eDTO.sesion().horario()))
@@ -153,9 +147,7 @@ public class CompraServiceImpl implements CompraService {
 
         EntradaDTO e = linea.getEntrada();
         EntradaId entradaId = new EntradaId(
-                e.sesion().numSala(),
-                e.sesion().peliculaId(),
-                e.sesion().horario(),
+                sesionId,
                 e.numFila(),
                 e.numButaca()
         );
