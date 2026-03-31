@@ -23,7 +23,7 @@ public class LineaCompra {
     @JoinColumn(name = "producto_id", nullable = true)
     private @Valid Producto producto;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "num_sala", referencedColumnName = "num_sala", nullable = true),
             @JoinColumn(name = "pelicula_id", referencedColumnName = "pelicula_id", nullable = true),

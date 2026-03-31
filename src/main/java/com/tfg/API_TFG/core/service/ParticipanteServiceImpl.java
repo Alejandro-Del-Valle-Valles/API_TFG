@@ -6,6 +6,7 @@ import com.tfg.API_TFG.core.entity.Participante;
 import com.tfg.API_TFG.core.service.interfaces.ParticipanteService;
 import com.tfg.API_TFG.core.repository.ParticipanteRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,11 +60,11 @@ public class ParticipanteServiceImpl implements ParticipanteService {
     }
 
     @Override
+    @Transactional
     public ParticipanteDTO deleteParticipante(Integer id) {
-        Optional<Participante> participanteExiste = participanteRepository.findById(id);
-        if(participanteExiste.isEmpty()) throw new EntityNotFoundException("No existe el participante con ID " + id);
-        Participante participante = participanteExiste.get();
-        participanteRepository.delete(participante);
+        Participante participante= participanteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No existe el participante con ID " + id));
+        participante.getCreditos().clear();
         return ParticipanteAdapter.toDTO(participante);
     }
 }

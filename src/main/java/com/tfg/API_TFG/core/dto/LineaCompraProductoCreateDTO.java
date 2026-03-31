@@ -6,7 +6,16 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
-@Schema(description = "Información para crear una línea de compra con un producto.")
+@Schema(
+        description = "Línea de compra para producto",
+        example = """
+    {
+      "type": "PRODUCTO",
+      "numero": 1,
+      "nombreProducto": "Palomitas"
+    }
+    """
+)
 public class LineaCompraProductoCreateDTO extends LineaCompraDTO{
 
     @Schema(

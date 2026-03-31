@@ -12,6 +12,5 @@ public interface SesionService {
     List<SesionCompletaDTO> getAllBetweenHorarios(LocalDateTime horarioInicio, LocalDateTime horarioFin);
     SesionCompletaDTO getSesion(Integer numSala, UUID peliculaId, LocalDateTime horario);
     SesionCompletaDTO createSesion(SesionCrudDTO sesionCrudDTO);
-    SesionCompletaDTO updateSesion(SesionCrudDTO sesion, Integer numSala, UUID peliculaId, LocalDateTime horario);
     SesionCompletaDTO deleteSesion(SesionCrudDTO sesionCrudDTO);
 }

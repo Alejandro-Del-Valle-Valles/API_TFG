@@ -75,9 +75,10 @@ public class CompraServiceImpl implements CompraService {
         compra.setUsuario(usuario);
 
         boolean hayEntrada = false;
-        Set<EntradaId> idsEnEstaCompra = new HashSet<>();
+        Set<Integer> numLineas = new HashSet<>();
 
         for (LineaCompraDTO linea : compraDTO.lineasCompra()) {
+            if(!numLineas.add(linea.getNumero())) throw new EntityExistsException("Existe más de una línea con el número " + linea.getNumero());
             LineaCompra lc = new LineaCompra();
             lc.setId(new LineaId(null, linea.getNumero()));
 
@@ -88,22 +89,19 @@ public class CompraServiceImpl implements CompraService {
                 LineaCompraEntradaDTO le = (LineaCompraEntradaDTO) linea;
                 EntradaDTO eDTO = le.getEntrada();
 
-                SesionId sesionId = new SesionId(eDTO.sesion().numSala(),  eDTO.sesion().peliculaId(),  eDTO.sesion().horario());
-
-                EntradaId entradaId = new EntradaId( sesionId,  eDTO.numFila(),  eDTO.numButaca() );
-                if (!idsEnEstaCompra.add(entradaId))
-                    throw new IllegalArgumentException("La entrada " + entradaId + " está duplicada en la misma compra.");
-                if (entradaRepository.existsById(entradaId))
-                    throw new EntityExistsException("Ya existe la entrada " + entradaId);
-
                 Sesion sesion = sesionRepository.findById(
                                 new SesionId(eDTO.sesion().numSala(), eDTO.sesion().peliculaId(), eDTO.sesion().horario()))
                         .orElseThrow(() -> new EntityNotFoundException("La sesión de la película no existe."));
 
                 Entrada entrada = new Entrada();
+                EntradaId entradaId = new EntradaId();
+                entradaId.setFila(eDTO.numFila());
+                entradaId.setButaca(eDTO.numButaca());
                 entrada.setId(entradaId);
+
                 entrada.setPrecio(eDTO.precio());
-                sesion.addEntrada(entrada);
+                entrada.setSesion(sesion);
+                sesion.getEntradas().add(entrada);
 
                 lc.setEntrada(entrada);
             }

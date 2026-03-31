@@ -39,7 +39,7 @@ public class Producto {
     )
     private List<@Valid Alergeno> alergenos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "producto")
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid LineaCompra> lineaCompras = new ArrayList<>();
 
     public Producto() { }
@@ -104,9 +104,10 @@ public class Producto {
 
     @PreRemove
     private void removeProductoFromAlergenos() {
-        this.alergenos.forEach(alergeno ->
+        alergenos.forEach(alergeno ->
                 alergeno.getProductos().remove(this)
         );
+        lineaCompras.forEach(linea -> linea.setProducto(null));
     }
 
     @Override

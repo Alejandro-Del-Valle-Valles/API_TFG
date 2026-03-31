@@ -1,13 +1,11 @@
 package com.tfg.API_TFG.core.service;
 
 import com.tfg.API_TFG.adapter.PeliculaAdapter;
-import com.tfg.API_TFG.core.dto.ParticipanteCompletoDTO;
-import com.tfg.API_TFG.core.dto.PeliculaCompletoDTO;
-import com.tfg.API_TFG.core.dto.PeliculaCreateDTO;
-import com.tfg.API_TFG.core.dto.PeliculaDTO;
+import com.tfg.API_TFG.core.dto.*;
 import com.tfg.API_TFG.core.entity.Credito;
 import com.tfg.API_TFG.core.entity.Participante;
 import com.tfg.API_TFG.core.entity.Pelicula;
+import com.tfg.API_TFG.core.entity.id.CreditoId;
 import com.tfg.API_TFG.core.enums.RolParticipante;
 import com.tfg.API_TFG.core.repository.CreditoRepository;
 import com.tfg.API_TFG.core.repository.ParticipanteRepository;
@@ -78,39 +76,45 @@ public class PeliculaServiceImpl implements PeliculaService {
         pelicula.setPortada(peliculaCreateDTO.url());
         pelicula.setCalificacionEdad(peliculaCreateDTO.edad());
         pelicula = peliculaRepository.save(pelicula);
+
         List<Integer> participanteIds = peliculaCreateDTO.participantes().stream()
-                .map(ParticipanteCompletoDTO::getId)
+                .map(ParticipanteCreateDTO::id)
+                .distinct()
                 .toList();
+
         List<Participante> participantes = participanteRepository.findAllById(participanteIds);
         if (participantes.size() != participanteIds.size()) {
-            List<Integer> encontrados = participantes.stream()
-                    .map(Participante::getId)
-                    .toList();
-            List<Integer> noEncontrados = participanteIds.stream()
-                    .filter(id -> !encontrados.contains(id))
-                    .toList();
-            throw new EntityNotFoundException(
-                    "No se encontraron los siguientes participantes: " + noEncontrados
-            );
+            List<Integer> encontrados = participantes.stream().map(Participante::getId).toList();
+            List<Integer> noEncontrados = participanteIds.stream().filter(id -> !encontrados.contains(id)).toList();
+            throw new EntityNotFoundException("No se encontraron los siguientes participantes: " + noEncontrados);
         }
+
         Map<Integer, Participante> participantesMap = participantes.stream()
                 .collect(Collectors.toMap(Participante::getId, p -> p));
+        Set<String> clavesUsadas = new HashSet<>();
 
-        for (ParticipanteCompletoDTO participanteDTO : peliculaCreateDTO.participantes()) {
-            Participante participante = participantesMap.get(participanteDTO.getId());
-            if (participanteDTO.getRoles() == null || participanteDTO.getRoles().isEmpty()) {
+        for (ParticipanteCreateDTO participanteDTO : peliculaCreateDTO.participantes()) {
+            Participante participante = participantesMap.get(participanteDTO.id());
+
+            if (participanteDTO.roles() == null || participanteDTO.roles().isEmpty())
                 throw new IllegalArgumentException(
                         "El participante " + participante.getNombre() + " debe tener al menos un rol"
                 );
-            }
-            for (RolParticipante rol : participanteDTO.getRoles()) {
+
+            for (RolParticipante rol : participanteDTO.roles()) {
+                String key = participante.getId() + "|" + rol.name();
+                if (!clavesUsadas.add(key)) continue;
+
+                CreditoId creditoId = new CreditoId(pelicula.getId(), participante.getId(), rol);
                 Credito credito = new Credito();
-                credito.setRol(rol);
-                credito.setParticipante(participante);
+                credito.setId(creditoId);
                 credito.setPelicula(pelicula);
-                pelicula.addCredito(credito);
+                credito.setParticipante(participante);
+                credito.setRol(rol);
+                pelicula.getCreditos().add(credito);
             }
         }
+
         pelicula = peliculaRepository.save(pelicula);
         return PeliculaAdapter.toCompletoDTO(pelicula);
     }

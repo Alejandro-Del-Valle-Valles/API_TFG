@@ -107,53 +107,104 @@ public class CompraController {
     }
 
     @Operation(
-                summary = "Crea una compra junto al usuario si no existe, y las entradas.",
-                description = "Crea una compra nueva y las entradas asignadas. Si no existe el usuario, lo crea."
-        )
-        @ApiResponses( value = {
-                @ApiResponse(
-                        responseCode = "201",
-                        description = "Compra creada exitosamente.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = CompraDTO.class)
-                        )
-                ),
-                @ApiResponse(
-                        responseCode = "400",
-                        description = "Datos inválidos.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                examples = @ExampleObject(
-                                        name = "DatosInválidos",
-                                        summary = "Ejemplo del error devuelto si algún dato es erróneo.",
-                                        value = """
+            summary = "Crea una compra junto al usuario si no existe, y las entradas.",
+            description = "Crea una compra nueva y las entradas asignadas. Si no existe el usuario, lo crea.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "DTO con los datos de la compra (usuario y líneas de compra polimórficas).",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CompraDTO.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "CompraConProducto",
+                                            summary = "Compra con una línea de producto",
+                                            value = """
+                                                {
+                                                  "correo": "ejemplo@gmail.com",
+                                                  "lineasCompra": [
                                                     {
-                                                        "nombre": "No existe el producto palomitas.",
-                                                        "precio": "El precio de la entrada no puede ser negativo.",
-                                                        "horario": "No existe una sesión con el horario indicado para la película a8f38717-7ec9-46f5-94f1-1b5cfee15f63"
+                                                      "type": "PRODUCTO",
+                                                      "numero": 1,
+                                                      "nombreProducto": "Palomitas"
                                                     }
-                                                    """
-                                )
-                        )
-                ),
-                @ApiResponse(
-                        responseCode = "409",
-                        description = "Compra ya existente",
-                        content = @Content(
-                                mediaType = "application/json",
-                                examples = @ExampleObject(
-                                        name = "ObjetoExistente",
-                                        summary = "Ejemplo del error devuelto si alguna de las entradas ya existe (Está asociada a una compra)",
-                                        value = """
+                                                  ]
+                                                }
+                                                """
+                                    ),
+                                    @ExampleObject(
+                                            name = "CompraConEntrada",
+                                            summary = "Compra con una línea de entrada",
+                                            value = """
                                                     {
-                                                        "EntityExistsException": "Ya existe la entrada que se trata de registrar."
-                                                    }
-                                                    """
-                                )
-                        )
-                )
-        })
+                                                         "correo": "ejemplo@gmail.com",
+                                                         "lineasCompra": [
+                                                         {
+                                                             "type": "ENTRADA",
+                                                             "numero": 1,
+                                                             "entrada": {
+                                                                 "sesion": {
+                                                                     "numSala": 1,
+                                                                     "peliculaId": "47944cc4-527a-4639-b91e-38d95f802617",
+                                                                     "horario": "2026-06-21T18:30"
+                                                                 },
+                                                                 "numFila": 5,
+                                                                 "numButaca": 8,
+                                                                 "precio": 7.5
+                                                             }
+                                                         }
+                                                         ]
+                                                     }
+                                                """
+                                    )
+                            }
+                    )
+            )
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Compra creada exitosamente.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CompraDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Datos inválidos.",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "DatosInválidos",
+                                    summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                    value = """
+                                        {
+                                          "nombre": "No existe el producto palomitas.",
+                                          "precio": "El precio de la entrada no puede ser negativo.",
+                                          "horario": "No existe una sesión con el horario indicado para la película a8f38717-7ec9-46f5-94f1-1b5cfee15f63"
+                                        }
+                                        """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Compra ya existente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoExistente",
+                                    summary = "Ejemplo del error devuelto si alguna de las entradas ya existe (está asociada a una compra)",
+                                    value = """
+                                        {
+                                          "EntityExistsException": "Ya existe la entrada que se trata de registrar."
+                                        }
+                                        """
+                            )
+                    )
+            )
+    })
     @PostMapping
     public ResponseEntity<CompraDTO> createCompra(
             @Parameter(description = "DTO con los datos de la compra (Usuario, Productos y Entradas)")

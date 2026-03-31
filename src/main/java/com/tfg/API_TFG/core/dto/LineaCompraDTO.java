@@ -11,13 +11,19 @@ import java.util.Objects;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
+        property = "type",
+        visible = true
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = LineaCompraProductoCreateDTO.class, name = "PRODUCTO"),
-        @JsonSubTypes.Type(value = LineaCompraEntradaDTO.class, name = "ENTRADA")
+        @JsonSubTypes.Type(value = LineaCompraEntradaDTO.class, name = "ENTRADA"),
+        @JsonSubTypes.Type(value = LineaCompraProductoDTO.class, name = "PRODUCTO")
 })
-@Schema(description = "De este heredan LineaCompraProductoDTO, LineaCompraProductoCreateDTO y LineaCompraEntradaDTO. Para crear debes especificar si es \"PRODUCTO\" O \"ENTRADA\"")
+@Schema(
+        description = "Línea de compra polimórfica. Puede ser para una entrada o un producto.",
+        discriminatorProperty = "type",
+        oneOf = {LineaCompraProductoCreateDTO.class, LineaCompraEntradaDTO.class, LineaCompraProductoDTO.class}
+)
 public abstract class LineaCompraDTO {
 
     @Schema(

@@ -2,6 +2,7 @@ package com.tfg.API_TFG.core.dto;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -58,8 +59,8 @@ public record PeliculaCreateDTO (
     Boolean enCartelera,
 
     @ArraySchema(
-            schema = @Schema(implementation = ParticipanteCompletoDTO.class),
-            arraySchema = @Schema(description = "Lista de participantes que actúan en la película")
+            schema = @Schema(implementation = ParticipanteCreateDTO.class),
+            arraySchema = @Schema(description = "Lista de de los participantes que actúan y/o dirigen la película")
     )
-    List<ParticipanteCompletoDTO> participantes
+    List<@Valid ParticipanteCreateDTO> participantes
 ) {}

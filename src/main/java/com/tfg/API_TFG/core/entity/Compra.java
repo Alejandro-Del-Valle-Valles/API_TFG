@@ -25,7 +25,7 @@ public class Compra {
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid LineaCompra> lineaCompras = new ArrayList<>();
 
-    @AssertTrue(message = "La compra debe tener al menos una línea con entrada.")
+    @AssertTrue(message = "La compra debe tener al menos una línea con entrada, y no puede haber 2 líneas de compra con el mismo número.")
     private boolean hasLineaConEntrada() {
         return lineaCompras != null && lineaCompras.stream().anyMatch(lc -> lc.getEntrada() != null);
     }

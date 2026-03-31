@@ -3,7 +3,22 @@ package com.tfg.API_TFG.core.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-@Schema(description = "Información de una línea de compra para una entrada.")
+@Schema(
+        description = "Línea de compra para entrada",
+        example = """
+    {
+      "type": "ENTRADA",
+      "numero": 2,
+      "entrada": {
+        "numSala": 1,
+        "peliculaId": "11111111-1111-1111-1111-111111111111",
+        "horario": "2026-06-21T18:30",
+        "fila": 5,
+        "butaca": 8
+      }
+    }
+    """
+)
 public class LineaCompraEntradaDTO extends LineaCompraDTO{
 
     @Schema(

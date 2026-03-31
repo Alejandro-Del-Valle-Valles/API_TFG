@@ -23,7 +23,7 @@ public class Participante {
     @Column(length = 50)
     private String nombre;
 
-    @OneToMany(mappedBy = "participante", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "participante", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Credito> creditos = new ArrayList<>();
 
     public Participante() { }

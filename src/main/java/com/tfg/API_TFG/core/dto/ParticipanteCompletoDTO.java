@@ -13,7 +13,7 @@ public class ParticipanteCompletoDTO extends ParticipanteDTO{
     @ArraySchema(
             schema = @Schema(
                     description = "Lista de roles del participante",
-                    example = "[ACTOR, DIRECTOR]",
+                    example = "\"ACTOR\", \"DIRECTOR\"",
                     allowableValues = {"ACTOR", "DIRECTOR"},
                     implementation = RolParticipante.class
             ),

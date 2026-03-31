@@ -29,7 +29,7 @@ public class Entrada {
     @Column(precision = 4, scale = 2)
     private BigDecimal precio;
 
-    @OneToOne(mappedBy = "entrada")
+    @OneToOne(mappedBy = "entrada", cascade = CascadeType.ALL, orphanRemoval = true)
     private @Valid LineaCompra lineaCompra;
 
     public Entrada() { }
@@ -49,6 +49,11 @@ public class Entrada {
     public LineaCompra getLineaCompra() { return lineaCompra; }
 
     public void setLineaCompra(@Valid LineaCompra lineaCompra) { this.lineaCompra = lineaCompra; }
+
+    @PreRemove
+    private void preRemove() {
+        if(lineaCompra != null) lineaCompra.setEntrada(null);
+    }
 
     @Override
     public boolean equals(Object o) {
