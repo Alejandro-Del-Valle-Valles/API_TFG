@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class Alergeno {
     private String nombre;
 
     @ManyToMany(mappedBy = "alergenos")
-    private List<@Valid Producto> productos;
+    private List<@Valid Producto> productos = new ArrayList<>();
 
     public Alergeno() { }
 
