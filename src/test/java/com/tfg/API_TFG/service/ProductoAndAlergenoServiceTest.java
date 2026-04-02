@@ -54,7 +54,8 @@ public class ProductoAndAlergenoServiceTest {
 
         when(productoRepository.findByNombreIgnoreCase("Palomitas"))
                 .thenReturn(Optional.empty());
-        when(productoRepository.save(any(Producto.class))).thenReturn(saved);
+        when(productoRepository.save(any(Producto.class)))
+                .thenReturn(saved);
 
         ProductoDTO result = productoService.createProducto(ProductoAdapter.toDTO(toSave));
 
