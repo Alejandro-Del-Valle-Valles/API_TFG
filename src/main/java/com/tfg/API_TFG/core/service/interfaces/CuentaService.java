@@ -1,9 +1,13 @@
 package com.tfg.API_TFG.core.service.interfaces;
 
 import com.tfg.API_TFG.core.dto.CuentaDTO;
+import com.tfg.API_TFG.core.dto.CuentaLoginDTO;
+import com.tfg.API_TFG.core.dto.LoginDTO;
+
+import javax.naming.AuthenticationException;
 
 public interface CuentaService {
-    CuentaDTO getByCorreo(String correo);
+    CuentaLoginDTO login(LoginDTO login) throws AuthenticationException;
     CuentaDTO createCuenta(CuentaDTO cuentaDTO);
     CuentaDTO updateCuenta(CuentaDTO cuentaDTO);
     CuentaDTO deleteCuenta(String correo);

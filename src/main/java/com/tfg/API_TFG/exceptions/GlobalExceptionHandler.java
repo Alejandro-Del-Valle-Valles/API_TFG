@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
         Map<String, String> message = new HashMap<>();
         message.put(ex.getClass().getSimpleName(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ApiResponse(responseCode = "401", description = "No se pudo loguear o autentificar.")
+    public ResponseEntity<Map<String, String>> notAutheticated(AuthenticationException ex) {
+        Map<String, String> message = new HashMap<>();
+        message.put(ex.getClass().getSimpleName(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
     }
 
     @ExceptionHandler(Exception.class)

@@ -28,8 +28,8 @@ public record CuentaDTO(
         String nombre,
 
         @Schema(
-                description = "Contraseña previamente cifrada",
-                example = "0Z8VgSH7gjOULiwhxjObs9W5ynS82tQ4xQRVO0LEoGqMhTGsha5S8AzuZsbFEehgh2jLmC0qJnd+3pU7fA4Bkg"
+                description = "Contraseña sin cifrar",
+                example = "Marzo2026"
         )
         @NotNull(message = "La contraseña no puede ser nula.")
         @NotBlank(message = "La contraseña no puede estar vacía.")

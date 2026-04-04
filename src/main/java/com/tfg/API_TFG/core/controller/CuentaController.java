@@ -1,6 +1,8 @@
 package com.tfg.API_TFG.core.controller;
 
 import com.tfg.API_TFG.core.dto.CuentaDTO;
+import com.tfg.API_TFG.core.dto.CuentaLoginDTO;
+import com.tfg.API_TFG.core.dto.LoginDTO;
 import com.tfg.API_TFG.core.service.interfaces.CuentaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
+
 @RestController
 @RequestMapping("/cuenta")
 @Tag(name = "Cuenta", description = "API para las cuentas")
@@ -28,16 +32,16 @@ public class CuentaController {
     }
 
     @Operation(
-                summary = "Busca una cuenta por su correo",
-                description = "Busca y devuelve si existe una cuenta en base al correo de un usuario."
+                summary = "Logea al usuario | NO FUNCIONA DE MOMENTO",
+                description = "Logea y al usuario y le devuelve la info de su cuenta | NO FUNCIONA DE MOMENTO"
         )
         @ApiResponses( value = {
                 @ApiResponse(
                         responseCode = "200",
-                        description = "La cuenta se encontró correctamente",
+                        description = "Se inició sesión",
                         content = @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = CuentaDTO.class)
+                                schema = @Schema(implementation = CuentaLoginDTO.class)
                         )
                 ),
                 @ApiResponse(
@@ -50,14 +54,14 @@ public class CuentaController {
                                         summary = "Ejemplo del error devuelto si algún dato es erróneo.",
                                         value = """
                                                     {
-                                                        "correo": "El correo es obligatorio"
+                                                        "correo": "El correo no puede ser nulo"
                                                     }
                                                     """
                                 )
                         )
                 ),
                 @ApiResponse(
-                        responseCode = "404",
+                        responseCode = "401",
                         description = "Cuenta no existente",
                         content = @Content(
                                 mediaType = "application/json",
@@ -66,19 +70,19 @@ public class CuentaController {
                                         summary = "Ejemplo del error devuelto si no existe esa cuenta",
                                         value = """
                                                     {
-                                                        "EntityNotFoundException": "No existe la cuenta con el correo ejemplo@gmail.com"
+                                                        "AuthenticationException": "La contraseña o el correo no son correctas."
                                                     }
                                                     """
                                 )
                         )
                 )
         })
-    @GetMapping("/{correo}")
-    public ResponseEntity<CuentaDTO> getCuentaByCorreo(
-            @Parameter(description = "Correo asignado a la cuenta.")
-            @PathVariable String correo
-    ) {
-        return ResponseEntity.ok(cuentaService.getByCorreo(correo));
+    @GetMapping("/login")
+    public ResponseEntity<CuentaLoginDTO> login(
+            @Parameter(description = "Correo y contraseña en plano dela cuenta.")
+            @RequestBody LoginDTO login
+            ) throws AuthenticationException {
+        return ResponseEntity.ok(cuentaService.login(login));
     }
 
     @Operation(
@@ -128,7 +132,7 @@ public class CuentaController {
                         )
                 )
         })
-    @PostMapping
+    @PostMapping("/registro")
     public ResponseEntity<CuentaDTO> createCuenta(
             @Parameter(description = "Datos de la nueva cuenta.")
             @RequestBody @Valid CuentaDTO cuentaDTO
