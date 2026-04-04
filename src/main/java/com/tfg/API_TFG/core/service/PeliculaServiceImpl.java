@@ -72,9 +72,11 @@ public class PeliculaServiceImpl implements PeliculaService {
         Pelicula pelicula = new Pelicula();
         pelicula.setNombre(peliculaCreateDTO.nombre());
         pelicula.setDescripcion(peliculaCreateDTO.descripcion());
+        pelicula.setGenero(peliculaCreateDTO.genero());
         pelicula.setDuracion(peliculaCreateDTO.duracion());
         pelicula.setPortada(peliculaCreateDTO.url());
         pelicula.setCalificacionEdad(peliculaCreateDTO.edad());
+        pelicula.setEnCartelera(peliculaCreateDTO.enCartelera());
         pelicula = peliculaRepository.save(pelicula);
 
         List<Integer> participanteIds = peliculaCreateDTO.participantes().stream()
@@ -121,13 +123,13 @@ public class PeliculaServiceImpl implements PeliculaService {
 
     @Override
     @Transactional
-    public PeliculaCompletoDTO updatePeliculaCompleto(PeliculaCompletoDTO peliculaCompletoDTO) {
-        Pelicula pelicula = peliculaRepository.findById(peliculaCompletoDTO.getId())
+    public PeliculaCompletoDTO updatePeliculaCompleto(UUID id, PeliculaCreateDTO peliculaUpdateDTO) {
+        Pelicula pelicula = peliculaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No existe la película con ID " + peliculaCompletoDTO.getId()
+                        "No existe la película con ID " + id
                 ));
-        actualizarCamposBasicos(pelicula, peliculaCompletoDTO);
-        actualizarParticipantes(pelicula, peliculaCompletoDTO.getParticipantes());
+        actualizarCamposBasicos(pelicula, peliculaUpdateDTO);
+        actualizarParticipantes(pelicula, peliculaUpdateDTO.participantes());
         pelicula = peliculaRepository.save(pelicula);
         return PeliculaAdapter.toCompletoDTO(pelicula);
     }
@@ -146,12 +148,14 @@ public class PeliculaServiceImpl implements PeliculaService {
      * @param pelicula Pelicula a actualizar
      * @param dto PelículaCompletaDTO a actualizar.
      */
-    private void actualizarCamposBasicos(Pelicula pelicula, PeliculaCompletoDTO dto) {
-        pelicula.setNombre(dto.getNombre());
-        pelicula.setDescripcion(dto.getDescripcion());
-        pelicula.setDuracion(dto.getDuracion());
-        pelicula.setPortada(dto.getUrl());
-        pelicula.setCalificacionEdad(dto.getEdad());
+    private void actualizarCamposBasicos(Pelicula pelicula, PeliculaCreateDTO dto) {
+        pelicula.setNombre(dto.nombre());
+        pelicula.setDescripcion(dto.descripcion());
+        pelicula.setGenero(dto.genero());
+        pelicula.setDuracion(dto.duracion());
+        pelicula.setPortada(dto.url());
+        pelicula.setCalificacionEdad(dto.edad());
+        pelicula.setEnCartelera(dto.enCartelera());
     }
 
     /**
@@ -160,10 +164,10 @@ public class PeliculaServiceImpl implements PeliculaService {
      * @param pelicula Película sobre la que actuar.
      * @param participantesDTO List de participantes de la película.
      */
-    private void actualizarParticipantes(Pelicula pelicula, List<ParticipanteCompletoDTO> participantesDTO) {
+    private void actualizarParticipantes(Pelicula pelicula, List<ParticipanteCreateDTO> participantesDTO) {
         Map<Integer, Set<RolParticipante>> nuevosParticipantesRoles = construirMapaParticipantesRoles(participantesDTO);
         eliminarCreditosObsoletos(pelicula, nuevosParticipantesRoles);
-        agregarNuevosCreditos(pelicula, participantesDTO, nuevosParticipantesRoles);
+        agregarNuevosCreditos(pelicula, participantesDTO);
     }
 
     /**
@@ -172,10 +176,10 @@ public class PeliculaServiceImpl implements PeliculaService {
      * @return Map<Integer, Set<RolParticipante>>
      */
     private Map<Integer, Set<RolParticipante>> construirMapaParticipantesRoles(
-            List<ParticipanteCompletoDTO> participantesDTO) {
+            List<ParticipanteCreateDTO> participantesDTO) {
         Map<Integer, Set<RolParticipante>> mapa = new HashMap<>();
-        for (ParticipanteCompletoDTO dto : participantesDTO) {
-            mapa.put(dto.getId(), new HashSet<>(dto.getRoles()));
+        for (ParticipanteCreateDTO dto : participantesDTO) {
+            mapa.put(dto.id(), new HashSet<>(dto.roles()));
         }
         return mapa;
     }
@@ -185,10 +189,7 @@ public class PeliculaServiceImpl implements PeliculaService {
      * @param pelicula Pelicula sobre la que actuar.
      * @param nuevosParticipantesRoles Map<Integer, Set<RolParticipante>> con los participantes nuevos de la película.
      */
-    private void eliminarCreditosObsoletos(
-            Pelicula pelicula,
-            Map<Integer, Set<RolParticipante>> nuevosParticipantesRoles) {
-
+    private void eliminarCreditosObsoletos(Pelicula pelicula, Map<Integer, Set<RolParticipante>> nuevosParticipantesRoles) {
         List<Credito> creditosAEliminar = pelicula.getCreditos().stream()
                 .filter(credito -> {
                     Integer participanteId = credito.getParticipante().getId();
@@ -205,10 +206,9 @@ public class PeliculaServiceImpl implements PeliculaService {
      * Crea las relaciones entre Pelicula-Credito-Participante nuevas.
      * @param pelicula Pelicula sobre la que actuar.
      * @param participantesDTO List de ParticipanteCompletoDTO con los nuevos participantes.
-     * @param nuevosParticipantesRoles Map con el ID y créditos de los nuevos participantes para crear la relación.
      */
-    private void agregarNuevosCreditos(Pelicula pelicula, List<ParticipanteCompletoDTO> participantesDTO,
-                                       Map<Integer, Set<RolParticipante>> nuevosParticipantesRoles) {
+    private void agregarNuevosCreditos(Pelicula pelicula, List<ParticipanteCreateDTO> participantesDTO) {
+
         Map<Integer, Set<RolParticipante>> creditosActuales = new HashMap<>();
         for (Credito credito : pelicula.getCreditos()) {
             Integer participanteId = credito.getParticipante().getId();
@@ -216,14 +216,44 @@ public class PeliculaServiceImpl implements PeliculaService {
                     .computeIfAbsent(participanteId, k -> new HashSet<>())
                     .add(credito.getRol());
         }
-        for (ParticipanteCompletoDTO participanteDTO : participantesDTO) {
-            Participante participante = participanteRepository.findById(participanteDTO.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("No existe el participante con ID " + participanteDTO.getId()));
-            Set<RolParticipante> rolesActuales = creditosActuales.getOrDefault(participanteDTO.getId(),
-                    Collections.emptySet());
-            for (RolParticipante rol : participanteDTO.getRoles()) {
+
+        List<Integer> ids = participantesDTO.stream()
+                .map(ParticipanteCreateDTO::id)
+                .distinct()
+                .toList();
+
+        List<Participante> participantes = participanteRepository.findAllById(ids);
+        if (participantes.size() != ids.size()) {
+            Set<Integer> encontrados = participantes.stream()
+                    .map(Participante::getId)
+                    .collect(Collectors.toSet());
+
+            List<Integer> noEncontrados = ids.stream()
+                    .filter(id -> !encontrados.contains(id))
+                    .toList();
+
+            throw new EntityNotFoundException("No existe(n) participante(s) con ID: " + noEncontrados);
+        }
+
+        Map<Integer, Participante> participantesMap = participantes.stream()
+                .collect(Collectors.toMap(Participante::getId, p -> p));
+
+        Set<String> clavesNuevas = new HashSet<>();
+
+        for (ParticipanteCreateDTO participanteDTO : participantesDTO) {
+            Participante participante = participantesMap.get(participanteDTO.id());
+            Set<RolParticipante> rolesActuales = creditosActuales.getOrDefault(participanteDTO.id(), Collections.emptySet());
+
+            if (participanteDTO.roles() == null || participanteDTO.roles().isEmpty())
+                throw new IllegalArgumentException("El participante con ID " + participanteDTO.id() + " debe tener al menos un rol");
+
+            for (RolParticipante rol : participanteDTO.roles()) {
+                String key = participanteDTO.id() + "|" + rol.name();
+                if (!clavesNuevas.add(key)) continue;
+
                 if (!rolesActuales.contains(rol)) {
                     Credito nuevoCredito = new Credito();
+                    nuevoCredito.setId(new CreditoId(pelicula.getId(), participante.getId(), rol));
                     nuevoCredito.setRol(rol);
                     nuevoCredito.setParticipante(participante);
                     pelicula.addCredito(nuevoCredito);

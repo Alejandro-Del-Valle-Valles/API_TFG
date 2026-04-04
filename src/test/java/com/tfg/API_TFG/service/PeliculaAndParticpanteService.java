@@ -5,6 +5,7 @@ import com.tfg.API_TFG.core.dto.ParticipanteDTO;
 import com.tfg.API_TFG.core.dto.PeliculaCreateDTO;
 import com.tfg.API_TFG.core.entity.Participante;
 import com.tfg.API_TFG.core.entity.Pelicula;
+import com.tfg.API_TFG.core.enums.GeneroPeliculas;
 import com.tfg.API_TFG.core.enums.RolParticipante;
 import com.tfg.API_TFG.core.repository.ParticipanteRepository;
 import com.tfg.API_TFG.core.repository.PeliculaRepository;
@@ -60,8 +61,9 @@ public class PeliculaAndParticpanteService {
     @Test
     void debeCrearPeliculaCon2Participantes_unoConAmbosRoles_yOtroSoloActor() {
         PeliculaCreateDTO dto = new PeliculaCreateDTO(
-                "Desc",
                 "Titanic",
+                "Descripción",
+                GeneroPeliculas.HISTORICA,
                 "https://example.com/poster.jpg",
                 LocalTime.of(3, 49),
                 3,

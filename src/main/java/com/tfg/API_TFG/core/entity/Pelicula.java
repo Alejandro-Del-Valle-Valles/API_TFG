@@ -1,8 +1,10 @@
 package com.tfg.API_TFG.core.entity;
 
+import com.tfg.API_TFG.core.enums.GeneroPeliculas;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -27,6 +29,11 @@ public class Pelicula {
     @Column(columnDefinition = "VARCHAR(511) DEFAULT 'Sin Descripción'")
     private String descripcion = "Sin Descripción";
 
+    @NotNull(message = "La película debe contener un género")
+    @Enumerated(EnumType.STRING)
+    @Column(length = 25)
+    private GeneroPeliculas genero;
+
     @Size(max = 511, message = "La URL de la imagen no puede ser superior a 511 cracateres.")
     @Column(length = 511, unique = true)
     private String portada;
@@ -37,6 +44,10 @@ public class Pelicula {
     @PositiveOrZero(message = "La calificación de edad de la película no puede ser negativa.")
     private Integer calificacionEdad = 0;
 
+    /**
+     * True en cartelera, False estreno, null no está en cartelera
+     */
+    @Column(columnDefinition = "BOOLEAN DEFAULT NULL")
     private Boolean enCartelera;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -58,6 +69,10 @@ public class Pelicula {
     public String getDescripcion() { return descripcion; }
 
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public GeneroPeliculas getGenero() { return genero; }
+
+    public void setGenero(GeneroPeliculas genero) { this.genero = genero; }
 
     public String getPortada() { return portada; }
 
@@ -94,10 +109,6 @@ public class Pelicula {
         if (credito.getParticipante() != null && !credito.getParticipante().getCreditos().contains(credito)) {
             credito.getParticipante().getCreditos().add(credito);
         }
-    }
-
-    public Boolean getEnCartelera() {
-        return enCartelera;
     }
 
     public List<Sesion> getSesiones() {

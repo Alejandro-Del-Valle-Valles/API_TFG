@@ -1,9 +1,12 @@
 package com.tfg.API_TFG.core.dto;
 
+import com.tfg.API_TFG.core.enums.GeneroPeliculas;
+import com.tfg.API_TFG.core.enums.RolParticipante;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
@@ -14,14 +17,6 @@ import java.util.List;
 
 @Schema(description = "DTO para la creación y actualización de info básica de películas.")
 public record PeliculaCreateDTO (
-
-    @Schema(
-            description = "Descripción de la película.",
-            example = "Descubre la historia del Titanic desde la perspectiva de un joven chico interpretado por Leonardo Dicaprio..."
-    )
-    @Length(max = 511, message = "La descripción no puede tener más de 511 caracteres.")
-    String descripcion,
-
     @Schema(
             description = "Nombre de la película",
             example = "Titanic"
@@ -30,6 +25,23 @@ public record PeliculaCreateDTO (
     @NotBlank(message = "El nombre de la película no puede estar en blanco.")
     @Length(max = 50, message = "El nombre no puede contener más de 50 caracteres.")
     String nombre,
+
+    @Schema(
+        description = "Descripción de la película.",
+        example = "Descubre la historia del Titanic desde la perspectiva de un joven chico interpretado por Leonardo Dicaprio..."
+    )
+    @Length(max = 511, message = "La descripción no puede tener más de 511 caracteres.")
+    String descripcion,
+    @Schema(
+        description = "Género de la película",
+        example = "HISTORICA",
+        allowableValues = { "ACCION", "TERROR", "CIENCIA_FICCION", "COMEDIA", "ROMANTICA", "CINE_NEGRO", "DRAMA",
+                "HISTORICA", "BELICA", "POLICIACA", "DOCUMENTAL", "MUSICAL", "INFANTIL", "SUSPENSE", "WESTERN_CLASICO",
+                "MAGICO", "AVENTURA", "FANTASIA" },
+        implementation = GeneroPeliculas.class
+    )
+    @NotNull(message = "La película debe tener un género.")
+    GeneroPeliculas genero,
 
     @Schema(
             description = "URL de la magen de la portada de la película",

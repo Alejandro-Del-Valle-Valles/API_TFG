@@ -1,19 +1,18 @@
 package com.tfg.API_TFG.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tfg.API_TFG.core.enums.GeneroPeliculas;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.validator.constraints.Length;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Schema(description = "Información básica de una Pleícula.")
+@Schema(description = "Información básica de una Película.")
 public class PeliculaDTO {
 
     @Schema(
@@ -24,13 +23,6 @@ public class PeliculaDTO {
     private UUID id;
 
     @Schema(
-            description = "Descripción de la película.",
-            example = "Descubre la historia del Titanic desde la perspectiva de un joven chico interpretado por Leonardo Dicaprio..."
-    )
-    @Length(max = 511, message = "La descripción no puede tener más de 511 caracteres.")
-    private String descripcion;
-
-    @Schema(
             description = "Nombre de la película",
             example = "Titanic"
     )
@@ -38,6 +30,24 @@ public class PeliculaDTO {
     @NotBlank(message = "El nombre de la película no puede estar en blanco.")
     @Length(max = 50, message = "El nombre no puede contener más de 50 caracteres.")
     private String nombre;
+
+    @Schema(
+            description = "Descripción de la película.",
+            example = "Descubre la historia del Titanic desde la perspectiva de un joven chico interpretado por Leonardo Dicaprio..."
+    )
+    @Length(max = 511, message = "La descripción no puede tener más de 511 caracteres.")
+    private String descripcion;
+
+    @Schema(
+            description = "Género de la película",
+            example = "HISTORICA",
+            allowableValues = { "ACCION", "TERROR", "CIENCIA_FICCION", "COMEDIA", "ROMANTICA", "CINE_NEGRO", "DRAMA",
+                    "HISTORICA", "BELICA", "POLICIACA", "DOCUMENTAL", "MUSICAL", "INFANTIL", "SUSPENSE", "WESTERN_CLASICO",
+                    "MAGICO", "AVENTURA", "FANTASIA" },
+            implementation = GeneroPeliculas.class
+    )
+    @NotNull(message = "La película debe tener un género.")
+    private GeneroPeliculas genero;
 
     @Schema(
             description = "URL de la magen de la portada de la película",
@@ -65,13 +75,16 @@ public class PeliculaDTO {
     )
     private Boolean enCartelera;
 
-    public PeliculaDTO(UUID id, String descripcion, String nombre, String url, LocalTime duracion, Integer edad) {
+    public PeliculaDTO(UUID id, String nombre, String descripcion, GeneroPeliculas genero, String url,
+                       LocalTime duracion, Integer edad, Boolean enCartelera) {
         this.id = id;
-        this.descripcion = descripcion;
         this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.genero = genero;
         this.url = url;
         this.duracion = duracion;
         this.edad = edad;
+        this.enCartelera = enCartelera;
     }
 
     public UUID getId() {
@@ -82,6 +95,14 @@ public class PeliculaDTO {
         this.id = id;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -90,13 +111,9 @@ public class PeliculaDTO {
         this.descripcion = descripcion;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public GeneroPeliculas getGenero() { return genero; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setGenero(GeneroPeliculas genero) { this.genero = genero; }
 
     public String getUrl() {
         return url;
@@ -114,6 +131,10 @@ public class PeliculaDTO {
         this.duracion = duracion;
     }
 
+    public Boolean isEnCartelera() { return enCartelera; }
+
+    public void setEnCartelera(Boolean enCartelera) { this.enCartelera = enCartelera; }
+
     public Integer getEdad() {
         return edad;
     }
@@ -130,7 +151,5 @@ public class PeliculaDTO {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

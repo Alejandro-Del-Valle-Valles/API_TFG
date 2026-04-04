@@ -1,5 +1,6 @@
 package com.tfg.API_TFG.core.dto;
 
+import com.tfg.API_TFG.core.enums.GeneroPeliculas;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -17,9 +18,9 @@ public class PeliculaCompletoDTO extends PeliculaDTO {
     )
     private List<ParticipanteCompletoDTO> participantes = new ArrayList<>();
 
-    public PeliculaCompletoDTO(UUID id, String descripcion, String nombre, String url, LocalTime duracion,
-                               Integer edad, List<ParticipanteCompletoDTO> participantes) {
-        super(id, descripcion, nombre, url, duracion, edad);
+    public PeliculaCompletoDTO(UUID id, String nombre, String descripcion, GeneroPeliculas genero, String url, LocalTime duracion,
+                               Integer edad, Boolean enCartelera, List<ParticipanteCompletoDTO> participantes) {
+        super(id, nombre, descripcion, genero, url, duracion, edad, enCartelera);
         this.participantes = participantes;
     }
 

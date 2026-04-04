@@ -1,0 +1,9 @@
+package com.tfg.API_TFG.core.enums;
+
+/**
+ * Géneros disponibles para películas
+ */
+public enum GeneroPeliculas {
+    ACCION, TERROR, CIENCIA_FICCION, COMEDIA, ROMANTICA, CINE_NEGRO, DRAMA, HISTORICA, BELICA, POLICIACA,
+    DOCUMENTAL, MUSICAL, INFANTIL, SUSPENSE, WESTERN_CLASICO, MAGICO, AVENTURA, FANTASIA
+}

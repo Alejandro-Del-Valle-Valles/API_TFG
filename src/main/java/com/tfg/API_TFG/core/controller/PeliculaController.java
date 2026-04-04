@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -220,7 +219,7 @@ public class PeliculaController {
                         description = "La película fue actualizada con éxito.",
                         content = @Content(
                                 mediaType = "application/json",
-                                schema = @Schema(implementation = PeliculaCompletoDTO.class)
+                                schema = @Schema(implementation = PeliculaCreateDTO.class)
                         )
                 ),
                 @ApiResponse(
@@ -258,12 +257,14 @@ public class PeliculaController {
                         )
                 )
         })
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<PeliculaCompletoDTO> updatePelicula(
+            @Parameter(description = "UUID de la película a actualizar")
+            @PathVariable UUID id,
             @Parameter(description = "DTO con los datos y participantes de la película.")
-            @RequestBody @Valid PeliculaCompletoDTO peliculaCompletoDTO
+            @RequestBody PeliculaCreateDTO pleiculaUpdateDTO
     ) {
-        return ResponseEntity.ok(peliculaService.updatePeliculaCompleto(peliculaCompletoDTO));
+        return ResponseEntity.ok(peliculaService.updatePeliculaCompleto(id, pleiculaUpdateDTO));
     }
 
     @Operation(
