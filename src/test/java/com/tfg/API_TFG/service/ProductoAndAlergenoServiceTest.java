@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductoAndAlergenoServiceTest {
+class ProductoAndAlergenoServiceTest {
 
     @Mock
     AlergenoRepository alergenoRepository;
@@ -52,18 +52,14 @@ public class ProductoAndAlergenoServiceTest {
         saved.setPrecio(new BigDecimal("7.5"));
         saved.setStock(20);
 
-        when(productoRepository.findByNombreIgnoreCase("Palomitas"))
-                .thenReturn(Optional.empty());
-        when(productoRepository.save(any(Producto.class)))
-                .thenReturn(saved);
+        when(productoRepository.findByNombreIgnoreCase("Palomitas")).thenReturn(Optional.empty());
+        when(productoRepository.save(any(Producto.class))).thenReturn(saved);
 
         ProductoDTO result = productoService.createProducto(ProductoAdapter.toDTO(toSave));
 
         assertThat(result.nombre()).isEqualTo("Palomitas");
-
         verify(productoRepository).findByNombreIgnoreCase("Palomitas");
         verify(productoRepository).save(any(Producto.class));
-
         verifyNoMoreInteractions(productoRepository, alergenoRepository);
     }
 
@@ -73,11 +69,10 @@ public class ProductoAndAlergenoServiceTest {
         toSave.setNombre("Gluten");
 
         Alergeno saved = new Alergeno();
-        toSave.setId(1);
-        toSave.setNombre("Gluten");
+        saved.setId(1);
+        saved.setNombre("Gluten");
 
-        when(alergenoRepository.findByNombreIgnoreCase("Gluten"))
-                .thenReturn(Optional.empty());
+        when(alergenoRepository.findByNombreIgnoreCase("Gluten")).thenReturn(Optional.empty());
         when(alergenoRepository.save(any(Alergeno.class))).thenReturn(saved);
 
         AlergenoDTO result = alergenoService.createAlergeno(AlergenoAdapter.toDTO(toSave));
@@ -85,7 +80,6 @@ public class ProductoAndAlergenoServiceTest {
         assertThat(result.nombre()).isEqualTo("Gluten");
         verify(alergenoRepository).findByNombreIgnoreCase("Gluten");
         verify(alergenoRepository).save(any(Alergeno.class));
-
         verifyNoMoreInteractions(productoRepository, alergenoRepository);
     }
 
@@ -102,12 +96,7 @@ public class ProductoAndAlergenoServiceTest {
         productoExistente.setPrecio(new BigDecimal("7.5"));
         productoExistente.setStock(20);
 
-        ProductoDTO cambios = new ProductoDTO(
-                "Palomitas de Maíz",
-                new BigDecimal("7.5"),
-                15,
-                alergenos
-        );
+        ProductoDTO cambios = new ProductoDTO("Palomitas de Maíz", new BigDecimal("7.5"), 15, alergenos);
 
         Producto guardado = new Producto();
         guardado.setId(1);
@@ -134,5 +123,7 @@ public class ProductoAndAlergenoServiceTest {
         assertThat(enviadoAGuardar.getId()).isEqualTo(1);
         assertThat(enviadoAGuardar.getNombre()).isEqualTo("Palomitas de Maíz");
         assertThat(enviadoAGuardar.getStock()).isEqualTo(15);
+
+        verifyNoMoreInteractions(productoRepository, alergenoRepository);
     }
 }

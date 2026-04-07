@@ -22,11 +22,11 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PeliculaAndParticpanteService {
+class PeliculaAndParticipanteServiceTest {
 
     @Mock
     PeliculaRepository peliculaRepository;
@@ -42,20 +42,17 @@ public class PeliculaAndParticpanteService {
 
     @Test
     void debeCrearParticipante() {
-        Participante toSave = new Participante();
-        toSave.setNombre("Participante 1");
-
         Participante saved = new Participante();
         saved.setNombre("Participante 1");
         saved.setId(1);
 
-        when(participanteRepository.save(any(Participante.class)))
-                .thenReturn(saved);
+        when(participanteRepository.save(any(Participante.class))).thenReturn(saved);
 
         ParticipanteDTO result = participanteService.createParticipante("Participante 1");
 
         assertThat(result.getId()).isEqualTo(1);
         verify(participanteRepository).save(any(Participante.class));
+        verifyNoMoreInteractions(participanteRepository, peliculaRepository);
     }
 
     @Test
@@ -82,15 +79,12 @@ public class PeliculaAndParticpanteService {
         p2.setId(2);
         p2.setNombre("Participante 2");
 
-        when(participanteRepository.findAllById(List.of(1, 2)))
-                .thenReturn(List.of(p1, p2));
+        when(participanteRepository.findAllById(List.of(1, 2))).thenReturn(List.of(p1, p2));
 
         UUID peliculaId = UUID.randomUUID();
         when(peliculaRepository.save(any(Pelicula.class))).thenAnswer(inv -> {
             Pelicula p = inv.getArgument(0);
-            if (p.getId() == null) {
-                p.setId(peliculaId);
-            }
+            if (p.getId() == null) p.setId(peliculaId);
             return p;
         });
 
@@ -106,16 +100,10 @@ public class PeliculaAndParticpanteService {
         Pelicula segundoSave = saves.get(1);
 
         assertThat(primerSave.getNombre()).isEqualTo("Titanic");
-
         assertThat(segundoSave.getCreditos()).hasSize(3);
-
         assertThat(segundoSave.getCreditos())
                 .extracting(c -> c.getParticipante().getId() + "|" + c.getRol().name())
-                .containsExactlyInAnyOrder(
-                        "1|ACTOR",
-                        "1|DIRECTOR",
-                        "2|ACTOR"
-                );
+                .containsExactlyInAnyOrder("1|ACTOR", "1|DIRECTOR", "2|ACTOR");
 
         verifyNoMoreInteractions(participanteRepository, peliculaRepository);
     }

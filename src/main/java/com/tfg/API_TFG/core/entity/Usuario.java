@@ -43,9 +43,8 @@ public class Usuario {
     public Cuenta getCuenta() { return cuenta; }
 
     public void setCuenta(Cuenta cuenta) {
-        if (cuenta == null) this.cuenta.setUsuario(null);
-        else cuenta.setUsuario(this);
-
+        if (this.cuenta != null) this.cuenta.setUsuario(null);
+        if (cuenta != null) cuenta.setUsuario(this);
         this.cuenta = cuenta;
     }
 
