@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -199,8 +200,25 @@ public class PeliculaController {
                                                     """
                                 )
                         )
+                ),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<PeliculaCompletoDTO> createPelicula(
             @Parameter(description = "DTO con los datos y participantes de la nueva película.")
@@ -241,6 +259,22 @@ public class PeliculaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no existente",
                         content = @Content(
@@ -257,6 +291,7 @@ public class PeliculaController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/{id}")
     public ResponseEntity<PeliculaCompletoDTO> updatePelicula(
             @Parameter(description = "UUID de la película a actualizar")
@@ -297,6 +332,22 @@ public class PeliculaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no existente",
                         content = @Content(
@@ -313,6 +364,7 @@ public class PeliculaController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<PeliculaDTO> deletePelicula(
             @Parameter(description = "ID de la película a eliminar")

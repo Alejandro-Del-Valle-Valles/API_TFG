@@ -51,8 +51,8 @@ public class AlergenoServiceImpl implements AlergenoService {
     public AlergenoDTO updateAlergeno(String nombreAntiguo, @Valid AlergenoDTO alergenoDTO) {
         Optional<Alergeno> alergenoExiste = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre());
         if(alergenoExiste.isPresent()) throw new EntityExistsException("Ya existe un alérgeno con el nombre " +  alergenoDTO.nombre());
-        Alergeno alergeno = alergenoRepository.findByNombreIgnoreCase(alergenoDTO.nombre())
-                .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno con nombre " + alergenoDTO.nombre()));
+        Alergeno alergeno = alergenoRepository.findByNombreIgnoreCase(nombreAntiguo)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró el alérgeno con nombre " + nombreAntiguo));
         alergeno.setNombre(alergenoDTO.nombre());
         alergenoRepository.save(alergeno);
         return alergenoDTO;

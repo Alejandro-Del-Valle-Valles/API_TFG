@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -117,6 +118,22 @@ public class AlergenoController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "No autorizado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "NoAutorizado",
+                                    summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                    value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "El objeto ya existe",
                     content = @Content(
@@ -133,6 +150,7 @@ public class AlergenoController {
                     )
             )
     })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<AlergenoDTO> createAlergeno(
             @Parameter(description = "Body con un objeto que contiene el nombre del nuevo alérgeno.")
@@ -170,6 +188,22 @@ public class AlergenoController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "No autorizado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "NoAutorizado",
+                                    summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                    value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "Alérgeno no encontrado",
                     content = @Content(
@@ -202,6 +236,7 @@ public class AlergenoController {
                     )
             )
     })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/{nombre}")
     public ResponseEntity<AlergenoDTO> updateAlergeno(
             @Parameter(description = "Nombre actual del parámetro.")
@@ -226,6 +261,22 @@ public class AlergenoController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "No autorizado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "NoAutorizado",
+                                    summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                    value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "Alérgeno no encontrado",
                     content = @Content(
@@ -242,6 +293,7 @@ public class AlergenoController {
                     )
             )
     })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{nombre}")
     public ResponseEntity<AlergenoDTO> deleteAlergeno(
             @Parameter(description = "Nombre del alérgeno a eliminar.")

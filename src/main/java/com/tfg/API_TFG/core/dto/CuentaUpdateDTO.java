@@ -7,17 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Schema(description = "Información de la cuenta y el usuario al que pertenece")
-public record CuentaDTO(
-
-        @Schema(
-                description = "Correo del usuario",
-                example = "ejemplo@gmail.com"
-        )
-        @NotNull(message = "El correo no puede ser nulo.")
-        @NotBlank(message = "El correo no puede estar en blanco.")
-        @Length(max = 100, message = "El correo no puede tener más de 100 caracteres.")
-        String correo,
-
+public record CuentaUpdateDTO(
         @Schema(
                 description = "Nombre del usuario",
                 example = "Blahaj"

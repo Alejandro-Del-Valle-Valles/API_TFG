@@ -9,6 +9,13 @@ import jakarta.validation.constraints.NotNull;
 public record CuentaLoginDTO(
 
         @Schema(
+                description = "Token de acceso"
+        )
+        @NotNull(message = "El token de acceso no puede ser nulo.")
+        @NotBlank(message = "El token de acceso no puede estar en blanco.")
+        String token,
+
+        @Schema(
                 description = "Correo de la cuenta",
                 example = "ejemplo@gmail.com"
         )

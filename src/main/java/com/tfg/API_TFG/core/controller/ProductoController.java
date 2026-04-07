@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -119,6 +120,22 @@ public class ProductoController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "409",
                         description = "Objeto ya existente",
                         content = @Content(
@@ -135,6 +152,7 @@ public class ProductoController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<ProductoDTO> createProducto(
             @Parameter(description = "Estructura en el body con los datos del nuevo producto.")
@@ -174,6 +192,22 @@ public class ProductoController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    description = "No autorizado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "NoAutorizado",
+                                    summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                    value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     description = "Objeto ya existente",
                     content = @Content(
@@ -190,6 +224,7 @@ public class ProductoController {
                     )
             )
     })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/{nombre}")
     public ResponseEntity<ProductoDTO> updateProducto(
             @Parameter(description = "Nombre del producto a actualizar.")
@@ -230,6 +265,22 @@ public class ProductoController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no encontrado",
                         content = @Content(
@@ -246,6 +297,7 @@ public class ProductoController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{nombre}")
     public ResponseEntity<ProductoDTO> deleteProducto(
             @Parameter(description = "Nombre del producto a borrar.")

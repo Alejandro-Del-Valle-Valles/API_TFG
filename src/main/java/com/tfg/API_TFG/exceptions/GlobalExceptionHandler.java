@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,6 +43,14 @@ public class GlobalExceptionHandler {
         Map<String, String> message = new HashMap<>();
         message.put(ex.getClass().getSimpleName(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ApiResponse(responseCode = "403", description = "No tiene los permisos adecuados")
+    public ResponseEntity<Map<String, String>> permisionDenied(AccessDeniedException ex) {
+        Map<String, String> message = new HashMap<>();
+        message.put(ex.getClass().getSimpleName(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
     }
 
     @ExceptionHandler(AuthenticationException.class)

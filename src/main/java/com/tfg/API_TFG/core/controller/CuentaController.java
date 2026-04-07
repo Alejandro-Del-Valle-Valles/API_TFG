@@ -2,6 +2,7 @@ package com.tfg.API_TFG.core.controller;
 
 import com.tfg.API_TFG.core.dto.CuentaDTO;
 import com.tfg.API_TFG.core.dto.CuentaLoginDTO;
+import com.tfg.API_TFG.core.dto.CuentaUpdateDTO;
 import com.tfg.API_TFG.core.dto.LoginDTO;
 import com.tfg.API_TFG.core.service.interfaces.CuentaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -77,7 +80,7 @@ public class CuentaController {
                         )
                 )
         })
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<CuentaLoginDTO> login(
             @Parameter(description = "Correo y contraseña en plano dela cuenta.")
             @RequestBody LoginDTO login
@@ -171,6 +174,22 @@ public class CuentaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "401",
+                        description = "No logueado o error de login",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoLogueado",
+                                        summary = "Ejemplo del error devuelto si el usuario no se ha logueado o ha ocurrido un error en el login.",
+                                        value = """
+                                                    {
+                                                        "AuthenticationException": "El usuario no ha sido logueado"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no existente",
                         content = @Content(
@@ -187,17 +206,19 @@ public class CuentaController {
                         )
                 )
         })
-    @PutMapping
+    @PutMapping("/me")
     public ResponseEntity<CuentaDTO> updateCuenta(
+            @Parameter(description = "Token de verificación de la cuenta.")
+            @AuthenticationPrincipal Jwt jwt,
             @Parameter(description = "Datos nuevos de la cuenta.")
-            @RequestBody @Valid CuentaDTO cuentaDTO
-    ) {
-        return ResponseEntity.ok(cuentaService.updateCuenta(cuentaDTO));
+            @RequestBody @Valid CuentaUpdateDTO cuentaUpdate
+    ) throws AuthenticationException {
+        return ResponseEntity.ok(cuentaService.updateCuenta(jwt.getSubject(), cuentaUpdate));
     }
 
     @Operation(
                 summary = "Elimina la cuenta",
-                description = "Elimina la cuenta en base al correo pasado"
+                description = "Elimina la cuenta en base al correo pasado. Primero comprueba que las credenciales son correctas."
         )
         @ApiResponses( value = {
                 @ApiResponse(
@@ -225,6 +246,22 @@ public class CuentaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "401",
+                        description = "No logueado o error de login",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoLogueado",
+                                        summary = "Ejemplo del error devuelto si el usuario no se ha logueado o ha ocurrido un error en el login.",
+                                        value = """
+                                                    {
+                                                        "AuthenticationException": "El usuario no ha sido logueado"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Cuenta no existente",
                         content = @Content(
@@ -241,11 +278,11 @@ public class CuentaController {
                         )
                 )
         })
-    @DeleteMapping("/{correo}")
+    @DeleteMapping("/me")
     public ResponseEntity<CuentaDTO> deleteCuenta(
-            @Parameter(description = "Correo de la cuenta a eliminar")
-            @PathVariable String correo
+            @Parameter(description = "Correo y contraseña en plano de la cuenta a eliminar")
+            @AuthenticationPrincipal Jwt jwt
     ) {
-        return ResponseEntity.ok(cuentaService.deleteCuenta(correo));
+        return ResponseEntity.ok(cuentaService.deleteCuenta(jwt.getSubject()));
     }
 }

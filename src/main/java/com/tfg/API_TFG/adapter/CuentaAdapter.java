@@ -11,7 +11,7 @@ public class CuentaAdapter {
                 cuenta.getRol());
     }
 
-    public static CuentaLoginDTO toLoginDTO(Cuenta cuenta) {
-        return new CuentaLoginDTO(cuenta.getUsuario().getCorreo(), cuenta.getNombre(), cuenta.getRol());
+    public static CuentaLoginDTO toLoginDTO(String token, Cuenta cuenta) {
+        return new CuentaLoginDTO(token, cuenta.getUsuario().getCorreo(), cuenta.getNombre(), cuenta.getRol());
     }
 }

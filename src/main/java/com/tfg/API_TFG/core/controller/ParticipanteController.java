@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -154,6 +155,22 @@ public class ParticipanteController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "409",
                         description = "Objeto ya existente",
                         content = @Content(
@@ -170,6 +187,7 @@ public class ParticipanteController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping("/{nombre}")
     public ResponseEntity<ParticipanteDTO> createParticipante(
             @Parameter(description = "Nombre del nuevo participante a crear.")
@@ -208,6 +226,22 @@ public class ParticipanteController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no existente",
                         content = @Content(
@@ -224,6 +258,7 @@ public class ParticipanteController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<ParticipanteDTO> updateParticipante(
             @Parameter(description = "ParticipanteDTO con el nuevo nombre.")
@@ -262,6 +297,22 @@ public class ParticipanteController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no existente",
                         content = @Content(
@@ -278,6 +329,7 @@ public class ParticipanteController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ParticipanteDTO> deleteParticipante(
             @Parameter(description = "ID del participante a eliminar.")

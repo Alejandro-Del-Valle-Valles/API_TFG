@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -168,6 +169,22 @@ public class SesionController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "409",
                         description = "Objeto ya existente",
                         content = @Content(
@@ -184,6 +201,7 @@ public class SesionController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<SesionCompletaDTO> createSesion(
             @Parameter(description = "Datos de la sesión a crear con el número de la sala, el ID de la película y el horario.")
@@ -223,6 +241,22 @@ public class SesionController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Objeto no existente",
                         content = @Content(
@@ -239,6 +273,7 @@ public class SesionController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping
     public ResponseEntity<SesionCompletaDTO> deleteSesion(
             @Parameter(description = "Datos de la sesión a eliminar.")

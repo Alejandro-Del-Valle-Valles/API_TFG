@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -135,6 +136,22 @@ public class SalaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "409",
                         description = "Objeto ya existente",
                         content = @Content(
@@ -151,6 +168,7 @@ public class SalaController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<SalaDTO> createSala(
             @Parameter(description = "Objeto de tipo SalaDTO con los datos de la sala.")
@@ -190,6 +208,22 @@ public class SalaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Sala no existente",
                         content = @Content(
@@ -206,6 +240,7 @@ public class SalaController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping
     public ResponseEntity<SalaDTO> updateSala(
             @Parameter(description = "Entidad SalaDTO con el aforo nuevo. El número no se cambia.")
@@ -228,6 +263,22 @@ public class SalaController {
                         )
                 ),
                 @ApiResponse(
+                        responseCode = "403",
+                        description = "No autorizado",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "NoAutorizado",
+                                        summary = "Ejemplo del error devuelto si el usuario no cuenta con los permisos adecuados.",
+                                        value = """
+                                                    {
+                                                        "AccessDeniedException": "El usuario no cuenta con el rol de ADMINISTRADOR"
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
                         responseCode = "404",
                         description = "Sala no existente",
                         content = @Content(
@@ -244,6 +295,7 @@ public class SalaController {
                         )
                 )
         })
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{numero}")
     public ResponseEntity<SalaDTO> deleteSala(
             @Parameter(description = "Número de la sala a eliminar.")

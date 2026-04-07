@@ -24,18 +24,16 @@ import java.util.Set;
 public class CompraServiceImpl implements CompraService {
     private final CompraRepository compraRepository;
     private final UsuarioRepository usuarioRepository;
-    private final LineaCompraRepository lineaCompraRepository;
     private final EntradaRepository entradaRepository;
     private final SesionRepository sesionRepository;
     private final ProductoRepository productoRepository;
 
     @Autowired
     public CompraServiceImpl(CompraRepository compraRepository, UsuarioRepository usuarioRepository,
-                             LineaCompraRepository lineaCompraRepository, EntradaRepository entradaRepository,
-                             SesionRepository sesionRepository, ProductoRepository productoRepository) {
+                             EntradaRepository entradaRepository, SesionRepository sesionRepository,
+                             ProductoRepository productoRepository) {
         this.compraRepository = compraRepository;
         this.usuarioRepository = usuarioRepository;
-        this.lineaCompraRepository = lineaCompraRepository;
         this.entradaRepository = entradaRepository;
         this.sesionRepository = sesionRepository;
         this.productoRepository = productoRepository;
@@ -45,8 +43,7 @@ public class CompraServiceImpl implements CompraService {
     public List<CompraDTO> getAllByCorreoUsuario(String correo) {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new EntityNotFoundException("No existe un usuario con correo " + correo));
-        List<Compra> compras = compraRepository.findAllByUsuarioCorreo(correo);
-        return compras.stream()
+        return usuario.getCompras().stream()
                 .map(CompraAdapter::toDTO)
                 .toList();
     }
@@ -127,38 +124,6 @@ public class CompraServiceImpl implements CompraService {
         Producto producto = productoRepository.findByNombreIgnoreCase(linea.getNombreProducto())
                 .orElseThrow(() -> new EntityNotFoundException("No existe el producto con nombre " + linea.getNombreProducto()));
         producto.addLineaCompra(lineaCompra);
-        return lineaCompra;
-    }
-
-    /**
-     * Comprueba si la sesión y la entrada existe. Si no existe la sesión o ya existe la entrada, lanza una excepción y noi guarda nada.
-     * Crea la entrada y la asigna a la línea de compra.
-     * @param linea DTO de la línea de compra
-     * @param lineaCompra Linea de compra a la que añadir la entrada
-     * @return LineaCompra con la entrada seteada.
-     */
-    private LineaCompra createLineaCompraEntrada(LineaCompraEntradaDTO linea, LineaCompra lineaCompra) {
-        SesionDTO s = linea.getEntrada().sesion();
-        SesionId sesionId = new SesionId(s.numSala(), s.peliculaId(), s.horario());
-        Sesion sesion = sesionRepository.findById(sesionId)
-                .orElseThrow(() -> new EntityNotFoundException("La sesión de la película no existe."));
-
-        EntradaDTO e = linea.getEntrada();
-        EntradaId entradaId = new EntradaId(
-                sesionId,
-                e.numFila(),
-                e.numButaca()
-        );
-        if (entradaRepository.existsById(entradaId))
-            throw new EntityExistsException("Ya existe la entrada que se trata de registrar");
-
-        Entrada entrada = new Entrada();
-        entrada.setId(entradaId);
-        entrada.setPrecio(e.precio());
-        sesion.addEntrada(entrada);
-        lineaCompra.setEntrada(entrada);
-        entrada.setLineaCompra(lineaCompra);
-
         return lineaCompra;
     }
 

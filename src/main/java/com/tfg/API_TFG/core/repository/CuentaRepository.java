@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface CuentaRepository extends JpaRepository<Cuenta, UUID> {
     Optional<Cuenta> findByUsuarioCorreo(String correo);
+    boolean existsByUsuarioCorreo(String correo);
 }

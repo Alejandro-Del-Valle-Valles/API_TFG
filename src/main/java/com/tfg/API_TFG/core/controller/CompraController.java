@@ -15,6 +15,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,41 +46,19 @@ public class CompraController {
                     )
             ),
             @ApiResponse(
-                    responseCode = "404",
-                    description = "Usuario no existente",
+                    responseCode = "401",
+                    description = "No logueado o error de login",
                     content = @Content(
                             mediaType = "application/json",
                             examples = @ExampleObject(
-                                    name = "ObjetoNoExistente",
-                                    summary = "Ejemplo del error devuelto si no existe el usuario",
+                                    name = "NoLogueado",
+                                    summary = "Ejemplo del error devuelto si el usuario no se ha logueado o ha ocurrido un error en el login.",
                                     value = """
-                                                {
-                                                    "EntityNotFoundException": "No existe el usuario con correo ejemplo@gmail.com"
-                                                }
-                                                """
+                                                    {
+                                                        "AuthenticationException": "El usuario no ha sido logueado"
+                                                    }
+                                                    """
                             )
-                    )
-            )
-    })
-    @GetMapping("/todas/{correo}")
-    public ResponseEntity<List<CompraDTO>> getAllComprasByUsuarioCorreo(
-            @Parameter(description = "Correo del usuario del que se quieren buscar las compras")
-            @PathVariable String correo
-    ) {
-        return ResponseEntity.ok(compraService.getAllByCorreoUsuario(correo));
-    }
-
-    @Operation(
-            summary = "Obtener todas las compras de un usuario que aún tiene que usar (Presentes o futuras)",
-            description = "Devuelve una lista con las compras a canjear en el presente o futuro, buscando al usuario mediante su correo."
-    )
-    @ApiResponses( value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Compras obtenidas",
-                    content = @Content(
-                            mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = CompraDTO.class))
                     )
             ),
             @ApiResponse(
@@ -98,12 +78,66 @@ public class CompraController {
                     )
             )
     })
-    @GetMapping("/futuras/{correo}")
-    public ResponseEntity<List<CompraDTO>> getAllComprasFuturasByUsuarioCorreo(
-            @Parameter(description = "Correo del usuario del que se quieren buscar las compras")
-            @PathVariable String correo
+    @GetMapping("/todas")
+    public ResponseEntity<List<CompraDTO>> getAllComprasByUsuarioCorreo(
+            @Parameter(description = "Token de verificación de la cuenta que contiene el correo de la cuenta.")
+            @AuthenticationPrincipal Jwt jwt
     ) {
-        return ResponseEntity.ok(compraService.getAllByCorreoUsuarioAndAfterYesterday(correo));
+        return ResponseEntity.ok(compraService.getAllByCorreoUsuario(jwt.getSubject()));
+    }
+
+    @Operation(
+            summary = "Obtener todas las compras de un usuario que aún tiene que usar (Presentes o futuras)",
+            description = "Devuelve una lista con las compras a canjear en el presente o futuro, buscando al usuario mediante su correo."
+    )
+    @ApiResponses( value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Compras obtenidas",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = CompraDTO.class))
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "No logueado o error de login",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "NoLogueado",
+                                    summary = "Ejemplo del error devuelto si el usuario no se ha logueado o ha ocurrido un error en el login.",
+                                    value = """
+                                                    {
+                                                        "AuthenticationException": "El usuario no ha sido logueado"
+                                                    }
+                                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuario no existente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "ObjetoNoExistente",
+                                    summary = "Ejemplo del error devuelto si no existe el usuario",
+                                    value = """
+                                                {
+                                                    "EntityNotFoundException": "No existe el usuario con correo ejemplo@gmail.com"
+                                                }
+                                                """
+                            )
+                    )
+            )
+    })
+    @GetMapping("/futuras")
+    public ResponseEntity<List<CompraDTO>> getAllComprasFuturasByUsuarioCorreo(
+            @Parameter(description = "Token de verificación de la cuenta para obtener las compras")
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        return ResponseEntity.ok(compraService.getAllByCorreoUsuarioAndAfterYesterday(jwt.getSubject()));
     }
 
     @Operation(

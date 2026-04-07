@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    //TODO: Crear endpoints con autorización de admin y configurar jwt
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -22,13 +21,46 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/cuenta/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/cuenta/registro").permitAll()
-                        .anyRequest().permitAll()
-                );
 
-        // IMPORTANTE: aún NO actives JWT resource server
-        // .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                        // Login/registro
+                        .requestMatchers(HttpMethod.GET, "/cuenta/login/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/cuenta/registro").permitAll()
+
+                        // Endpoints "mi cuenta" (requieren token)
+                        .requestMatchers(HttpMethod.PUT, "/cuenta/me").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/cuenta/me").authenticated()
+
+                        // Públicos (GET)
+                        .requestMatchers(HttpMethod.GET,
+                                "/alergeno/**", "/compra/**", "/participante/**", "/pelicula/**",
+                                "/producto/**", "/sala/**", "/sesion/**", "/usuario/**"
+                        ).permitAll()
+
+                        // Públicos (POST)
+                        .requestMatchers(HttpMethod.POST, "/compra/**", "/cuenta/**", "/usuario/**").permitAll()
+
+                        // Admin
+                        .requestMatchers(HttpMethod.POST,
+                                "/alergeno/**", "/participante/**", "/pelicula/**",
+                                "/producto/**", "/sala/**", "/sesion/**"
+                        ).hasRole("ADMINISTRADOR")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/alergeno/**", "/participante/**", "/pelicula/**",
+                                "/producto/**", "/sala/**", "/sesion/**"
+                        ).hasRole("ADMINISTRADOR")
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/alergeno/**", "/participante/**", "/pelicula/**",
+                                "/producto/**", "/sala/**", "/sesion/**"
+                        ).hasRole("ADMINISTRADOR")
+
+                        // Resto públicos
+                        .anyRequest().permitAll()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtAuthConverter()))
+                );
 
         return http.build();
     }
