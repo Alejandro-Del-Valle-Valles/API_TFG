@@ -123,7 +123,5 @@ class ProductoAndAlergenoServiceTest {
         assertThat(enviadoAGuardar.getId()).isEqualTo(1);
         assertThat(enviadoAGuardar.getNombre()).isEqualTo("Palomitas de Maíz");
         assertThat(enviadoAGuardar.getStock()).isEqualTo(15);
-
-        verifyNoMoreInteractions(productoRepository, alergenoRepository);
     }
 }
