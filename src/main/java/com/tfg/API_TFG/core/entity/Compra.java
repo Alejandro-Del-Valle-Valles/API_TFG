@@ -23,7 +23,7 @@ public class Compra {
 
     @NotEmpty(message = "La compra debe contener al menos una línea.")
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<@Valid LineaCompra> lineaCompras = new ArrayList<>();
+    private List<@Valid LineaCompra> lineaCompras;
 
     @AssertTrue(message = "La compra debe tener al menos una línea con entrada, y no puede haber 2 líneas de compra con el mismo número.")
     private boolean hasLineaConEntrada() {
@@ -40,7 +40,10 @@ public class Compra {
 
     public void setUsuario(@Valid Usuario usuario) { this.usuario = usuario; }
 
-    public List<LineaCompra> getLineaCompras() { return lineaCompras; }
+    public List<LineaCompra> getLineaCompras() {
+        if(this.lineaCompras == null) this.lineaCompras = new ArrayList<>();
+        return lineaCompras;
+    }
 
     public void setLineaCompras(List<@Valid LineaCompra> lineaCompras) { this.lineaCompras = lineaCompras; }
 
@@ -49,6 +52,7 @@ public class Compra {
      * @param lineaCompra LineaCompra a añadir.
      */
     public void addLineaCompra(@Valid LineaCompra lineaCompra) {
+        if(this.lineaCompras == null) this.lineaCompras = new ArrayList<>();
         if(lineaCompra == null) throw new IllegalArgumentException("La línea de compra no puede ser nula.");
         if(!this.lineaCompras.contains(lineaCompra)) {
             lineaCompra.setCompra(this);

@@ -44,7 +44,7 @@ public class SesionServiceImpl implements SesionService {
 
     @Override
     public SesionCompletaDTO getSesion(Integer numSala, UUID peliculaId, LocalDateTime horario) {
-        SesionCrudDTO sesionCrudDTO = new SesionCrudDTO(numSala, peliculaId, horario);
+        SesionCrudDTO sesionCrudDTO = new SesionCrudDTO(numSala, false, false, peliculaId, horario);
         SesionId id = toSesionId(sesionCrudDTO);
         Sesion sesion = sesionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -76,6 +76,8 @@ public class SesionServiceImpl implements SesionService {
         }
         Sesion sesion = new Sesion();
         sesion.setId(id);
+        sesion.setTresD(sesionCrudDTO.tresD());
+        sesion.setVose(sesionCrudDTO.vose());
         sesion.setSala(sala);
         sesion.setPelicula(pelicula);
         sesion.setHorario(sesionCrudDTO.horario());

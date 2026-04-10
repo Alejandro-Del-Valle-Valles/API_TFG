@@ -16,6 +16,14 @@ public class Sesion {
     @EmbeddedId
     private SesionId id;
 
+    @NotNull(message = "No se admite valor nulo para si la sesión es o no en 3D.")
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean tresD = false;
+
+    @NotNull(message = "No se admite valor nulo para si la sesión es o no VOSE.")
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean vose = false;
+
     @ManyToOne
     @JoinColumn(name = "num_sala", referencedColumnName = "numSala", insertable = false, updatable = false)
     private @Valid Sala sala;
@@ -32,6 +40,14 @@ public class Sesion {
     public SesionId getId() { return id; }
 
     public void setId(SesionId id) { this.id = id; }
+
+    public boolean isTresD() { return tresD; }
+
+    public void setTresD(boolean es3D) { this.tresD = es3D; }
+
+    public boolean isVose() { return vose; }
+
+    public void setVose(boolean esVose) { this.vose = esVose; }
 
     public Sala getSala() { return sala; }
 
