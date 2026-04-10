@@ -37,7 +37,6 @@ public record SesionDTO(
         @Schema(
                 description = "Información básica de la película"
         )
-        @NotNull(message = "La película que se proyecta no puede ser nula.")
         UUID peliculaId,
 
         @Schema(

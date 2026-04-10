@@ -16,11 +16,9 @@ public class Sesion {
     @EmbeddedId
     private SesionId id;
 
-    @NotNull(message = "No se admite valor nulo para si la sesión es o no en 3D.")
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean tresD = false;
 
-    @NotNull(message = "No se admite valor nulo para si la sesión es o no VOSE.")
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean vose = false;
 

@@ -15,28 +15,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class CompraServiceImpl implements CompraService {
+    private final DateTimeFormatter FORMATO_HORARIO = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm");
     private final CompraRepository compraRepository;
     private final UsuarioRepository usuarioRepository;
     private final EntradaRepository entradaRepository;
     private final SesionRepository sesionRepository;
     private final ProductoRepository productoRepository;
+    private final EmailService emailService;
 
     @Autowired
     public CompraServiceImpl(CompraRepository compraRepository, UsuarioRepository usuarioRepository,
                              EntradaRepository entradaRepository, SesionRepository sesionRepository,
-                             ProductoRepository productoRepository) {
+                             ProductoRepository productoRepository, EmailService emailService) {
         this.compraRepository = compraRepository;
         this.usuarioRepository = usuarioRepository;
         this.entradaRepository = entradaRepository;
         this.sesionRepository = sesionRepository;
         this.productoRepository = productoRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -111,7 +112,48 @@ public class CompraServiceImpl implements CompraService {
         }
 
         Compra guardada = compraRepository.save(compra);
+
+        String[] info = crearInfoCorreo(guardada);
+
+        emailService.enviarCompra(compraDTO.correo(), info[0], info[1]);
+
         return CompraAdapter.toDTO(guardada);
+    }
+
+
+    /**
+     * Crea la info que se va a enviar por correo.
+     * @param compra Compra sobre la que se quiere obtener info
+     * @return String[] de 2 posiciones. Posición 0 con asunto, posición 1 con cuerpo.
+     */
+    private String[] crearInfoCorreo(Compra compra) {
+        Entrada entradaBase = compra.getLineaCompras().stream()
+                .map(LineaCompra::getEntrada)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("No se ha encontrado ninguna entrada en la compra."));
+
+        var sesion = entradaBase.getSesion();
+        String nombrePelicula = sesion.getPelicula().getNombre();
+        String horario = sesion.getHorario().format(FORMATO_HORARIO);
+
+        String asunto = String.format("Compra confirmada: %s | %s", nombrePelicula, horario);
+
+        StringBuilder cuerpo = new StringBuilder();
+        cuerpo.append(String.format("Confirmada su compra para %s | %s%n", nombrePelicula, horario));
+        for (LineaCompra linea : compra.getLineaCompras()) {
+            if (linea.getEntrada() != null) {
+                Entrada e = linea.getEntrada();
+                cuerpo.append(String.format("\tEntrada Fila %d Butaca %d Precio %.2f%n",
+                        e.getId().getFila(), e.getId().getButaca(), e.getPrecio()));
+            } else if (linea.getProducto() != null) {
+                Producto p = linea.getProducto();
+                cuerpo.append(String.format("\tProducto %s Precio %.2f%n",
+                        p.getNombre(), p.getPrecio()));
+            }
+        }
+
+        return new String[]{asunto, cuerpo.toString()};
     }
 
     /**

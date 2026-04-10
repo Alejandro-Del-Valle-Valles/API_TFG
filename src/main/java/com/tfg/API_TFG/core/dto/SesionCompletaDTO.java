@@ -22,14 +22,12 @@ public record SesionCompletaDTO(
             description = "La sesión se proyecta o no en 3D. True si es 3D, false si no.",
             example = "true"
     )
-    @NotNull(message = "No puede ser nulo. True si se proyecta en 3D, false si no.")
     boolean tresD,
 
     @Schema(
             description = "La sesión se proyecta en VOSE o doblada. True si es VOSE, false si no.",
             example = "false"
     )
-    @NotNull(message = "No puede ser nulo. True si es en VOSE, false si no.")
     boolean vose,
 
     @Schema(

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.tfg"
-version = "1.1.1"
+version = "1.2.0"
 description = "Proyecto de la API para el TFG de DAM 2 curso 25-26"
 
 java {
@@ -26,6 +26,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
