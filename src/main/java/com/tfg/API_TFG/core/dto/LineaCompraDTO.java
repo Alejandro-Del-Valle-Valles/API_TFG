@@ -15,9 +15,9 @@ import java.util.Objects;
         visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = LineaCompraProductoCreateDTO.class, name = "PRODUCTO"),
+        @JsonSubTypes.Type(value = LineaCompraProductoCreateDTO.class, name = "PRODUCTO_CREATE"),
         @JsonSubTypes.Type(value = LineaCompraEntradaDTO.class, name = "ENTRADA"),
-        @JsonSubTypes.Type(value = LineaCompraProductoDTO.class, name = "PRODUCTO")
+        @JsonSubTypes.Type(value = LineaCompraProductoDTO.class, name = "PRODUCTO_INFO")
 })
 @Schema(
         description = "Línea de compra polimórfica. Puede ser para una entrada o un producto.",

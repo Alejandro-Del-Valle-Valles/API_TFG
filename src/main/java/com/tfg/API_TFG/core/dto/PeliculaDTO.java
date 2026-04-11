@@ -50,7 +50,7 @@ public class PeliculaDTO {
     private GeneroPeliculas genero;
 
     @Schema(
-            description = "URL de la magen de la portada de la película",
+            description = "URL de la imagen de la portada de la película",
             example = "https://es.web.img3.acsta.net/medias/nmedia/18/86/91/41/19870073.jpg"
     )
     @Length(max = 511, message = "El enlace no puede ser superior a 50 caracteres.")
