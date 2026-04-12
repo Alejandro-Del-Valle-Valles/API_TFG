@@ -35,8 +35,8 @@ public class CuentaController {
     }
 
     @Operation(
-                summary = "Logea al usuario | NO FUNCIONA DE MOMENTO",
-                description = "Logea y al usuario y le devuelve la info de su cuenta | NO FUNCIONA DE MOMENTO"
+                summary = "Logea al usuario",
+                description = "Logea y al usuario y le devuelve la info de su cuenta"
         )
         @ApiResponses( value = {
                 @ApiResponse(
