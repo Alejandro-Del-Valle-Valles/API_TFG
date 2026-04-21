@@ -28,9 +28,7 @@ public class AlergenoController {
     private final AlergenoService alergenoService;
 
     @Autowired
-    public AlergenoController(AlergenoService alergenoService) {
-        this.alergenoService = alergenoService;
-    }
+    public AlergenoController(AlergenoService alergenoService) { this.alergenoService = alergenoService; }
 
     @Operation(
             summary = "Obtiene todos los alérgenos. No ordenado",

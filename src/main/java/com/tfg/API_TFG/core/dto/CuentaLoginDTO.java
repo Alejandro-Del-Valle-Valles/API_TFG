@@ -9,7 +9,8 @@ import jakarta.validation.constraints.NotNull;
 public record CuentaLoginDTO(
 
         @Schema(
-                description = "Token de acceso"
+                description = "Token de acceso",
+                example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlamVtcGxvQGdtYWlsLmNvbSIsImV4cCI6MTc3NjgxNDgzOCwiaWF0IjoxNzc2Nzk2ODM4LCJyb2wiOiJBRE1JTklTVFJBRE9SIn0.VR_K6PlH4eL83UcFMfAYyq57qUtkYdEJFqk5wynFhpA"
         )
         @NotNull(message = "El token de acceso no puede ser nulo.")
         @NotBlank(message = "El token de acceso no puede estar en blanco.")

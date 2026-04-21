@@ -4,7 +4,6 @@ import com.tfg.API_TFG.core.enums.GeneroPeliculas;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -55,6 +54,9 @@ public class Pelicula {
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Sesion> sesiones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<@Valid Baner> baners = new ArrayList<>();
 
     public Pelicula() { }
 
@@ -126,6 +128,24 @@ public class Pelicula {
             sesion.setPelicula(this);
             this.sesiones.add(sesion);
         }
+    }
+
+    public Boolean getEnCartelera() { return enCartelera; }
+
+    public List<Baner> getBaners() { return baners; }
+
+    public void setBaners(List<@Valid Baner> baners) { this.baners = baners; }
+
+    public void addBaner(@Valid Baner baner) {
+        if (baner == null) throw new IllegalArgumentException("El baner no puede ser nulo.");
+        if (baner.getPelicula() != null && baner.getPelicula() != this) baner.getPelicula().removeBaner(baner);
+        if (!this.baners.contains(baner)) this.baners.add(baner);
+        baner.setPelicula(this);
+    }
+
+    public void removeBaner(@Valid Baner baner) {
+        if (baner == null) return;
+        if (this.baners.remove(baner)) baner.setPelicula(null);
     }
 
     /**
