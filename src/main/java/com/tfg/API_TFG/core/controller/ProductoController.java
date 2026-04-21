@@ -152,7 +152,7 @@ public class ProductoController {
                         )
                 )
         })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
     @PostMapping
     public ResponseEntity<ProductoDTO> createProducto(
             @Parameter(description = "Estructura en el body con los datos del nuevo producto.")
@@ -224,7 +224,7 @@ public class ProductoController {
                     )
             )
     })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
     @PutMapping("/{nombre}")
     public ResponseEntity<ProductoDTO> updateProducto(
             @Parameter(description = "Nombre del producto a actualizar.")
@@ -297,7 +297,7 @@ public class ProductoController {
                         )
                 )
         })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
     @DeleteMapping("/{nombre}")
     public ResponseEntity<ProductoDTO> deleteProducto(
             @Parameter(description = "Nombre del producto a borrar.")

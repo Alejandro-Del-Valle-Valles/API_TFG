@@ -115,7 +115,7 @@ public class CompraServiceImpl implements CompraService {
 
         String[] info = crearInfoCorreo(guardada);
 
-        emailService.enviarCompra(compraDTO.correo(), info[0], info[1]);
+        emailService.enviarCompraHtml(compraDTO.correo(), info[0], info[1]);
 
         return CompraAdapter.toDTO(guardada);
     }
@@ -139,21 +139,54 @@ public class CompraServiceImpl implements CompraService {
 
         String asunto = String.format("Compra confirmada: %s | %s", nombrePelicula, horario);
 
-        StringBuilder cuerpo = new StringBuilder();
-        cuerpo.append(String.format("Confirmada su compra para %s | %s%n", nombrePelicula, horario));
+        StringBuilder html = new StringBuilder();
+        html.append("<div style='font-family:Arial,sans-serif'>");
+        html.append(String.format("<h2>Compra confirmada</h2><p><b>%s</b><br/>%s</p>", nombrePelicula, horario));
+
+        html.append("<table style='border-collapse:collapse;width:100%'>");
+        html.append("<thead><tr>")
+                .append("<th style='border:1px solid #ddd;padding:8px;text-align:left'>Concepto</th>")
+                .append("<th style='border:1px solid #ddd;padding:8px;text-align:right'>Precio</th>")
+                .append("</tr></thead><tbody>");
+
         for (LineaCompra linea : compra.getLineaCompras()) {
             if (linea.getEntrada() != null) {
                 Entrada e = linea.getEntrada();
-                cuerpo.append(String.format("\tEntrada Fila %d Butaca %d Precio %.2f%n",
-                        e.getId().getFila(), e.getId().getButaca(), e.getPrecio()));
+                html.append("<tr>")
+                        .append(String.format(
+                                "<td style='border:1px solid #ddd;padding:8px'>Entrada - Fila %d, Butaca %d</td>",
+                                e.getId().getFila(), e.getId().getButaca()))
+                        .append(String.format(
+                                "<td style='border:1px solid #ddd;padding:8px;text-align:right'>%.2f €</td>",
+                                e.getPrecio()))
+                        .append("</tr>");
             } else if (linea.getProducto() != null) {
                 Producto p = linea.getProducto();
-                cuerpo.append(String.format("\tProducto %s Precio %.2f%n",
-                        p.getNombre(), p.getPrecio()));
+                html.append("<tr>")
+                        .append(String.format(
+                                "<td style='border:1px solid #ddd;padding:8px'>Producto - %s</td>",
+                                escapeHtml(p.getNombre())))
+                        .append(String.format(
+                                "<td style='border:1px solid #ddd;padding:8px;text-align:right'>%.2f €</td>",
+                                p.getPrecio()))
+                        .append("</tr>");
             }
         }
 
-        return new String[]{asunto, cuerpo.toString()};
+        html.append("</tbody></table>");
+        html.append("<p style='margin-top:16px'>Gracias por tu compra.</p>");
+        html.append("</div>");
+
+        return new String[]{asunto, html.toString()};
+    }
+
+    private String escapeHtml(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
     /**

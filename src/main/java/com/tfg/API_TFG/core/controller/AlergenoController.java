@@ -150,7 +150,7 @@ public class AlergenoController {
                     )
             )
     })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
     @PostMapping
     public ResponseEntity<AlergenoDTO> createAlergeno(
             @Parameter(description = "Body con un objeto que contiene el nombre del nuevo alérgeno.")
@@ -236,7 +236,7 @@ public class AlergenoController {
                     )
             )
     })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
     @PutMapping("/{nombre}")
     public ResponseEntity<AlergenoDTO> updateAlergeno(
             @Parameter(description = "Nombre actual del parámetro.")
@@ -293,7 +293,7 @@ public class AlergenoController {
                     )
             )
     })
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
     @DeleteMapping("/{nombre}")
     public ResponseEntity<AlergenoDTO> deleteAlergeno(
             @Parameter(description = "Nombre del alérgeno a eliminar.")

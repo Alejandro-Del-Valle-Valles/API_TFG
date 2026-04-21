@@ -2,7 +2,6 @@ package com.tfg.API_TFG.core.controller;
 
 import com.tfg.API_TFG.core.dto.SesionCrudDTO;
 import com.tfg.API_TFG.core.dto.SesionCompletaDTO;
-import com.tfg.API_TFG.core.dto.SesionDTO;
 import com.tfg.API_TFG.core.service.interfaces.SesionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

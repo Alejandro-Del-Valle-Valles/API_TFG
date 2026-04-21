@@ -26,7 +26,7 @@ public class SalaServiceImpl implements SalaService {
     @Override
     public List<SalaDTO> getAll() {
         return salaRepository.findAll().stream()
-                .map(SalaAdapter:: toDTO)
+                .map(SalaAdapter::toDTO)
                 .toList();
     }
 

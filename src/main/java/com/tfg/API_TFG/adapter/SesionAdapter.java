@@ -7,8 +7,7 @@ import com.tfg.API_TFG.core.entity.Sesion;
 public class SesionAdapter {
 
     public static SesionDTO toDTO(Sesion sesion) {
-        return new SesionDTO(sesion.getSala().getNumSala(), sesion.isTresD(), sesion.isVose(),
-                sesion.getPelicula().getId(), sesion.getHorario());
+        return new SesionDTO(sesion.getSala().getNumSala(), sesion.getHorario(), sesion.getPelicula().getId());
     }
 
     public static SesionCompletaDTO toCompletoDTO(Sesion sesion) {
