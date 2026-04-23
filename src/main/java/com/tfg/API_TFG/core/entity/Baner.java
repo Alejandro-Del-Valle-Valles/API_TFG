@@ -17,7 +17,7 @@ public class Baner {
     private UUID id;
 
     @MapsId
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "pelicula_id", nullable = false)
     private @Valid Pelicula pelicula;
 

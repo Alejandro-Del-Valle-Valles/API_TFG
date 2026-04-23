@@ -18,7 +18,7 @@ public record LoginDTO(
 
         @Schema(
                 description = "Contraseña de la cuenta.",
-                example = "Abril2026"
+                example = "Abril2026*"
         )
         @NotNull(message = "La contraseña no puede ser nula.")
         @NotBlank(message = "La contraseña no puede estar vacía.")

@@ -55,8 +55,8 @@ public class Pelicula {
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Sesion> sesiones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<@Valid Baner> baners = new ArrayList<>();
+    @OneToOne(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
+    private @Valid Baner baner;
 
     public Pelicula() { }
 
@@ -132,21 +132,9 @@ public class Pelicula {
 
     public Boolean getEnCartelera() { return enCartelera; }
 
-    public List<Baner> getBaners() { return baners; }
+    public Baner getBaner() { return baner; }
 
-    public void setBaners(List<@Valid Baner> baners) { this.baners = baners; }
-
-    public void addBaner(@Valid Baner baner) {
-        if (baner == null) throw new IllegalArgumentException("El baner no puede ser nulo.");
-        if (baner.getPelicula() != null && baner.getPelicula() != this) baner.getPelicula().removeBaner(baner);
-        if (!this.baners.contains(baner)) this.baners.add(baner);
-        baner.setPelicula(this);
-    }
-
-    public void removeBaner(@Valid Baner baner) {
-        if (baner == null) return;
-        if (this.baners.remove(baner)) baner.setPelicula(null);
-    }
+    public void setBaner(Baner baner) { this.baner = baner; }
 
     /**
      * Limpia las relaciones antes de eliminar la película.

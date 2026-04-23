@@ -45,7 +45,8 @@ public class BanerServiceImpl implements BanerService {
         baner.setUrl(banerDTO.url());
         baner.setEmpieza(banerDTO.empieza());
         baner.setTermina(banerDTO.termina());
-        pelicula.addBaner(baner);
+        pelicula.setBaner(baner);
+        baner.setPelicula(pelicula);
         return BanerAdapter.toDTO(banerRepository.save(baner));
     }
 
@@ -61,7 +62,8 @@ public class BanerServiceImpl implements BanerService {
         baner.setUrl(banerDTO.url());
         baner.setEmpieza(banerDTO.empieza());
         baner.setTermina(banerDTO.termina());
-        pelicula.addBaner(baner);
+        pelicula.setBaner(baner);
+        baner.setPelicula(pelicula);
         return BanerAdapter.toDTO(banerRepository.save(baner));
     }
 
