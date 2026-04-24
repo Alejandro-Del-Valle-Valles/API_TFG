@@ -156,6 +156,7 @@ public class CompraController {
                                             value = """
                                                 {
                                                   "correo": "ejemplo@gmail.com",
+                                                  "holdToken": "6b8fb0f3-7ee8-4ef8-94ec-7bbfc9f68997",
                                                   "lineasCompra": [
                                                     {
                                                       "type": "PRODUCTO",
@@ -172,6 +173,7 @@ public class CompraController {
                                             value = """
                                                     {
                                                          "correo": "ejemplo@gmail.com",
+                                                          "holdToken": "6b8fb0f3-7ee8-4ef8-94ec-7bbfc9f68997",
                                                          "lineasCompra": [
                                                          {
                                                              "type": "ENTRADA",

@@ -21,6 +21,14 @@ public record CompraDTO(
         @Length(max = 100, message = "El correo no puede contener más de 100 caracteres.")
         String correo,
 
+        @Schema(
+                description = "Token de reserva de butacas.",
+                example = "TokenDeReservDeButacasEjemplo"
+        )
+        @NotBlank(message = "El token no puede estar vacío.")
+        @NotNull(message = "El Token no puede ser nulo.")
+        String holdToken,
+
         @ArraySchema(
                 schema = @Schema(implementation = LineaCompraDTO.class),
                 arraySchema = @Schema(description = "Lista de lineas de compra del DTO")

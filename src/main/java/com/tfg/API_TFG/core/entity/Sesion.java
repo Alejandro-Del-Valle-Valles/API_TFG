@@ -31,6 +31,9 @@ public class Sesion {
     private @Valid Pelicula pelicula;
 
     @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<@Valid BloqueoButaca> bloqueoButacas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<@Valid Entrada> entradas = new ArrayList<>();
 
     public Sesion() { }
@@ -71,6 +74,18 @@ public class Sesion {
         }
     }
 
+    public List<BloqueoButaca> getBloqueoButacas() { return bloqueoButacas; }
+
+    public void setBloqueoButacas(List<@Valid BloqueoButaca> bloqueoButacas) { this.bloqueoButacas = bloqueoButacas; }
+
+    public void addBloqueButaca(@Valid BloqueoButaca butaca) {
+        if(butaca == null) throw new IllegalArgumentException("La butaca no puede ser nula");
+        if(!this.bloqueoButacas.contains(butaca)) {
+            butaca.setSesion(this);
+            this.bloqueoButacas.add(butaca);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -79,7 +94,5 @@ public class Sesion {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public int hashCode() { return Objects.hashCode(id); }
 }

@@ -9,9 +9,13 @@ import java.util.List;
 public class CompraAdapter {
 
     public static CompraDTO toDTO(Compra compra) {
+        return toDTO(compra, "NO_APLICA");
+    }
+
+    public static CompraDTO toDTO(Compra compra, String holdToken) {
         List<LineaCompraDTO> lineas = compra.getLineaCompras().stream()
                 .map(LineaCompraAdapter::toDTO)
                 .toList();
-        return new CompraDTO(compra.getUsuario().getCorreo(), lineas);
+        return new CompraDTO(compra.getUsuario().getCorreo(), holdToken, lineas);
     }
 }

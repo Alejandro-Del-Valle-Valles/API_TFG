@@ -24,17 +24,20 @@ public class CompraServiceImpl implements CompraService {
     private final CompraRepository compraRepository;
     private final UsuarioRepository usuarioRepository;
     private final EntradaRepository entradaRepository;
+    private final BloqueoButacaRepository bloqueoButacaRepository;
     private final SesionRepository sesionRepository;
     private final ProductoRepository productoRepository;
     private final EmailService emailService;
 
     @Autowired
     public CompraServiceImpl(CompraRepository compraRepository, UsuarioRepository usuarioRepository,
-                             EntradaRepository entradaRepository, SesionRepository sesionRepository,
+                             EntradaRepository entradaRepository, BloqueoButacaRepository bloqueoButacaRepository,
+                             SesionRepository sesionRepository,
                              ProductoRepository productoRepository, EmailService emailService) {
         this.compraRepository = compraRepository;
         this.usuarioRepository = usuarioRepository;
         this.entradaRepository = entradaRepository;
+        this.bloqueoButacaRepository = bloqueoButacaRepository;
         this.sesionRepository = sesionRepository;
         this.productoRepository = productoRepository;
         this.emailService = emailService;
@@ -91,10 +94,28 @@ public class CompraServiceImpl implements CompraService {
                                 new SesionId(eDTO.sesion().numSala(), eDTO.sesion().peliculaId(), eDTO.sesion().horario()))
                         .orElseThrow(() -> new EntityNotFoundException("La sesión de la película no existe."));
 
+                SesionId sesionId = sesion.getId();
+                EntradaId entradaId = new EntradaId(sesionId, eDTO.numFila(), eDTO.numButaca());
+
+                if (entradaRepository.existsById(entradaId)) {
+                    throw new EntityExistsException("Butaca ya comprada");
+                }
+
+                boolean bloqueoValido = bloqueoButacaRepository
+                        .findBySesion_IdAndFilaAndButacaAndTokenAndExpiraGreaterThanEqual(
+                                sesionId,
+                                eDTO.numFila(),
+                                eDTO.numButaca(),
+                                compraDTO.holdToken(),
+                                LocalDateTime.now()
+                        )
+                        .isPresent();
+                if (!bloqueoValido) {
+                    throw new EntityExistsException("Bloqueo expirado o no pertenece al token");
+                }
+
                 Entrada entrada = new Entrada();
-                EntradaId entradaId = new EntradaId();
-                entradaId.setFila(eDTO.numFila());
-                entradaId.setButaca(eDTO.numButaca());
+                entradaId.setSesionId(sesion.getId());
                 entrada.setId(entradaId);
 
                 entrada.setPrecio(eDTO.precio());
@@ -113,11 +134,13 @@ public class CompraServiceImpl implements CompraService {
 
         Compra guardada = compraRepository.save(compra);
 
+        bloqueoButacaRepository.deleteByToken(compraDTO.holdToken());
+
         String[] info = crearInfoCorreo(guardada);
 
         emailService.enviarCompraHtml(compraDTO.correo(), info[0], info[1]);
 
-        return CompraAdapter.toDTO(guardada);
+        return CompraAdapter.toDTO(guardada, compraDTO.holdToken());
     }
 
 

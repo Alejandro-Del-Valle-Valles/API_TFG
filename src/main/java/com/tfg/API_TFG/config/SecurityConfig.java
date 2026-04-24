@@ -36,6 +36,15 @@ public class SecurityConfig {
                                 "/producto/**", "/sala/**", "/sesion/**", "/usuario/**"
                         ).permitAll()
 
+                        .requestMatchers(HttpMethod.POST,
+                                "/sesion/*/*/*/hold-token",
+                                "/sesion/*/*/*/butaca/hold"
+                        ).permitAll()
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/sesion/*/*/*/butaca/hold"
+                        ).permitAll()
+
                         // Públicos (POST)
                         .requestMatchers(HttpMethod.POST, "/compra/**", "/cuenta/**", "/usuario/**").permitAll()
 

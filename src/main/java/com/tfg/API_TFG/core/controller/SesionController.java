@@ -1,7 +1,12 @@
 package com.tfg.API_TFG.core.controller;
 
+import com.tfg.API_TFG.core.dto.ButacasStatusResponse;
+import com.tfg.API_TFG.core.dto.HoldButacaRequest;
+import com.tfg.API_TFG.core.dto.HoldTokenResponse;
+import com.tfg.API_TFG.core.dto.ReleaseButacaRequest;
 import com.tfg.API_TFG.core.dto.SesionCrudDTO;
 import com.tfg.API_TFG.core.dto.SesionCompletaDTO;
+import com.tfg.API_TFG.core.service.interfaces.ButacaSyncService;
 import com.tfg.API_TFG.core.service.interfaces.SesionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,10 +34,12 @@ import java.util.UUID;
 @Tag(name = "Sesiones", description = "API para las sesiones")
 public class SesionController {
     private final SesionService sesionService;
+    private final ButacaSyncService butacaSyncService;
 
     @Autowired
-    public SesionController(SesionService sesionService) {
+    public SesionController(SesionService sesionService, ButacaSyncService butacaSyncService) {
         this.sesionService = sesionService;
+        this.butacaSyncService = butacaSyncService;
     }
 
     @Operation(
@@ -279,5 +286,64 @@ public class SesionController {
             @RequestBody @Valid SesionCrudDTO sesionCrudDTO
     ) {
         return ResponseEntity.ok(sesionService.deleteSesion(sesionCrudDTO));
+    }
+
+    @Operation(summary = "Genera un token temporal para selección de butacas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token generado",
+                    content = @Content(schema = @Schema(implementation = HoldTokenResponse.class)))
+    })
+    @PostMapping("/{numSala}/{peliculaId}/{horario}/hold-token")
+    public ResponseEntity<HoldTokenResponse> createHoldToken(
+            @PathVariable Integer numSala,
+            @PathVariable UUID peliculaId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario
+    ) {
+        return ResponseEntity.ok(butacaSyncService.createHoldToken(numSala, peliculaId, horario));
+    }
+
+    @Operation(summary = "Bloquea temporalmente una butaca durante 10 minutos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Butaca bloqueada"),
+            @ApiResponse(responseCode = "409", description = "Conflicto de butaca")
+    })
+    @PostMapping("/{numSala}/{peliculaId}/{horario}/butaca/hold")
+    public ResponseEntity<Void> holdButaca(
+            @PathVariable Integer numSala,
+            @PathVariable UUID peliculaId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario,
+            @Valid @RequestBody HoldButacaRequest req
+    ) {
+        butacaSyncService.holdSeat(numSala, peliculaId, horario, req);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Libera una butaca bloqueada por token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Butaca liberada")
+    })
+    @DeleteMapping("/{numSala}/{peliculaId}/{horario}/butaca/hold")
+    public ResponseEntity<Void> releaseButaca(
+            @PathVariable Integer numSala,
+            @PathVariable UUID peliculaId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario,
+            @Valid @RequestBody ReleaseButacaRequest req
+    ) {
+        butacaSyncService.releaseSeat(numSala, peliculaId, horario, req);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Consulta estado de butacas ocupadas y bloqueadas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estado consultado",
+                    content = @Content(schema = @Schema(implementation = ButacasStatusResponse.class)))
+    })
+    @GetMapping("/{numSala}/{peliculaId}/{horario}/butaca/status")
+    public ResponseEntity<ButacasStatusResponse> butacaStatus(
+            @PathVariable Integer numSala,
+            @PathVariable UUID peliculaId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario
+    ) {
+        return ResponseEntity.ok(butacaSyncService.getStatus(numSala, peliculaId, horario));
     }
 }
