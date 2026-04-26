@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.tfg"
-version = "1.4.1"
+version = "1.4.2"
 description = "Proyecto de la API para el TFG de DAM 2 curso 25-26"
 
 java {

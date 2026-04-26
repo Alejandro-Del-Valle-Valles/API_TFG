@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface ButacaSyncService {
     HoldTokenResponse createHoldToken(Integer numSala, UUID peliculaId, LocalDateTime horario);
 
+    void releaseHoldToken(Integer numSala, UUID peliculaId, LocalDateTime horario, String token);
+
     void holdSeat(Integer numSala, UUID peliculaId, LocalDateTime horario, HoldButacaRequest req);
 
     void releaseSeat(Integer numSala, UUID peliculaId, LocalDateTime horario, ReleaseButacaRequest req);

@@ -54,6 +54,17 @@ public class ButacaSyncServiceImpl implements ButacaSyncService {
 
     @Override
     @Transactional
+    public void releaseHoldToken(Integer numSala, UUID peliculaId, LocalDateTime horario, String token) {
+        SesionId sesionId = new SesionId(numSala, peliculaId, horario);
+        if (!sesionRepository.existsById(sesionId)) {
+            throw new EntityNotFoundException("La sesion indicada no existe.");
+        }
+
+        bloqueoButacaRepository.deleteBySesion_IdAndToken(sesionId, token);
+    }
+
+    @Override
+    @Transactional
     public void holdSeat(Integer numSala, UUID peliculaId, LocalDateTime horario, HoldButacaRequest req) {
         LocalDateTime now = LocalDateTime.now();
         cleanupExpired(now);

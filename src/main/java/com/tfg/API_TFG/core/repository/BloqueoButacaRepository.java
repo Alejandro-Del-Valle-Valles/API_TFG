@@ -26,5 +26,9 @@ public interface BloqueoButacaRepository extends JpaRepository<BloqueoButaca, UU
     int deleteBySesion_IdAndFilaAndButacaAndToken(SesionId sesionId, int fila, int butaca, String token);
 
     @Modifying
+    int deleteBySesion_IdAndToken(SesionId sesionId, String token);
+
+    @Modifying
     int deleteByToken(String token);
 }
+

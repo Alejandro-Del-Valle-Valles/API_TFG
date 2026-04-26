@@ -302,6 +302,22 @@ public class SesionController {
         return ResponseEntity.ok(butacaSyncService.createHoldToken(numSala, peliculaId, horario));
     }
 
+    @Operation(summary = "Libera un hold token y sus bloqueos temporales")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Hold token liberado")
+    })
+    @DeleteMapping("/{numSala}/{peliculaId}/{horario}/hold-token")
+    public ResponseEntity<Void> releaseHoldToken(
+            @PathVariable Integer numSala,
+            @PathVariable UUID peliculaId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime horario,
+            @Parameter(description = "Token temporal a liberar", required = true)
+            @RequestParam String token
+    ) {
+        butacaSyncService.releaseHoldToken(numSala, peliculaId, horario, token);
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "Bloquea temporalmente una butaca durante 10 minutos")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Butaca bloqueada"),

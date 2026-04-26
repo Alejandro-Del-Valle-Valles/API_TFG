@@ -83,6 +83,23 @@ class ButacaSyncServiceImplTest {
         assertThat(status.bloqueadas()).containsExactly(new ButacaDTO(4, 6));
     }
 
+    @Test
+    void releaseHoldToken_eliminaBloqueosDelTokenEnLaSesion() {
+        SesionId sesionId = new SesionId(1, UUID.randomUUID(), LocalDateTime.now().plusDays(1).withSecond(0).withNano(0));
+        String token = "token-1";
+
+        when(sesionRepository.existsById(sesionId)).thenReturn(true);
+
+        butacaSyncService.releaseHoldToken(
+                sesionId.getNumSala(),
+                sesionId.getPeliculaId(),
+                sesionId.getHorarioSesion(),
+                token
+        );
+
+        verify(bloqueoButacaRepository).deleteBySesion_IdAndToken(sesionId, token);
+    }
+
     private Sesion sesionConAforo(int aforo, SesionId sesionId) {
         Sala sala = new Sala();
         sala.setAforo(aforo);
