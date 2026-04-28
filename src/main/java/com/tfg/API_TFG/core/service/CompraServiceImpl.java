@@ -213,15 +213,16 @@ public class CompraServiceImpl implements CompraService {
     }
 
     /**
-     * Busca el producto, y si existe, lo añade a la línea de compra.
-     * @param linea DTO de la linea de compra con el nombre del producto.
-     * @param lineaCompra Linea de compra a la que settear el producto
-     * @return La misma línea de compra pasada como atributo pero con el producto setteado.
+     * Finds the product and sets it to the purchase line.
+     *
+     * @param linea DTO containing the product name.
+     * @param lineaCompra Purchase line to set the product to.
+     * @return The same purchase line with the product set.
      */
     private LineaCompra createLineaCompraProducto(LineaCompraProductoCreateDTO linea, LineaCompra lineaCompra) {
         Producto producto = productoRepository.findByNombreIgnoreCase(linea.getNombreProducto())
                 .orElseThrow(() -> new EntityNotFoundException("No existe el producto con nombre " + linea.getNombreProducto()));
-        producto.addLineaCompra(lineaCompra);
+        lineaCompra.setProducto(producto);
         return lineaCompra;
     }
 
