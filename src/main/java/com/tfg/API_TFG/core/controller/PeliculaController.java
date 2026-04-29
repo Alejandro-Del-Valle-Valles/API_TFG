@@ -1,5 +1,6 @@
 package com.tfg.API_TFG.core.controller;
 
+import com.tfg.API_TFG.core.dto.PeliculaCompletoAndSesionesDTO;
 import com.tfg.API_TFG.core.dto.PeliculaCompletoDTO;
 import com.tfg.API_TFG.core.dto.PeliculaCreateDTO;
 import com.tfg.API_TFG.core.dto.PeliculaDTO;
@@ -168,6 +169,60 @@ public class PeliculaController {
             @PathVariable UUID id
     ) {
         return ResponseEntity.ok(peliculaService.getCompletoById(id));
+    }
+
+    @Operation(
+                summary = "Obtiene una película con sus sesiones presentes y futuras",
+                description = "Obtiene toda la información de una película y sus sesiones presentes y futuras."
+        )
+        @ApiResponses( value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "La película fue encontrada.",
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = PeliculaCompletoAndSesionesDTO.class)
+                        )
+                ),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Datos inválidos.",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "DatosInválidos",
+                                        summary = "Ejemplo del error devuelto si algún dato es erróneo.",
+                                        value = """
+                                                    {
+                                                        "id": "El ID de la película debe ser de tipo UUID",
+                                                    }
+                                                    """
+                                )
+                        )
+                ),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Pelicula no existente",
+                        content = @Content(
+                                mediaType = "application/json",
+                                examples = @ExampleObject(
+                                        name = "ObjetoNoExistente",
+                                        summary = "Ejemplo del error devuelto si no existe la película con el ID especificado",
+                                        value = """
+                                                    {
+                                                        "EntityNotFoundException": "No existe la película con ID c5363d99-8ed5-4694-94be-20141bf1cc2f"
+                                                    }
+                                                    """
+                                )
+                        )
+                )
+        })
+    @GetMapping("/completo-sesiones/{id}")
+    public ResponseEntity<PeliculaCompletoAndSesionesDTO> getCompletoWithSesionesById(
+            @Parameter(description = "UUID de la película buscada")
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.ok(peliculaService.getCompletoAndSesionesById(id));
     }
 
     @Operation(

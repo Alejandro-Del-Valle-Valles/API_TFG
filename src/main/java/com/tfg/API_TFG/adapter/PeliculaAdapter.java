@@ -1,8 +1,6 @@
 package com.tfg.API_TFG.adapter;
 
-import com.tfg.API_TFG.core.dto.ParticipanteCompletoDTO;
-import com.tfg.API_TFG.core.dto.PeliculaCompletoDTO;
-import com.tfg.API_TFG.core.dto.PeliculaDTO;
+import com.tfg.API_TFG.core.dto.*;
 import com.tfg.API_TFG.core.entity.Credito;
 import com.tfg.API_TFG.core.entity.Participante;
 import com.tfg.API_TFG.core.entity.Pelicula;
@@ -22,6 +20,21 @@ public class PeliculaAdapter {
     }
 
     public static PeliculaCompletoDTO toCompletoDTO(Pelicula pelicula) {
+        return new PeliculaCompletoDTO(pelicula.getId(), pelicula.getNombre(), pelicula.getDescripcion(),
+                pelicula.getGenero(), pelicula.getPortada(), pelicula.getDuracion(), pelicula.getCalificacionEdad(),
+                pelicula.isEnCartelera(), parseParticpantesFromPelicula(pelicula));
+    }
+
+    public static PeliculaCompletoAndSesionesDTO toCompletoAndSesionesDTO(Pelicula pelicula) {
+        List<SesionDTO> sesiones = pelicula.getSesiones().stream()
+                .map(SesionAdapter::toDTO)
+                .collect(Collectors.toList());
+        return new PeliculaCompletoAndSesionesDTO(pelicula.getId(), pelicula.getNombre(), pelicula.getDescripcion(),
+                pelicula.getGenero(), pelicula.getPortada(), pelicula.getDuracion(), pelicula.getCalificacionEdad(),
+                pelicula.isEnCartelera(), parseParticpantesFromPelicula(pelicula), sesiones);
+    }
+
+    private static List<ParticipanteCompletoDTO> parseParticpantesFromPelicula(Pelicula pelicula) {
         Map<Participante, List<RolParticipante>> participanteRoles = new HashMap<>();
         for (Credito credito : pelicula.getCreditos()) {
             Participante participante = credito.getParticipante();
@@ -32,8 +45,6 @@ public class PeliculaAdapter {
         List<ParticipanteCompletoDTO> participantes = participanteRoles.entrySet().stream()
                 .map(entry -> ParticipanteAdapter.toCompletoDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
-        return new PeliculaCompletoDTO(pelicula.getId(), pelicula.getNombre(), pelicula.getDescripcion(),
-                pelicula.getGenero(), pelicula.getPortada(), pelicula.getDuracion(), pelicula.getCalificacionEdad(),
-                pelicula.isEnCartelera(), participantes);
+        return participantes;
     }
 }

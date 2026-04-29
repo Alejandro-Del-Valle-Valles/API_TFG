@@ -1,14 +1,15 @@
 package com.tfg.API_TFG.core.service;
 
 import com.tfg.API_TFG.adapter.PeliculaAdapter;
+import com.tfg.API_TFG.adapter.SesionAdapter;
 import com.tfg.API_TFG.core.dto.*;
 import com.tfg.API_TFG.core.entity.Credito;
 import com.tfg.API_TFG.core.entity.Participante;
 import com.tfg.API_TFG.core.entity.Pelicula;
 import com.tfg.API_TFG.core.entity.id.CreditoId;
 import com.tfg.API_TFG.core.enums.RolParticipante;
-import com.tfg.API_TFG.core.repository.CreditoRepository;
 import com.tfg.API_TFG.core.repository.ParticipanteRepository;
+import com.tfg.API_TFG.core.repository.SesionRepository;
 import com.tfg.API_TFG.core.service.interfaces.PeliculaService;
 import com.tfg.API_TFG.core.repository.PeliculaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,18 +17,21 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class PeliculaServiceImpl implements PeliculaService {
     private final PeliculaRepository peliculaRepository;
+    private final SesionRepository sesionRepository;
     private final ParticipanteRepository participanteRepository;
 
     @Autowired
-    public PeliculaServiceImpl(PeliculaRepository peliculaRepository, CreditoRepository creditoRepository,
+    public PeliculaServiceImpl(PeliculaRepository peliculaRepository, SesionRepository sesionRepository,
                                ParticipanteRepository participanteRepository) {
         this.peliculaRepository = peliculaRepository;
+        this.sesionRepository = sesionRepository;
         this.participanteRepository = participanteRepository;
     }
 
@@ -64,6 +68,19 @@ public class PeliculaServiceImpl implements PeliculaService {
         Pelicula pelicula = peliculaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No existe la película con ID: " + id));
         return PeliculaAdapter.toCompletoDTO(pelicula);
+    }
+
+    @Override
+    public PeliculaCompletoAndSesionesDTO getCompletoAndSesionesById(UUID id) {
+        Pelicula pelicula = peliculaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No existe la película con ID: " + id));
+        LocalDateTime limiteTemporal = LocalDateTime.now().minusDays(1);
+        List<SesionDTO> sesionesFuturas = sesionRepository.findByPeliculaIdAndIdHorarioSesionAfter(id, limiteTemporal).stream()
+                .map(SesionAdapter::toDTO)
+                .toList();
+        PeliculaCompletoAndSesionesDTO dto = PeliculaAdapter.toCompletoAndSesionesDTO(pelicula);
+        dto.setSesiones(sesionesFuturas);
+        return dto;
     }
 
     @Override

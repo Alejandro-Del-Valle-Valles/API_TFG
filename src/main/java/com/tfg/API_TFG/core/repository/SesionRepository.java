@@ -15,5 +15,6 @@ public interface SesionRepository extends JpaRepository<Sesion, SesionId> {
     List<Sesion> findByIdHorarioSesionBetween(LocalDateTime horarioInicio, LocalDateTime horarioFin);
     List<Sesion> findByIdHorarioSesionAndSalaNumSala(LocalDateTime horario, Integer numSala);
     List<Sesion> findByPeliculaId(UUID peliculaId);
+    List<Sesion> findByPeliculaIdAndIdHorarioSesionAfter(UUID peliculaId, LocalDateTime ayer);
 
 }
