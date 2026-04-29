@@ -187,6 +187,7 @@ public class CompraController {
                                                                  "numFila": 5,
                                                                  "numButaca": 8,
                                                                  "tipo": {
+                                                                    "id": 1,
                                                                     "nombre": "Adulto",
                                                                     "descripcion": "A partir de 12 años",
                                                                     "precio": 8.5

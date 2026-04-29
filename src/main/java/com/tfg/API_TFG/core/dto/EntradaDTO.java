@@ -37,6 +37,7 @@ public record EntradaDTO(
                 description = "Tipo de entrada.",
                 implementation = TipoEntradaDTO.class
         )
-        TipoEntradaDTO tipoEntrada
+        @NotNull(message = "El tipo de entrada no puede ser nulo.")
+        TipoEntradaDTO tipo
 ) {
 }

@@ -92,9 +92,9 @@ public class CompraServiceImpl implements CompraService {
                 LineaCompraEntradaDTO le = (LineaCompraEntradaDTO) linea;
                 EntradaDTO eDTO = le.getEntrada();
 
-                TipoEntrada tipoEntrada = tipoEntradaRepository.findById(eDTO.tipoEntrada().id())
+                TipoEntrada tipoEntrada = tipoEntradaRepository.findById(eDTO.tipo().id())
                         .orElseThrow(
-                                () ->  new EntityNotFoundException("No se ha encontrado el tipo de entrada con ID " + eDTO.tipoEntrada().id())
+                                () ->  new EntityNotFoundException("No se ha encontrado el tipo de entrada con ID " + eDTO.tipo().id())
                         );
 
                 Sesion sesion = sesionRepository.findById(
@@ -104,9 +104,7 @@ public class CompraServiceImpl implements CompraService {
                 SesionId sesionId = sesion.getId();
                 EntradaId entradaId = new EntradaId(sesionId, eDTO.numFila(), eDTO.numButaca());
 
-                if (entradaRepository.existsById(entradaId)) {
-                    throw new EntityExistsException("Butaca ya comprada");
-                }
+                if (entradaRepository.existsById(entradaId)) throw new EntityExistsException("Butaca ya comprada");
 
                 boolean bloqueoValido = bloqueoButacaRepository
                         .findBySesion_IdAndFilaAndButacaAndTokenAndExpiraGreaterThanEqual(
@@ -117,9 +115,7 @@ public class CompraServiceImpl implements CompraService {
                                 LocalDateTime.now()
                         )
                         .isPresent();
-                if (!bloqueoValido) {
-                    throw new EntityExistsException("Bloqueo expirado o no pertenece al token");
-                }
+                if (!bloqueoValido) throw new EntityExistsException("Bloqueo expirado o no pertenece al token");
 
                 Entrada entrada = new Entrada();
                 entradaId.setSesionId(sesion.getId());
@@ -135,18 +131,13 @@ public class CompraServiceImpl implements CompraService {
             compra.addLineaCompra(lc);
         }
 
-        if (!hayEntrada) {
+        if (!hayEntrada)
             throw new IllegalArgumentException("Debe existir al menos una entrada para poder realizar la compra.");
-        }
 
         Compra guardada = compraRepository.save(compra);
-
         bloqueoButacaRepository.deleteByToken(compraDTO.holdToken());
-
         String[] info = crearInfoCorreo(guardada);
-
         emailService.enviarCompraHtml(compraDTO.correo(), info[0], info[1]);
-
         return CompraAdapter.toDTO(guardada, compraDTO.holdToken());
     }
 
@@ -184,8 +175,8 @@ public class CompraServiceImpl implements CompraService {
                 Entrada e = linea.getEntrada();
                 html.append("<tr>")
                         .append(String.format(
-                                "<td style='border:1px solid #ddd;padding:8px'>Entrada - Fila %d, Butaca %d</td>",
-                                e.getId().getFila(), e.getId().getButaca()))
+                                "<td style='border:1px solid #ddd;padding:8px'>Entrada %s - Fila %d, Butaca %d</td>",
+                                e.getTipo().getNombre(), e.getId().getFila(), e.getId().getButaca()))
                         .append(String.format(
                                 "<td style='border:1px solid #ddd;padding:8px;text-align:right'>%.2f €</td>",
                                 e.getTipo().getPrecio().floatValue()))

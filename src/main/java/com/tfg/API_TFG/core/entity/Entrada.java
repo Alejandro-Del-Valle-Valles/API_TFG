@@ -25,7 +25,7 @@ public class Entrada {
     private @Valid Sesion sesion;
 
     @ManyToOne
-    @JoinColumn(name = "tipo", referencedColumnName = "tipo", insertable = false, updatable = false)
+    @JoinColumn(name = "tipo", referencedColumnName = "id", insertable = false, updatable = false)
     private @Valid TipoEntrada tipo;
 
     @OneToOne(mappedBy = "entrada", cascade = CascadeType.ALL, orphanRemoval = true)
