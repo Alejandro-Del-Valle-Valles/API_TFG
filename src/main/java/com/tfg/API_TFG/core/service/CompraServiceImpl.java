@@ -24,6 +24,7 @@ public class CompraServiceImpl implements CompraService {
     private final CompraRepository compraRepository;
     private final UsuarioRepository usuarioRepository;
     private final EntradaRepository entradaRepository;
+    private final TipoEntradaRepository tipoEntradaRepository;
     private final BloqueoButacaRepository bloqueoButacaRepository;
     private final SesionRepository sesionRepository;
     private final ProductoRepository productoRepository;
@@ -31,12 +32,13 @@ public class CompraServiceImpl implements CompraService {
 
     @Autowired
     public CompraServiceImpl(CompraRepository compraRepository, UsuarioRepository usuarioRepository,
-                             EntradaRepository entradaRepository, BloqueoButacaRepository bloqueoButacaRepository,
-                             SesionRepository sesionRepository,
+                             EntradaRepository entradaRepository, TipoEntradaRepository tipoEntradaRepository,
+                             BloqueoButacaRepository bloqueoButacaRepository, SesionRepository sesionRepository,
                              ProductoRepository productoRepository, EmailService emailService) {
         this.compraRepository = compraRepository;
         this.usuarioRepository = usuarioRepository;
         this.entradaRepository = entradaRepository;
+        this.tipoEntradaRepository = tipoEntradaRepository;
         this.bloqueoButacaRepository = bloqueoButacaRepository;
         this.sesionRepository = sesionRepository;
         this.productoRepository = productoRepository;
@@ -90,6 +92,11 @@ public class CompraServiceImpl implements CompraService {
                 LineaCompraEntradaDTO le = (LineaCompraEntradaDTO) linea;
                 EntradaDTO eDTO = le.getEntrada();
 
+                TipoEntrada tipoEntrada = tipoEntradaRepository.findById(eDTO.tipoEntrada().id())
+                        .orElseThrow(
+                                () ->  new EntityNotFoundException("No se ha encontrado el tipo de entrada con ID " + eDTO.tipoEntrada().id())
+                        );
+
                 Sesion sesion = sesionRepository.findById(
                                 new SesionId(eDTO.sesion().numSala(), eDTO.sesion().peliculaId(), eDTO.sesion().horario()))
                         .orElseThrow(() -> new EntityNotFoundException("La sesión de la película no existe."));
@@ -118,9 +125,9 @@ public class CompraServiceImpl implements CompraService {
                 entradaId.setSesionId(sesion.getId());
                 entrada.setId(entradaId);
 
-                entrada.setPrecio(eDTO.precio());
                 entrada.setSesion(sesion);
                 sesion.getEntradas().add(entrada);
+                tipoEntrada.addEntrada(entrada);
 
                 lc.setEntrada(entrada);
             }
@@ -181,7 +188,7 @@ public class CompraServiceImpl implements CompraService {
                                 e.getId().getFila(), e.getId().getButaca()))
                         .append(String.format(
                                 "<td style='border:1px solid #ddd;padding:8px;text-align:right'>%.2f €</td>",
-                                e.getPrecio()))
+                                e.getTipo().getPrecio().floatValue()))
                         .append("</tr>");
             } else if (linea.getProducto() != null) {
                 Producto p = linea.getProducto();

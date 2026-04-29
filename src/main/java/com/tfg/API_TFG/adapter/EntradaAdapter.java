@@ -7,6 +7,6 @@ public class EntradaAdapter {
 
     public static EntradaDTO toDTO(Entrada entrada) {
         return new EntradaDTO(SesionAdapter.toDTO(entrada.getSesion()), entrada.getId().getFila(),
-                entrada.getId().getButaca(), entrada.getPrecio());
+                entrada.getId().getButaca(), TipoEntradaAdapter.toDTO(entrada.getTipo()));
     }
 }

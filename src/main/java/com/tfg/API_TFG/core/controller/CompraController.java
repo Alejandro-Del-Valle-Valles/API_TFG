@@ -186,7 +186,11 @@ public class CompraController {
                                                                  },
                                                                  "numFila": 5,
                                                                  "numButaca": 8,
-                                                                 "precio": 7.5
+                                                                 "tipo": {
+                                                                    "nombre": "Adulto",
+                                                                    "descripcion": "A partir de 12 años",
+                                                                    "precio": 8.5
+                                                                 }
                                                              }
                                                          }
                                                          ]

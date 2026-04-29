@@ -22,12 +22,11 @@ public class Entrada {
             @JoinColumn(name = "pelicula_id", referencedColumnName = "pelicula_id"),
             @JoinColumn(name = "horario_sesion", referencedColumnName = "horario_sesion")
     })
-    private Sesion sesion;
+    private @Valid Sesion sesion;
 
-    @NotNull(message = "El precio no puede ser nulo.")
-    @PositiveOrZero(message = "El precio debe ser 0 o superior.")
-    @Column(precision = 4, scale = 2)
-    private BigDecimal precio;
+    @ManyToOne
+    @JoinColumn(name = "tipo", referencedColumnName = "tipo", insertable = false, updatable = false)
+    private @Valid TipoEntrada tipo;
 
     @OneToOne(mappedBy = "entrada", cascade = CascadeType.ALL, orphanRemoval = true)
     private @Valid LineaCompra lineaCompra;
@@ -42,9 +41,9 @@ public class Entrada {
 
     public void setSesion(@Valid Sesion sesion) { this.sesion = sesion; }
 
-    public BigDecimal getPrecio() { return precio; }
+    public TipoEntrada getTipo() { return tipo; }
 
-    public void setPrecio(BigDecimal precio) { this.precio = precio; }
+    public void setTipo(TipoEntrada tipo) { this.tipo = tipo; }
 
     public LineaCompra getLineaCompra() { return lineaCompra; }
 

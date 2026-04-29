@@ -34,11 +34,9 @@ public record EntradaDTO(
         Integer numButaca,
 
         @Schema(
-                description = "Precio de la entrada.",
-                example = "7.50"
+                description = "Tipo de entrada.",
+                implementation = TipoEntradaDTO.class
         )
-        @NotNull(message = "El precio de la entrada no puede ser nulo.")
-        @PositiveOrZero(message = "El precio de la entrada no puede ser negativo.")
-        BigDecimal precio
+        TipoEntradaDTO tipoEntrada
 ) {
 }
