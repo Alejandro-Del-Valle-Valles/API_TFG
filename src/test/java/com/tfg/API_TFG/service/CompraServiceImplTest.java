@@ -1,11 +1,7 @@
 package com.tfg.API_TFG.service;
 
 import com.tfg.API_TFG.core.dto.*;
-import com.tfg.API_TFG.core.entity.BloqueoButaca;
-import com.tfg.API_TFG.core.entity.Pelicula;
-import com.tfg.API_TFG.core.entity.Sala;
-import com.tfg.API_TFG.core.entity.Sesion;
-import com.tfg.API_TFG.core.entity.Usuario;
+import com.tfg.API_TFG.core.entity.*;
 import com.tfg.API_TFG.core.entity.id.EntradaId;
 import com.tfg.API_TFG.core.entity.id.SesionId;
 import com.tfg.API_TFG.core.repository.*;
@@ -36,6 +32,7 @@ class CompraServiceImplTest {
     @Mock CompraRepository compraRepository;
     @Mock UsuarioRepository usuarioRepository;
     @Mock EntradaRepository entradaRepository;
+    @Mock TipoEntradaRepository tipoEntradaRepository;
     @Mock BloqueoButacaRepository bloqueoButacaRepository;
     @Mock SesionRepository sesionRepository;
     @Mock ProductoRepository productoRepository;
@@ -59,14 +56,21 @@ class CompraServiceImplTest {
         pelicula.setNombre("Interstellar");
         sesion.setPelicula(pelicula);
 
+        TipoEntrada tipoEntrada = new TipoEntrada();
+        tipoEntrada.setId(1);
+        tipoEntrada.setNombre("Adulto");
+        tipoEntrada.setDescripcion("A partir de 13 años");
+        tipoEntrada.setPrecio(new BigDecimal("7.50"));
+
         Usuario usuario = new Usuario();
         usuario.setCorreo("anonimo@correo.com");
 
-        EntradaDTO entradaDTO = new EntradaDTO(new SesionDTO(1, horario, peliculaId), 2, 4, new BigDecimal("7.50"));
+        EntradaDTO entradaDTO = new EntradaDTO(new SesionDTO(1, horario, peliculaId), 2, 4, new TipoEntradaDTO(1, "Adulto", "A partir de 13 años", 7.50f));
         LineaCompraEntradaDTO linea = new LineaCompraEntradaDTO(1, entradaDTO);
         CompraDTO compraDTO = new CompraDTO(usuario.getCorreo(), "token-123", List.of(linea));
 
         when(usuarioRepository.findByCorreo(usuario.getCorreo())).thenReturn(Optional.of(usuario));
+        when(tipoEntradaRepository.findById(1)).thenReturn(Optional.of(tipoEntrada));
         when(sesionRepository.findById(sesionId)).thenReturn(Optional.of(sesion));
         when(entradaRepository.existsById(new EntradaId(sesionId, 2, 4))).thenReturn(false);
         when(bloqueoButacaRepository.findBySesion_IdAndFilaAndButacaAndTokenAndExpiraGreaterThanEqual(
@@ -95,14 +99,21 @@ class CompraServiceImplTest {
         Sesion sesion = new Sesion();
         sesion.setId(sesionId);
 
+        TipoEntrada tipoEntrada = new TipoEntrada();
+        tipoEntrada.setId(1);
+        tipoEntrada.setNombre("Adulto");
+        tipoEntrada.setDescripcion("A partir de 13 años");
+        tipoEntrada.setPrecio(new BigDecimal("7.50"));
+
         Usuario usuario = new Usuario();
         usuario.setCorreo("anonimo@correo.com");
 
-        EntradaDTO entradaDTO = new EntradaDTO(new SesionDTO(1, horario, peliculaId), 2, 4, new BigDecimal("7.50"));
+        EntradaDTO entradaDTO = new EntradaDTO(new SesionDTO(1, horario, peliculaId), 2, 4, new TipoEntradaDTO(1, "Adulto", "A partir de 13 años", 7.50f));
         LineaCompraEntradaDTO linea = new LineaCompraEntradaDTO(1, entradaDTO);
         CompraDTO compraDTO = new CompraDTO(usuario.getCorreo(), "token-123", List.of(linea));
 
         when(usuarioRepository.findByCorreo(usuario.getCorreo())).thenReturn(Optional.of(usuario));
+        when(tipoEntradaRepository.findById(1)).thenReturn(Optional.of(tipoEntrada));
         when(sesionRepository.findById(sesionId)).thenReturn(Optional.of(sesion));
         when(entradaRepository.existsById(new EntradaId(sesionId, 2, 4))).thenReturn(false);
         when(bloqueoButacaRepository.findBySesion_IdAndFilaAndButacaAndTokenAndExpiraGreaterThanEqual(
