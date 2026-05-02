@@ -6,7 +6,7 @@ import com.tfg.API_TFG.core.entity.id.EntradaId;
 import com.tfg.API_TFG.core.entity.id.SesionId;
 import com.tfg.API_TFG.core.repository.*;
 import com.tfg.API_TFG.core.service.CompraServiceImpl;
-import com.tfg.API_TFG.core.service.EmailService;
+import com.tfg.API_TFG.core.event.CompraEmailEvent;
 import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,7 +37,7 @@ class CompraServiceImplTest {
     @Mock BloqueoButacaRepository bloqueoButacaRepository;
     @Mock SesionRepository sesionRepository;
     @Mock ProductoRepository productoRepository;
-    @Mock EmailService emailService;
+    @Mock ApplicationEventPublisher eventPublisher;
 
     @InjectMocks CompraServiceImpl compraService;
 
@@ -87,7 +88,9 @@ class CompraServiceImplTest {
         assertThat(entradaIdGuardada.getSesionId()).isEqualTo(sesionId);
         assertThat(result.holdToken()).isEqualTo("token-123");
         verify(bloqueoButacaRepository).deleteByToken("token-123");
-        verify(emailService).enviarCompraHtml(eq(usuario.getCorreo()), anyString(), anyString());
+        ArgumentCaptor<CompraEmailEvent> eventCaptor = ArgumentCaptor.forClass(CompraEmailEvent.class);
+        verify(eventPublisher).publishEvent(eventCaptor.capture());
+        assertThat(eventCaptor.getValue().to()).isEqualTo(usuario.getCorreo());
     }
 
     @Test
@@ -126,6 +129,6 @@ class CompraServiceImplTest {
 
         verify(compraRepository, never()).save(any());
         verify(bloqueoButacaRepository, never()).deleteByToken(anyString());
+        verify(eventPublisher, never()).publishEvent(any());
     }
 }
-

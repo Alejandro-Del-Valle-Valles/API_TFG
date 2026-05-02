@@ -1,5 +1,5 @@
 # API_TFG
-> Autores: Alejandro del Valle Vallés, Aurora Pinar del Hoy, Carolina Lobato Ruiz
+> Autores: Alejandro del Valle Vallés, Aurora Pinar del Hoyo, Carolina Lobato Ruiz
 
 Este proyecto corresponde a la API elaborada para el proyecto fin de grado del curso de DAM 2 del año 2025-2026.
 

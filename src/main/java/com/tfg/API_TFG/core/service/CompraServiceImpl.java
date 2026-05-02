@@ -6,12 +6,14 @@ import com.tfg.API_TFG.core.entity.*;
 import com.tfg.API_TFG.core.entity.id.EntradaId;
 import com.tfg.API_TFG.core.entity.id.LineaId;
 import com.tfg.API_TFG.core.entity.id.SesionId;
+import com.tfg.API_TFG.core.event.CompraEmailEvent;
 import com.tfg.API_TFG.core.repository.*;
 import com.tfg.API_TFG.core.service.interfaces.CompraService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,13 +30,13 @@ public class CompraServiceImpl implements CompraService {
     private final BloqueoButacaRepository bloqueoButacaRepository;
     private final SesionRepository sesionRepository;
     private final ProductoRepository productoRepository;
-    private final EmailService emailService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public CompraServiceImpl(CompraRepository compraRepository, UsuarioRepository usuarioRepository,
                              EntradaRepository entradaRepository, TipoEntradaRepository tipoEntradaRepository,
                              BloqueoButacaRepository bloqueoButacaRepository, SesionRepository sesionRepository,
-                             ProductoRepository productoRepository, EmailService emailService) {
+                             ProductoRepository productoRepository, ApplicationEventPublisher eventPublisher) {
         this.compraRepository = compraRepository;
         this.usuarioRepository = usuarioRepository;
         this.entradaRepository = entradaRepository;
@@ -42,7 +44,7 @@ public class CompraServiceImpl implements CompraService {
         this.bloqueoButacaRepository = bloqueoButacaRepository;
         this.sesionRepository = sesionRepository;
         this.productoRepository = productoRepository;
-        this.emailService = emailService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -137,7 +139,7 @@ public class CompraServiceImpl implements CompraService {
         Compra guardada = compraRepository.save(compra);
         bloqueoButacaRepository.deleteByToken(compraDTO.holdToken());
         String[] info = crearInfoCorreo(guardada);
-        emailService.enviarCompraHtml(compraDTO.correo(), info[0], info[1]);
+        eventPublisher.publishEvent(new CompraEmailEvent(compraDTO.correo(), info[0], info[1]));
         return CompraAdapter.toDTO(guardada, compraDTO.holdToken());
     }
 
