@@ -17,4 +17,4 @@ COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
 EXPOSE 8080
 
 # Clean environment variables for Spring
-ENTRYPOINT ["java", "-Duser.timezone=Europe/Madrid", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=Europe/Madrid", "-jar", "app.jar"]
