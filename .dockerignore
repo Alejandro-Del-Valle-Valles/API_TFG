@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+
+# Gradle build files
+.gradle
+build/
+!build/libs/*.jar
+
+# IDEs
+.idea
+.vscode
+*.iml
+
+# Local configuration and logs
+*.log
+.DS_Store
