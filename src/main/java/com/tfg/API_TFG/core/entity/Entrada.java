@@ -24,8 +24,9 @@ public class Entrada {
     })
     private @Valid Sesion sesion;
 
-    @ManyToOne
-    @JoinColumn(name = "tipo", referencedColumnName = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "tipo", referencedColumnName = "id", nullable = false)
+    @NotNull(message = "El tipo de entrada no puede ser nulo.")
     private @Valid TipoEntrada tipo;
 
     @OneToOne(mappedBy = "entrada", cascade = CascadeType.ALL, orphanRemoval = true)
