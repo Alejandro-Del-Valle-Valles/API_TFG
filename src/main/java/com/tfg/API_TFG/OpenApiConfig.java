@@ -19,7 +19,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("API de Cines Frame")
-                        .version("1.7.1")
+                        .version("1.7.2")
                         .description("Documentación de la API REST para gestión y consulta de la BBDD de Cines Frame")
                         .license(new License()
                                 .name("GPL-3.0")
