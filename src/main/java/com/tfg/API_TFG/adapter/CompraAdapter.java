@@ -16,6 +16,6 @@ public class CompraAdapter {
         List<LineaCompraDTO> lineas = compra.getLineaCompras().stream()
                 .map(LineaCompraAdapter::toDTO)
                 .toList();
-        return new CompraDTO(compra.getUsuario().getCorreo(), holdToken, lineas);
+        return new CompraDTO(compra.getId(), compra.getUsuario().getCorreo(), holdToken, lineas);
     }
 }

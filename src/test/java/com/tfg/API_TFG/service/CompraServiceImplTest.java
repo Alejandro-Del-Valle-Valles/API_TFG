@@ -68,7 +68,7 @@ class CompraServiceImplTest {
 
         EntradaDTO entradaDTO = new EntradaDTO(new SesionDTO(1, horario, peliculaId), 2, 4, new TipoEntradaDTO(1, "Adulto", "A partir de 13 años", 7.50f));
         LineaCompraEntradaDTO linea = new LineaCompraEntradaDTO(1, entradaDTO);
-        CompraDTO compraDTO = new CompraDTO(usuario.getCorreo(), "token-123", List.of(linea));
+        CompraDTO compraDTO = new CompraDTO(null, usuario.getCorreo(), "token-123", List.of(linea));
 
         when(usuarioRepository.findByCorreo(usuario.getCorreo())).thenReturn(Optional.of(usuario));
         when(tipoEntradaRepository.findById(1)).thenReturn(Optional.of(tipoEntrada));
@@ -113,7 +113,7 @@ class CompraServiceImplTest {
 
         EntradaDTO entradaDTO = new EntradaDTO(new SesionDTO(1, horario, peliculaId), 2, 4, new TipoEntradaDTO(1, "Adulto", "A partir de 13 años", 7.50f));
         LineaCompraEntradaDTO linea = new LineaCompraEntradaDTO(1, entradaDTO);
-        CompraDTO compraDTO = new CompraDTO(usuario.getCorreo(), "token-123", List.of(linea));
+        CompraDTO compraDTO = new CompraDTO(null, usuario.getCorreo(), "token-123", List.of(linea));
 
         when(usuarioRepository.findByCorreo(usuario.getCorreo())).thenReturn(Optional.of(usuario));
         when(tipoEntradaRepository.findById(1)).thenReturn(Optional.of(tipoEntrada));

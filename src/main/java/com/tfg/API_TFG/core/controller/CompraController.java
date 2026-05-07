@@ -1,6 +1,7 @@
 package com.tfg.API_TFG.core.controller;
 
 import com.tfg.API_TFG.core.dto.CompraDTO;
+import com.tfg.API_TFG.core.service.CompraPdfService;
 import com.tfg.API_TFG.core.service.interfaces.CompraService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,23 +14,29 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/compra")
 @Tag(name = "Compras", description = "API para las compras")
 public class CompraController {
     private final CompraService compraService;
+    private final CompraPdfService compraPdfService;
 
     @Autowired
-    public CompraController(CompraService compraService) {
+    public CompraController(CompraService compraService, CompraPdfService compraPdfService) {
         this.compraService = compraService;
+        this.compraPdfService = compraPdfService;
     }
 
     @Operation(
@@ -252,5 +259,35 @@ public class CompraController {
             @Valid @RequestBody CompraDTO compraDTO
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(compraService.createCompra(compraDTO));
+    }
+
+    @Operation(
+            summary = "Genera y descarga el PDF de una compra",
+            description = "Genera un PDF con el resumen de la compra y un QR."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "PDF generado",
+                    content = @Content(mediaType = "application/pdf")
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Compra no existente",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    @GetMapping(value = "/{compraId}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getCompraPdf(
+            @Parameter(description = "ID de la compra")
+            @PathVariable UUID compraId
+    ) {
+        byte[] pdf = compraPdfService.generarPdf(compraId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.attachment()
+                .filename("compra-" + compraId + ".pdf")
+                .build());
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 }

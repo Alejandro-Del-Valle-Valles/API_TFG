@@ -13,6 +13,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class CompraServiceImpl implements CompraService {
     private final SesionRepository sesionRepository;
     private final ProductoRepository productoRepository;
     private final ApplicationEventPublisher eventPublisher;
+
+    @Value("${app.base-url:http://localhost:8443/api}")
+    private String baseUrl;
 
     @Autowired
     public CompraServiceImpl(CompraRepository compraRepository, UsuarioRepository usuarioRepository,
@@ -138,7 +142,8 @@ public class CompraServiceImpl implements CompraService {
 
         Compra guardada = compraRepository.save(compra);
         bloqueoButacaRepository.deleteByToken(compraDTO.holdToken());
-        String[] info = crearInfoCorreo(guardada);
+        String pdfUrl = buildPdfUrl(guardada.getId());
+        String[] info = crearInfoCorreo(guardada, pdfUrl);
         eventPublisher.publishEvent(new CompraEmailEvent(compraDTO.correo(), info[0], info[1]));
         return CompraAdapter.toDTO(guardada, compraDTO.holdToken());
     }
@@ -147,9 +152,10 @@ public class CompraServiceImpl implements CompraService {
     /**
      * Crea la info que se va a enviar por correo.
      * @param compra Compra sobre la que se quiere obtener info
+     * @param pdfUrl URL para descargar el PDF de la compra
      * @return String[] de 2 posiciones. Posición 0 con asunto, posición 1 con cuerpo.
      */
-    private String[] crearInfoCorreo(Compra compra) {
+    private String[] crearInfoCorreo(Compra compra, String pdfUrl) {
         Entrada entradaBase = compra.getLineaCompras().stream()
                 .map(LineaCompra::getEntrada)
                 .filter(Objects::nonNull)
@@ -197,10 +203,16 @@ public class CompraServiceImpl implements CompraService {
         }
 
         html.append("</tbody></table>");
+        html.append(String.format("<p style='margin-top:16px'><a href='%s'>Descargar PDF de la compra</a></p>", escapeHtml(pdfUrl)));
         html.append("<p style='margin-top:16px'>Gracias por tu compra.</p>");
         html.append("</div>");
 
         return new String[]{asunto, html.toString()};
+    }
+
+    private String buildPdfUrl(UUID compraId) {
+        String resolvedBaseUrl = (baseUrl == null || baseUrl.isBlank()) ? "http://localhost:8080" : baseUrl;
+        return resolvedBaseUrl + "/compra/" + compraId + "/pdf";
     }
 
     private String escapeHtml(String s) {

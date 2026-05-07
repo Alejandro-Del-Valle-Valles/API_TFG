@@ -8,9 +8,16 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
+import java.util.UUID;
 
 @Schema(description = "Información de una compra.")
 public record CompraDTO(
+
+        @Schema(
+                description = "Identificador de la compra",
+                example = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        )
+        UUID id,
 
         @Schema(
                 description = "Correo del usuario",
