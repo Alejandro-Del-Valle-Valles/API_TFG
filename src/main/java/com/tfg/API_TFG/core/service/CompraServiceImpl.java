@@ -33,7 +33,7 @@ public class CompraServiceImpl implements CompraService {
     private final ProductoRepository productoRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    @Value("${app.base-url:http://localhost:8443/api}")
+    @Value("${app.base-url:https://api-tfg-dm7g.onrender.com/api}")
     private String baseUrl;
 
     @Autowired
