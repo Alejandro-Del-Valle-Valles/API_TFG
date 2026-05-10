@@ -50,6 +50,25 @@ public class BanerController {
     }
 
     @Operation(
+            summary = "Obtener todos los baners",
+            description = "Devuelve una lista con todos los datos de los baners"
+    )
+    @ApiResponses( value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Baners obtenidos",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = BanerDTO.class))
+                    )
+            )
+    })
+    @GetMapping
+    public ResponseEntity<List<BanerDTO>> getAll() {
+        return ResponseEntity.ok(banerService.getAll());
+    }
+
+    @Operation(
                 summary = "Crea un nuevo baner para una película",
                 description = "Crea un nuevo banner si no existe uno con la misma imagen ya."
         )

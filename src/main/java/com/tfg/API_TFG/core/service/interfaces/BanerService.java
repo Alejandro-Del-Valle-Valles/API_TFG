@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface BanerService {
     List<BanerDTO> getTodayBaners();
+    List<BanerDTO> getAll();
     BanerDTO createBaner(BanerDTO banerDTO);
     BanerDTO updateBaner(String antiguaUrl, BanerDTO banerDTO);
     BanerDTO deleteBaner(String url);

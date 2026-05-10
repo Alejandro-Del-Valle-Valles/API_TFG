@@ -36,6 +36,13 @@ public class BanerServiceImpl implements BanerService {
     }
 
     @Override
+    public List<BanerDTO> getAll() {
+        return banerRepository.findAll().stream()
+                .map(BanerAdapter::toDTO)
+                .toList();
+    }
+
+    @Override
     public BanerDTO createBaner(BanerDTO banerDTO) {
         if(banerRepository.existsByUrl(banerDTO.url())) throw new EntityExistsException("Ya existe un banner con la misma imagen.");
         Pelicula pelicula = peliculaRepository.findById(banerDTO.peliculaId()).orElseThrow(
