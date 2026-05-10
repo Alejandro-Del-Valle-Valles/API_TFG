@@ -63,7 +63,7 @@ public class BanerController {
                     )
             )
     })
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<BanerDTO>> getAll() {
         return ResponseEntity.ok(banerService.getAll());
     }
