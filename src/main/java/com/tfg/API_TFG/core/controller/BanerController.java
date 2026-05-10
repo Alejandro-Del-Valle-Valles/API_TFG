@@ -125,7 +125,7 @@ public class BanerController {
 
     @Operation(
                 summary = "Actualiza un baner",
-                description = "Actualiza un baner si existe."
+                description = "Actualiza la URL y las fechas de un baner si existe, sin modificar la película asociada."
         )
         @ApiResponses( value = {
                 @ApiResponse(
@@ -190,7 +190,7 @@ public class BanerController {
     public ResponseEntity<BanerDTO> updateBaner(
             @Parameter(description = "URL actual de la imagen del baner a actualizar")
             @PathVariable String url,
-            @Parameter(description = "Info nueva del baner")
+            @Parameter(description = "Info nueva del baner. La película asociada no se actualiza.")
             @RequestBody @Valid BanerDTO banerDTO
     ) {
         return ResponseEntity.ok(banerService.updateBaner(url, banerDTO));
