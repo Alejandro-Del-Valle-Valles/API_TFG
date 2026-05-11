@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface BanerRepository extends JpaRepository<Baner, Integer> {
     List<Baner> findByEmpiezaLessThanEqualAndTerminaGreaterThanEqual(LocalDate empieza, LocalDate termina);
     Optional<Baner> findByUrl(String url);
+    boolean existsByUrlAndIdNot(String url, Integer id);
     boolean existsByUrl(String url);
 }

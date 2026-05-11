@@ -186,14 +186,12 @@ public class BanerController {
                 )
         })
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<BanerDTO> updateBaner(
-            @Parameter(description = "ID del baner a actualizar")
-            @PathVariable int id,
             @Parameter(description = "Info nueva del baner. La película asociada no se actualiza.")
             @RequestBody @Valid BanerDTO banerDTO
     ) {
-        return ResponseEntity.ok(banerService.updateBaner(id, banerDTO));
+        return ResponseEntity.ok(banerService.updateBaner(banerDTO));
     }
 
     @Operation(

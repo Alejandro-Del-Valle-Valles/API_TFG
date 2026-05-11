@@ -47,6 +47,9 @@ public class BanerServiceImpl implements BanerService {
         Pelicula pelicula = peliculaRepository.findById(banerDTO.peliculaId()).orElseThrow(
                 () -> new EntityNotFoundException("No existe la película con el ID especificado")
         );
+        if (banerRepository.existsByUrl(banerDTO.url())) {
+            throw new EntityExistsException("Ya existe un banner con la misma imagen.");
+        }
         Baner baner = new Baner();
         baner.setUrl(banerDTO.url());
         baner.setEmpieza(banerDTO.empieza());
@@ -57,11 +60,11 @@ public class BanerServiceImpl implements BanerService {
     }
 
     @Override
-    public BanerDTO updateBaner(int id, BanerDTO banerDTO) {
-        Baner baner = banerRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("No existe el baner a actualizar con la URL especificada.")
+    public BanerDTO updateBaner(BanerDTO banerDTO) {
+        Baner baner = banerRepository.findById(banerDTO.id()).orElseThrow(
+                () -> new EntityNotFoundException("No existe el baner a actualizar con el ID especificada.")
         );
-        if (banerRepository.existsByUrl(banerDTO.url())) {
+        if (banerRepository.existsByUrlAndIdNot(banerDTO.url(), banerDTO.id())) {
             throw new EntityExistsException("Ya existe un banner con la misma imagen.");
         }
 
