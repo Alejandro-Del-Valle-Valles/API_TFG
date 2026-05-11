@@ -9,6 +9,7 @@ import com.tfg.API_TFG.core.repository.PeliculaRepository;
 import com.tfg.API_TFG.core.service.interfaces.BanerService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,11 +76,15 @@ public class BanerServiceImpl implements BanerService {
     }
 
     @Override
+    @Transactional
     public BanerDTO deleteBaner(int id) {
         Baner baner = banerRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("No existe el banner con la ID especificada")
+                () -> new EntityNotFoundException("Banner not found with the specified ID")
         );
+        if (baner.getPelicula() != null)
+            baner.getPelicula().setBaner(null);
         banerRepository.delete(baner);
+        banerRepository.flush();
         return BanerAdapter.toDTO(baner);
     }
 }
