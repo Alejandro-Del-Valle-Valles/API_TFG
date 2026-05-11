@@ -4,7 +4,7 @@
 Este proyecto corresponde a la API elaborada para el proyecto fin de grado del curso de DAM 2 del año 2025-2026.
 
 ## Versión del Proyecto:
-Versión: **1.8.1**
+Versión: **1.8.2**
 
 ## Herramientas
 - Java 17.0.18

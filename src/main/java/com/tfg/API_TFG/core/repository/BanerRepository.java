@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface BanerRepository extends JpaRepository<Baner, UUID> {
+public interface BanerRepository extends JpaRepository<Baner, Integer> {
     List<Baner> findByEmpiezaLessThanEqualAndTerminaGreaterThanEqual(LocalDate empieza, LocalDate termina);
     Optional<Baner> findByUrl(String url);
     boolean existsByUrl(String url);

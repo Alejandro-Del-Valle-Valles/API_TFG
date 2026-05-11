@@ -14,9 +14,10 @@ import java.util.UUID;
 public class Baner {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @MapsId
+
     @OneToOne
     @JoinColumn(name = "pelicula_id", nullable = false)
     private @Valid Pelicula pelicula;
@@ -35,9 +36,9 @@ public class Baner {
 
     public Baner() { }
 
-    public UUID getId() { return id; }
+    public int getId() { return id; }
 
-    public void setId(UUID id) { this.id = id; }
+    public void setId(int id) { this.id = id; }
 
     public Pelicula getPelicula() { return pelicula; }
 
@@ -59,11 +60,11 @@ public class Baner {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Baner baner = (Baner) o;
-        return Objects.equals(id, baner.id) && Objects.equals(pelicula, baner.pelicula);
+        return baner.id.equals(this.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pelicula);
+        return Objects.hash(id);
     }
 }

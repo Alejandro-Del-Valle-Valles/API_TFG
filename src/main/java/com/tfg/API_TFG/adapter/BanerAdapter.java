@@ -6,6 +6,6 @@ import com.tfg.API_TFG.core.entity.Baner;
 public class BanerAdapter {
 
     public static BanerDTO toDTO(Baner baner) {
-        return new BanerDTO(baner.getId(), baner.getUrl(), baner.getEmpieza(), baner.getTermina());
+        return new BanerDTO(baner.getId(), baner.getPelicula().getId(), baner.getUrl(), baner.getEmpieza(), baner.getTermina());
     }
 }

@@ -44,7 +44,6 @@ public class BanerServiceImpl implements BanerService {
 
     @Override
     public BanerDTO createBaner(BanerDTO banerDTO) {
-        if(banerRepository.existsByUrl(banerDTO.url())) throw new EntityExistsException("Ya existe un banner con la misma imagen.");
         Pelicula pelicula = peliculaRepository.findById(banerDTO.peliculaId()).orElseThrow(
                 () -> new EntityNotFoundException("No existe la película con el ID especificado")
         );
@@ -58,11 +57,11 @@ public class BanerServiceImpl implements BanerService {
     }
 
     @Override
-    public BanerDTO updateBaner(String antiguaUrl, BanerDTO banerDTO) {
-        Baner baner = banerRepository.findByUrl(antiguaUrl).orElseThrow(
+    public BanerDTO updateBaner(int id, BanerDTO banerDTO) {
+        Baner baner = banerRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("No existe el baner a actualizar con la URL especificada.")
         );
-        if (!antiguaUrl.equals(banerDTO.url()) && banerRepository.existsByUrl(banerDTO.url())) {
+        if (banerRepository.existsByUrl(banerDTO.url())) {
             throw new EntityExistsException("Ya existe un banner con la misma imagen.");
         }
 
@@ -73,9 +72,9 @@ public class BanerServiceImpl implements BanerService {
     }
 
     @Override
-    public BanerDTO deleteBaner(String url) {
-        Baner baner = banerRepository.findByUrl(url).orElseThrow(
-                () -> new EntityNotFoundException("No existe el banner con la url especificada")
+    public BanerDTO deleteBaner(int id) {
+        Baner baner = banerRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("No existe el banner con la ID especificada")
         );
         banerRepository.delete(baner);
         return BanerAdapter.toDTO(baner);

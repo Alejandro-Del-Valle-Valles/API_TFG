@@ -4,6 +4,7 @@ import com.tfg.API_TFG.core.validation.ValidDateRange;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
@@ -13,6 +14,12 @@ import java.util.UUID;
         message = "La fecha de inicio debe ser posterior o igual a la fecha de finalización")
 @Schema(description = "Información básica del banner")
 public record BanerDTO(
+
+        @Schema(
+                description = "ID del banner",
+                example = "1"
+        )
+        Integer id,
 
         @Schema(
                 description = "ID de la película",

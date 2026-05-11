@@ -186,19 +186,19 @@ public class BanerController {
                 )
         })
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PutMapping("/{url}")
+    @PutMapping("/{id}")
     public ResponseEntity<BanerDTO> updateBaner(
-            @Parameter(description = "URL actual de la imagen del baner a actualizar")
-            @PathVariable String url,
+            @Parameter(description = "ID del baner a actualizar")
+            @PathVariable int id,
             @Parameter(description = "Info nueva del baner. La película asociada no se actualiza.")
             @RequestBody @Valid BanerDTO banerDTO
     ) {
-        return ResponseEntity.ok(banerService.updateBaner(url, banerDTO));
+        return ResponseEntity.ok(banerService.updateBaner(id, banerDTO));
     }
 
     @Operation(
                 summary = "Elimina el baner",
-                description = "Elimina el baner por la URL dada"
+                description = "Elimina el baner por el ID dado"
         )
         @ApiResponses( value = {
                 @ApiResponse(
@@ -243,11 +243,11 @@ public class BanerController {
                 )
         })
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @DeleteMapping("/{url}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<BanerDTO> deleteBaner(
-            @Parameter(description = "URL de la imagen del baner a eliminar")
-            @PathVariable String url
+            @Parameter(description = "ID del baner a eliminar")
+            @PathVariable int id
     ) {
-        return ResponseEntity.ok(banerService.deleteBaner(url));
+        return ResponseEntity.ok(banerService.deleteBaner(id));
     }
 }
