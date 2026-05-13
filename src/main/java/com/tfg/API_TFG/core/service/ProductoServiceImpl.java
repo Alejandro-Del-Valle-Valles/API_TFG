@@ -48,10 +48,16 @@ public class ProductoServiceImpl implements ProductoService {
     public ProductoDTO createProducto(ProductoDTO productoDTO) {
         Optional<Producto> productoExiste = productoRepository.findByNombreIgnoreCase(productoDTO.nombre());
         if(productoExiste.isPresent()) throw new EntityExistsException("Ya existe un producto con el nombre " + productoDTO.nombre());
+        List<Alergeno> alergenos = new ArrayList<>();
+        productoDTO.alergenos().forEach( a -> {
+            Optional<Alergeno> alergeno = alergenoRepository.findByNombreIgnoreCase(a.nombre());
+            if(alergeno.isPresent() && !alergenos.contains(alergeno.get())) alergenos.add(alergeno.get());
+        });
         Producto producto = new Producto();
         producto.setNombre(productoDTO.nombre());
         producto.setPrecio(productoDTO.precio());
         producto.setStock(productoDTO.stock());
+        producto.setAlergenos(alergenos);
         return ProductoAdapter.toDTO(productoRepository.save(producto));
     }
 
