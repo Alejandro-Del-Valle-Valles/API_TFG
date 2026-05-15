@@ -57,12 +57,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,
                                 "/alergeno/**", "/participante/**", "/pelicula/**",
                                 "/producto/**", "/sala/**", "/sesion/**"
-                        ).hasRole("ADMINISTRADOR")
+                        ).hasAnyRole("ADMINISTRADOR", "EMPLEADO")
 
                         .requestMatchers(HttpMethod.DELETE,
                                 "/alergeno/**", "/participante/**", "/pelicula/**",
                                 "/producto/**", "/sala/**", "/sesion/**"
-                        ).hasRole("ADMINISTRADOR")
+                        ).hasAnyRole("ADMINISTRADOR", "EMPLEADO")
 
                         // Resto públicos
                         .anyRequest().permitAll()
