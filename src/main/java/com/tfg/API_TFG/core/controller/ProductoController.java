@@ -152,7 +152,7 @@ public class ProductoController {
                         )
                 )
         })
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ROLE_EMPLEADO')")
     @PostMapping
     public ResponseEntity<ProductoDTO> createProducto(
             @Parameter(description = "Estructura en el body con los datos del nuevo producto.")
@@ -224,7 +224,7 @@ public class ProductoController {
                     )
             )
     })
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'ROLE_EMPLEADO')")
     @PutMapping("/{nombre}")
     public ResponseEntity<ProductoDTO> updateProducto(
             @Parameter(description = "Nombre del producto a actualizar.")

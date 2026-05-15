@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/alergeno/**", "/participante/**", "/pelicula/**",
                                 "/producto/**", "/sala/**", "/sesion/**"
-                        ).hasRole("ADMINISTRADOR")
+                        ).hasAnyRole("ADMINISTRADOR", "EMPLEADO")
 
                         .requestMatchers(HttpMethod.PUT,
                                 "/alergeno/**", "/participante/**", "/pelicula/**",
