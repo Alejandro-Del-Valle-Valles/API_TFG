@@ -255,8 +255,6 @@ public class PeliculaServiceImpl implements PeliculaService {
         Map<Integer, Participante> participantesMap = participantes.stream()
                 .collect(Collectors.toMap(Participante::getId, p -> p));
 
-        Set<String> clavesNuevas = new HashSet<>();
-
         for (ParticipanteCreateDTO participanteDTO : participantesDTO) {
             Participante participante = participantesMap.get(participanteDTO.id());
             Set<RolParticipante> rolesActuales = creditosActuales.getOrDefault(participanteDTO.id(), Collections.emptySet());
@@ -265,15 +263,15 @@ public class PeliculaServiceImpl implements PeliculaService {
                 throw new IllegalArgumentException("El participante con ID " + participanteDTO.id() + " debe tener al menos un rol");
 
             for (RolParticipante rol : participanteDTO.roles()) {
-                String key = participanteDTO.id() + "|" + rol.name();
-                if (!clavesNuevas.add(key)) continue;
-
+                // Solo añadir si no existe actualmente
                 if (!rolesActuales.contains(rol)) {
+                    CreditoId creditoId = new CreditoId(pelicula.getId(), participante.getId(), rol);
                     Credito nuevoCredito = new Credito();
-                    nuevoCredito.setId(new CreditoId(pelicula.getId(), participante.getId(), rol));
-                    nuevoCredito.setRol(rol);
+                    nuevoCredito.setId(creditoId);
+                    nuevoCredito.setPelicula(pelicula);
                     nuevoCredito.setParticipante(participante);
-                    pelicula.addCredito(nuevoCredito);
+                    nuevoCredito.setRol(rol);
+                    pelicula.getCreditos().add(nuevoCredito);
                 }
             }
         }
