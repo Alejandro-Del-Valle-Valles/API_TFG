@@ -11,6 +11,7 @@ Versión: **1.8.2**
 - Spring Boot 4.0.3
 - Spring Data JPA
 - PostgreSQL
+- MailJS
 
 ### Como hacer uso de la API
 
@@ -20,5 +21,5 @@ También se debe definir una clave secreta para la encriptación con JWT y el ti
 También es necesario un correo electrónico que permita ser usado para servicio smtp para el envio de correos con la info de la compra.
 Puedes consultar el fichero `.env.exmaple` para usarlo de referencia en el rellenado de estos datos.
 Por defecto, la api funciona en el puerto `8443` con la raíz `/api`.
-Puedes consultar la documentación hecha con swagger en cualquier navegador pulsando en el siguiente enlace (Configurado para el puerto 9090 con la raíz /api) [Documentación de Swagger](http://localhost:9090/api/swagger-ui/index.html).<br>
+Puedes consultar la documentación hecha con swagger en cualquier navegador pulsando en el siguiente enlace (Configurado para el puerto 8443 con la raíz /api) [Documentación de Swagger](http://localhost:9090/api/swagger-ui/index.html).<br>
 Esta ruta debes modificarla en base al puerto que decidas usar o la raíz de la api.
