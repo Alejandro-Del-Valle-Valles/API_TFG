@@ -92,7 +92,7 @@ public class CodigoDescuentoController {
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<CodigoDescuentoDTO> getById(
+        public ResponseEntity<CodigoDescuentoDTO> getById(
             @Parameter(description = "ID del código de descuento")
             @PathVariable Integer id
     ) {
