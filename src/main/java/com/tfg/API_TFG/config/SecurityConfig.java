@@ -50,18 +50,18 @@ public class SecurityConfig {
 
                         // Admin
                         .requestMatchers(HttpMethod.POST,
-                                "/alergeno/**", "/participante/**", "/pelicula/**",
-                                "/producto/**", "/sala/**", "/sesion/**"
+                                "/alergeno/", "/participante/", "/pelicula/",
+                                "/producto/", "/sala/", "/sesion/", "/codigo-descuento"
                         ).hasAnyRole("ADMINISTRADOR", "EMPLEADO")
 
                         .requestMatchers(HttpMethod.PUT,
-                                "/alergeno/**", "/participante/**", "/pelicula/**",
-                                "/producto/**", "/sala/**", "/sesion/**"
+                                "/alergeno/", "/participante/", "/pelicula/",
+                                "/producto/", "/sala/", "/sesion/", "/codigo-descuento"
                         ).hasAnyRole("ADMINISTRADOR", "EMPLEADO")
 
                         .requestMatchers(HttpMethod.DELETE,
-                                "/alergeno/**", "/participante/**", "/pelicula/**",
-                                "/producto/**", "/sala/**", "/sesion/**"
+                                "/alergeno/", "/participante/", "/pelicula/",
+                                "/producto/", "/sala/", "/sesion/", "/codigo-descuento"
                         ).hasAnyRole("ADMINISTRADOR", "EMPLEADO")
 
                         // Resto públicos
